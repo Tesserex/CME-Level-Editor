@@ -52,6 +52,7 @@
             this.ClientSize = new System.Drawing.Size(294, 175);
             this.Controls.Add(this.screensBox);
             this.Name = "BrowseForm";
+            this.StartPosition = System.Windows.Forms.FormStartPosition.Manual;
             this.Text = "Browse Screens";
             ((System.ComponentModel.ISupportInitialize)(this.screensBox)).EndInit();
             this.ResumeLayout(false);

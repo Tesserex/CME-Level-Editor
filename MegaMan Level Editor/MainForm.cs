@@ -96,14 +96,20 @@ namespace MegaMan_Level_Editor
             openScreens = new ScreenDict();
 
             tileForm = new TileBoxForm();
-            //tileForm.MdiParent = this;
             tileForm.Show();
             tileForm.SelectedChanged += new Action(tileForm_SelectedChanged);
+            tileForm.Shown += (s,e) => tilesetToolStripMenuItem.Checked = true;
+            tileForm.FormClosing += (s, e) => { e.Cancel = true; tileForm.Hide(); tilesetToolStripMenuItem.Checked = false; };
+            tileForm.Top = 50;
+            tileForm.Left = 20;
 
             brushForm = new BrushForm();
-            //brushForm.MdiParent = this;
             brushForm.Show();
             brushForm.BrushChanged += new BrushChangedHandler(brushForm_BrushChanged);
+            brushForm.Shown += (s, e) => brushesToolStripMenuItem.Checked = true;
+            brushForm.FormClosing += (s, e) => { e.Cancel = true; brushForm.Hide(); brushesToolStripMenuItem.Checked = false; };
+            brushForm.Top = 50;
+            brushForm.Left = this.Width - brushForm.Width - 20;
 
             DrawGrid = false;
             DrawTiles = true;
@@ -243,6 +249,7 @@ namespace MegaMan_Level_Editor
         private void quitToolStripMenuItem_Click(object sender, EventArgs e)
         {
             Application.Exit();
+            Environment.Exit(0);
         }
 
         private void gridToolStripMenuItem_Click(object sender, EventArgs e)
@@ -419,6 +426,24 @@ namespace MegaMan_Level_Editor
 
                 openScreens[UniqueName(map)][screen.Name] = screenform;
             };
+        }
+
+        private void tilesetToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (tileForm.Visible) tileForm.Hide();
+            else tileForm.Show();
+        }
+
+        private void brushesToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (brushForm.Visible) brushForm.Hide();
+            else brushForm.Show();
+        }
+
+        private void animateToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Program.Animated = !Program.Animated;
+            animateToolStripMenuItem.Checked = Program.Animated;
         }
     }
 }

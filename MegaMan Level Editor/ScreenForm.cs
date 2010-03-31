@@ -12,6 +12,9 @@ namespace MegaMan_Level_Editor
 {
     public partial class ScreenForm : Form
     {
+        private static Brush blockBrush = new SolidBrush(Color.FromArgb(160, Color.OrangeRed));
+        private static Brush ladderBrush = new SolidBrush(Color.FromArgb(160, Color.Yellow));
+
         private MegaMan.Screen myScreen;
 
         private ITileBrush currentBrush = null;
@@ -40,7 +43,7 @@ namespace MegaMan_Level_Editor
             set
             {
                 drawGrid = value;
-                screenImage.Invalidate();
+                ReDrawMaster();
             }
         }
 
@@ -50,7 +53,7 @@ namespace MegaMan_Level_Editor
             set
             {
                 drawTiles = value;
-                screenImage.Invalidate();
+                ReDrawMaster();
             }
         }
 
@@ -60,7 +63,7 @@ namespace MegaMan_Level_Editor
             set
             {
                 drawBlock = value;
-                screenImage.Invalidate();
+                ReDrawMaster();
             }
         }
         #endregion
@@ -112,8 +115,25 @@ namespace MegaMan_Level_Editor
             InitLayer(ref blockLayer);
 
             ReDrawTiles();
+            ReDrawBlocking();
 
             ReDrawMaster();
+            
+            // draw grid
+            using (Graphics g = Graphics.FromImage(gridLayer))
+            {
+                for (int x = 0; x < screen.Width; x++)
+                {
+                    int tx = x * screen.Tileset.TileSize;
+                    g.DrawLine(Pens.GreenYellow, tx, 0, tx, screen.PixelHeight);
+                }
+
+                for (int y = 0; y < screen.Height; y++)
+                {
+                    int ty = y * screen.Tileset.TileSize;
+                    g.DrawLine(Pens.GreenYellow, 0, ty, screen.PixelWidth, ty);
+                }
+            }
         }
 
         private void SetBrush(ITileBrush brush)
@@ -137,6 +157,27 @@ namespace MegaMan_Level_Editor
             using (Graphics g = Graphics.FromImage(tileLayer))
             {
                 myScreen.Draw(g, 0, 0, myScreen.PixelWidth, myScreen.PixelHeight);
+            }
+        }
+
+        private void ReDrawBlocking()
+        {
+            using (Graphics g = Graphics.FromImage(blockLayer))
+            {
+                for (int y = 0; y < myScreen.Height; y++)
+                {
+                    for (int x = 0; x < myScreen.Width; x++)
+                    {
+                        if (myScreen.TileAt(x, y).Properties.Blocking)
+                        {
+                            g.FillRectangle(blockBrush, x * myScreen.Tileset.TileSize, y * myScreen.Tileset.TileSize, myScreen.Tileset.TileSize, myScreen.Tileset.TileSize);
+                        }
+                        if (myScreen.TileAt(x, y).Properties.Climbable)
+                        {
+                            g.FillRectangle(ladderBrush, x * myScreen.Tileset.TileSize, y * myScreen.Tileset.TileSize, myScreen.Tileset.TileSize, myScreen.Tileset.TileSize);
+                        }
+                    }
+                }
             }
         }
 
@@ -192,6 +233,7 @@ namespace MegaMan_Level_Editor
             if (!drawing || currentBrush == null) return;
             currentBrush.DrawOn(this.myScreen, x, y);
             ReDrawTiles();
+            ReDrawBlocking();
             ReDrawMaster();
         }
 

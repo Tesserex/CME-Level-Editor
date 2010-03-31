@@ -61,7 +61,13 @@ namespace MegaMan_Level_Editor
         #region Private Methods
         private void ReDraw()
         {
-            if (image == null) return;
+            if (image == null || tileset == null) return;
+
+            foreach (Tile tile in tileset)
+            {
+                tile.Sprite.Update();
+            }
+
             using (Graphics g = Graphics.FromImage(image))
             {
                 for (int i = 0, x = 0; i < tileset.Count; i++, x+= tileset.TileSize)

@@ -32,9 +32,10 @@ namespace MegaMan_Level_Editor
             if (FrameTick != null) FrameTick();
         }
 
-        public static void Animate(bool animate)
+        public static bool Animated
         {
-            timer.Enabled = animate;
+            get { return timer.Enabled; }
+            set { timer.Enabled = value; }
         }
     }
 }

@@ -58,6 +58,7 @@
             this.Controls.Add(this.buttonNewBrush);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.SizableToolWindow;
             this.Name = "BrushForm";
+            this.ShowInTaskbar = false;
             this.Text = "Brushes";
             this.TopMost = true;
             this.ResumeLayout(false);
