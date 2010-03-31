@@ -388,6 +388,8 @@ namespace MegaMan_Level_Editor
 
         private void propertiesToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            if (focusScreen == null) return;
+
             LevelProp propForm = new LevelProp();
             propForm.LoadMap(focusScreen.Map);
 

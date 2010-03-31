@@ -53,14 +53,13 @@
             this.showBlockingToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.showEnemiesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.showGridToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.animateToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.levelToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.screensMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.addScreenToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.browseToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.propertiesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.screenToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.manageJoinsMenu = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
             this.toolStripMenuItem2 = new System.Windows.Forms.ToolStripMenuItem();
             this.addEnemyToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.manageEnemiesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -70,11 +69,11 @@
             this.splitScreenToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
             this.clearScreenToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.folderDialog = new System.Windows.Forms.FolderBrowserDialog();
             this.windowsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.tilesetToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.brushesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.animateToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.folderDialog = new System.Windows.Forms.FolderBrowserDialog();
+            this.manageJoinsMenu = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -290,10 +289,18 @@
             this.showGridToolStripMenuItem.Text = "Grid";
             this.showGridToolStripMenuItem.Click += new System.EventHandler(this.gridToolStripMenuItem_Click);
             // 
+            // animateToolStripMenuItem
+            // 
+            this.animateToolStripMenuItem.Name = "animateToolStripMenuItem";
+            this.animateToolStripMenuItem.Size = new System.Drawing.Size(159, 22);
+            this.animateToolStripMenuItem.Text = "Animate";
+            this.animateToolStripMenuItem.Click += new System.EventHandler(this.animateToolStripMenuItem_Click);
+            // 
             // levelToolStripMenuItem
             // 
             this.levelToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.screensMenuItem,
+            this.manageJoinsMenu,
             this.propertiesToolStripMenuItem});
             this.levelToolStripMenuItem.Name = "levelToolStripMenuItem";
             this.levelToolStripMenuItem.Size = new System.Drawing.Size(44, 20);
@@ -305,14 +312,14 @@
             this.addScreenToolStripMenuItem1,
             this.browseToolStripMenuItem});
             this.screensMenuItem.Name = "screensMenuItem";
-            this.screensMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.screensMenuItem.Size = new System.Drawing.Size(182, 22);
             this.screensMenuItem.Text = "Screens";
             // 
             // addScreenToolStripMenuItem1
             // 
             this.addScreenToolStripMenuItem1.Name = "addScreenToolStripMenuItem1";
             this.addScreenToolStripMenuItem1.ShortcutKeys = System.Windows.Forms.Keys.F4;
-            this.addScreenToolStripMenuItem1.Size = new System.Drawing.Size(151, 22);
+            this.addScreenToolStripMenuItem1.Size = new System.Drawing.Size(152, 22);
             this.addScreenToolStripMenuItem1.Text = "Add Screen";
             this.addScreenToolStripMenuItem1.Click += new System.EventHandler(this.addScreenToolStripMenuItem1_Click);
             // 
@@ -320,7 +327,7 @@
             // 
             this.browseToolStripMenuItem.Name = "browseToolStripMenuItem";
             this.browseToolStripMenuItem.ShortcutKeys = System.Windows.Forms.Keys.F5;
-            this.browseToolStripMenuItem.Size = new System.Drawing.Size(151, 22);
+            this.browseToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.browseToolStripMenuItem.Text = "Browse";
             this.browseToolStripMenuItem.Click += new System.EventHandler(this.browseToolStripMenuItem_Click);
             // 
@@ -328,15 +335,13 @@
             // 
             this.propertiesToolStripMenuItem.Name = "propertiesToolStripMenuItem";
             this.propertiesToolStripMenuItem.ShortcutKeys = System.Windows.Forms.Keys.F3;
-            this.propertiesToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.propertiesToolStripMenuItem.Size = new System.Drawing.Size(182, 22);
             this.propertiesToolStripMenuItem.Text = "Properties";
             this.propertiesToolStripMenuItem.Click += new System.EventHandler(this.propertiesToolStripMenuItem_Click);
             // 
             // screenToolStripMenuItem
             // 
             this.screenToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.manageJoinsMenu,
-            this.toolStripSeparator1,
             this.toolStripMenuItem2,
             this.toolStripSeparator3,
             this.mergeScreenToolStripMenuItem,
@@ -346,18 +351,6 @@
             this.screenToolStripMenuItem.Name = "screenToolStripMenuItem";
             this.screenToolStripMenuItem.Size = new System.Drawing.Size(53, 20);
             this.screenToolStripMenuItem.Text = "Screen";
-            // 
-            // manageJoinsMenu
-            // 
-            this.manageJoinsMenu.Name = "manageJoinsMenu";
-            this.manageJoinsMenu.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.J)));
-            this.manageJoinsMenu.Size = new System.Drawing.Size(219, 22);
-            this.manageJoinsMenu.Text = "Manage Joins";
-            // 
-            // toolStripSeparator1
-            // 
-            this.toolStripSeparator1.Name = "toolStripSeparator1";
-            this.toolStripSeparator1.Size = new System.Drawing.Size(216, 6);
             // 
             // toolStripMenuItem2
             // 
@@ -444,12 +437,12 @@
             this.brushesToolStripMenuItem.Text = "Brushes";
             this.brushesToolStripMenuItem.Click += new System.EventHandler(this.brushesToolStripMenuItem_Click);
             // 
-            // animateToolStripMenuItem
+            // manageJoinsMenu
             // 
-            this.animateToolStripMenuItem.Name = "animateToolStripMenuItem";
-            this.animateToolStripMenuItem.Size = new System.Drawing.Size(159, 22);
-            this.animateToolStripMenuItem.Text = "Animate";
-            this.animateToolStripMenuItem.Click += new System.EventHandler(this.animateToolStripMenuItem_Click);
+            this.manageJoinsMenu.Name = "manageJoinsMenu";
+            this.manageJoinsMenu.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.J)));
+            this.manageJoinsMenu.Size = new System.Drawing.Size(182, 22);
+            this.manageJoinsMenu.Text = "Manage Joins";
             // 
             // MainForm
             // 
@@ -483,8 +476,6 @@
         private System.Windows.Forms.ToolStripMenuItem addScreenToolStripMenuItem1;
         private System.Windows.Forms.ToolStripMenuItem browseToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem screenToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem manageJoinsMenu;
-        private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator2;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem2;
         private System.Windows.Forms.ToolStripMenuItem addEnemyToolStripMenuItem;
@@ -518,6 +509,7 @@
         private System.Windows.Forms.ToolStripMenuItem tilesetToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem brushesToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem animateToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem manageJoinsMenu;
     }
 }
 
