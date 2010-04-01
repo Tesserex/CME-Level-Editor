@@ -316,10 +316,10 @@ namespace MegaMan_Level_Editor
 
             LevelProp propForm = new LevelProp();
             propForm.LoadMap(map);
+            propForm.Text = "New Level Properties";
             propForm.Show();
 
-            propForm.FormClosed += (s, ev) =>
-            {
+            propForm.OkPressed += () => {
                 AddScreen(map);
             };
         }
@@ -396,6 +396,7 @@ namespace MegaMan_Level_Editor
 
             LevelProp propForm = new LevelProp();
             propForm.LoadMap(focusScreen.Map);
+            propForm.Text = focusScreen.Map.Name + " Properties";
 
             propForm.Show();
         }

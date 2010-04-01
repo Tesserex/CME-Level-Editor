@@ -13,7 +13,8 @@ namespace MegaMan_Level_Editor
     public partial class LevelProp : Form
     {
         private Map map;
-        private string tileset;
+
+        public event Action OkPressed;
 
         public LevelProp()
         {
@@ -23,8 +24,7 @@ namespace MegaMan_Level_Editor
         public void LoadMap(Map map)
         {
             this.map = map;
-            tilesetLabel.Text = map.TilePath;
-            tileset = map.TilePath;
+            tilesetField.Text = map.TilePath;
         }
 
         private void tilesetChange_Click(object sender, EventArgs e)
@@ -34,19 +34,33 @@ namespace MegaMan_Level_Editor
 
             if (result == DialogResult.OK)
             {
-                tileset = tilesetLabel.Text = dialog.FileName;
+                tilesetField.Text = dialog.FileName;
             }
         }
 
         private void buttonOK_Click(object sender, EventArgs e)
         {
-            Save();
-            Cancel();
+            bool success = Save();
+            if (success)
+            {
+                if (OkPressed != null) OkPressed();
+                this.Close();
+            }
         }
 
-        private void Save()
+        private bool Save()
         {
-            map.ChangeTileset(tileset);
+            try
+            {
+                map.Name = nameField.Text;
+                map.ChangeTileset(tilesetField.Text);
+                return true;
+            }
+            catch
+            {
+                MessageBox.Show("The tileset specified could not be loaded. Sorry.", "C# Mega Man Level Editor", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+            return false;
         }
 
         private void Cancel()
@@ -57,6 +71,11 @@ namespace MegaMan_Level_Editor
         private void buttonCancel_Click(object sender, EventArgs e)
         {
             Cancel();
+        }
+
+        private void buttonApply_Click(object sender, EventArgs e)
+        {
+            this.Save();
         }
     }
 }
