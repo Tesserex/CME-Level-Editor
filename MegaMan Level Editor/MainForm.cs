@@ -102,6 +102,8 @@ namespace MegaMan_Level_Editor
             tileForm.FormClosing += (s, e) => { e.Cancel = true; tileForm.Hide(); tilesetToolStripMenuItem.Checked = false; };
             tileForm.Top = 50;
             tileForm.Left = 20;
+            tileForm.TopLevel = false;
+            tileForm.Parent = this;
 
             brushForm = new BrushForm();
             brushForm.Show();
@@ -110,6 +112,8 @@ namespace MegaMan_Level_Editor
             brushForm.FormClosing += (s, e) => { e.Cancel = true; brushForm.Hide(); brushesToolStripMenuItem.Checked = false; };
             brushForm.Top = 50;
             brushForm.Left = this.Width - brushForm.Width - 20;
+            brushForm.TopLevel = false;
+            brushForm.Parent = this;
 
             DrawGrid = false;
             DrawTiles = true;

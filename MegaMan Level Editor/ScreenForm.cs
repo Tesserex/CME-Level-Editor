@@ -211,11 +211,9 @@ namespace MegaMan_Level_Editor
         #region Form Event Handlers
         private void mapForm_Resize(object sender, EventArgs e)
         {
-            int newleft = screenImage.Left, newtop = screenImage.Top;
-            if (screenImage.Right < this.Right) newleft += (this.Right - screenImage.Right);
-            if (newleft > 0) newleft = 0;
-            if (screenImage.Bottom < this.Bottom) newtop += (this.Bottom - screenImage.Bottom);
-            if (newtop > 0) newtop = 0;
+            int newleft = (this.Width - screenImage.Width) / 2, newtop = (this.Height - screenImage.Height) / 2;
+            if (newleft < 0) newleft = 0;
+            if (newtop < 0) newtop = 0;
             screenImage.Top = newtop;
             screenImage.Left = newleft;
         }

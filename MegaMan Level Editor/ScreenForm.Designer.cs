@@ -34,6 +34,7 @@
             // 
             // screenImage
             // 
+            this.screenImage.Anchor = System.Windows.Forms.AnchorStyles.None;
             this.screenImage.BackColor = System.Drawing.SystemColors.Control;
             this.screenImage.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
             this.screenImage.Location = new System.Drawing.Point(0, 0);
@@ -45,14 +46,14 @@
             this.screenImage.MouseDown += new System.Windows.Forms.MouseEventHandler(this.screenImage_MouseDown);
             this.screenImage.MouseUp += new System.Windows.Forms.MouseEventHandler(this.screenImage_MouseUp);
             // 
-            // MapForm
+            // ScreenForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.AutoScroll = true;
             this.ClientSize = new System.Drawing.Size(292, 267);
             this.Controls.Add(this.screenImage);
-            this.Name = "MapForm";
+            this.Name = "ScreenForm";
             this.Text = "MapForm";
             this.Resize += new System.EventHandler(this.mapForm_Resize);
             ((System.ComponentModel.ISupportInitialize)(this.screenImage)).EndInit();
