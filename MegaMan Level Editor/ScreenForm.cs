@@ -134,6 +134,8 @@ namespace MegaMan_Level_Editor
                     g.DrawLine(Pens.GreenYellow, 0, ty, screen.PixelWidth, ty);
                 }
             }
+
+            Center();
         }
 
         private void SetBrush(ITileBrush brush)
@@ -206,16 +208,21 @@ namespace MegaMan_Level_Editor
             screenImage.Height = masterImage.Height;
             screenImage.Refresh();
         }
+
+        private void Center()
+        {
+            int newleft = (sizingPanel.Width - screenImage.Width) / 2, newtop = (sizingPanel.Height - screenImage.Height) / 2;
+            if (newleft < 0) newleft = 0;
+            if (newtop < 0) newtop = 0;
+            screenImage.Top = newtop;
+            screenImage.Left = newleft;
+        }
         #endregion Private Methods
 
         #region Form Event Handlers
         private void mapForm_Resize(object sender, EventArgs e)
         {
-            int newleft = (this.Width - screenImage.Width) / 2, newtop = (this.Height - screenImage.Height) / 2;
-            if (newleft < 0) newleft = 0;
-            if (newtop < 0) newtop = 0;
-            screenImage.Top = newtop;
-            screenImage.Left = newleft;
+            Center();
         }
         #endregion Form Event Handlers
 
