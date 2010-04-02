@@ -103,10 +103,19 @@ namespace MegaMan_Level_Editor
             
         }
 
+        private void SetText()
+        {
+            this.Text = this.Map.Name + " - " + myScreen.Name;
+            if (this.Map.Dirty) this.Text += " *";
+        }
+
         public void SetScreen(Map map, MegaMan.Screen screen)
         {
             Map = map;
             myScreen = screen;
+
+            SetText();
+            map.DirtyChanged += (b) => SetText();
 
             InitLayer(ref masterImage);
             InitLayer(ref tileLayer);

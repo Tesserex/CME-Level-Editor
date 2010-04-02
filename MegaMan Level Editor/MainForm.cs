@@ -191,19 +191,20 @@ namespace MegaMan_Level_Editor
             }
 
             Map map = new Map(path);
+
             openMaps.Add(map);
+            openScreens[path] = new Dictionary<string, ScreenForm>();
+
             KeyValuePair<string, MegaMan.Screen> pair = map.Screens.First();
 
             ScreenForm screenform = new ScreenForm();
             screenform.MdiParent = this;
             screenform.SetScreen(map, pair.Value);
-            screenform.Text = map.Name + " - " + pair.Value.Name;
             screenform.GotFocus += new EventHandler(screenform_GotFocus);
             screenform.Show();
 
             AddRecentFile(path);
 
-            openScreens[path] = new Dictionary<string,ScreenForm>();
             openScreens[path][pair.Value.Name] = screenform;
 
             tileForm.Tileset = map.Tileset;
@@ -311,7 +312,6 @@ namespace MegaMan_Level_Editor
             map.Name = "Untitled" + untitledCount.ToString();
 
             openMaps.Add(map);
-
             openScreens[map.Name] = new Dictionary<string, ScreenForm>();
 
             LevelProp propForm = new LevelProp();
