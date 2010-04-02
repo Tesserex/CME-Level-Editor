@@ -100,20 +100,16 @@ namespace MegaMan_Level_Editor
             tileForm.SelectedChanged += new Action(tileForm_SelectedChanged);
             tileForm.Shown += (s,e) => tilesetToolStripMenuItem.Checked = true;
             tileForm.FormClosing += (s, e) => { e.Cancel = true; tileForm.Hide(); tilesetToolStripMenuItem.Checked = false; };
-            tileForm.Top = 50;
-            tileForm.Left = 20;
-            tileForm.TopLevel = false;
-            tileForm.Parent = this;
+            tileForm.Anchor = AnchorStyles.Top;
+            tileForm.Owner = this;
 
             brushForm = new BrushForm();
             brushForm.Show();
             brushForm.BrushChanged += new BrushChangedHandler(brushForm_BrushChanged);
             brushForm.Shown += (s, e) => brushesToolStripMenuItem.Checked = true;
             brushForm.FormClosing += (s, e) => { e.Cancel = true; brushForm.Hide(); brushesToolStripMenuItem.Checked = false; };
-            brushForm.Top = 50;
-            brushForm.Left = this.Width - brushForm.Width - 20;
-            brushForm.TopLevel = false;
-            brushForm.Parent = this;
+            brushForm.Anchor = AnchorStyles.Left;
+            brushForm.Owner = this;
 
             DrawGrid = false;
             DrawTiles = true;
@@ -138,7 +134,7 @@ namespace MegaMan_Level_Editor
 
         void Application_ApplicationExit(object sender, EventArgs e)
         {
-            CheckSaveOnQuit();
+            CheckSaveOnClose();
             File.WriteAllLines(recentPath, recentFiles.ToArray());
         }
 
@@ -221,7 +217,7 @@ namespace MegaMan_Level_Editor
         void mapform_FormClosed(object sender, FormClosedEventArgs e)
         {
             ScreenForm form = sender as ScreenForm;
-            openScreens[form.Path].Remove(form.Name);
+            CloseScreen(form);
         }
         #endregion Private Methods
         
@@ -237,7 +233,7 @@ namespace MegaMan_Level_Editor
             }
         }
 
-        private void CheckSaveOnQuit()
+        private bool CheckSaveOnClose()
         {
             foreach (Map map in openMaps)
             {
@@ -246,9 +242,32 @@ namespace MegaMan_Level_Editor
                     DialogResult result = MessageBox.Show("Do you want to save changes to " + map.Name + " before closing?", "Save Changes", MessageBoxButtons.YesNoCancel);
                     if (result == DialogResult.Yes) map.Save();
                     else if (result == DialogResult.No) continue;
-                    else return;
+                    else return false;
                 }
             }
+            return true;
+        }
+
+        private void CloseMap(Map map)
+        {
+            if (map.Dirty)
+            {
+                DialogResult result = MessageBox.Show("Do you want to save changes to " + map.Name + " before closing?", "Save Changes", MessageBoxButtons.YesNoCancel);
+                if (result == DialogResult.Yes) map.Save();
+                else if (result == DialogResult.Cancel) return;
+            }
+
+            // if the tile form is showing this map's tileset, remove it from the form
+            if (focusScreen.Map == map)
+            {
+                tileForm.Tileset = null;
+            }
+
+            foreach (ScreenForm screen in openScreens[map.FileDir].Values)
+                CloseScreen(screen);
+
+            openMaps.Remove(map);
+            openScreens.Remove(UniqueName(map));
         }
 
         private void quitToolStripMenuItem_Click(object sender, EventArgs e)
@@ -291,8 +310,7 @@ namespace MegaMan_Level_Editor
         {
             if (focusScreen == null) return;
 
-            foreach (ScreenForm screen in openScreens[focusScreen.Map.FileDir].Values)
-                screen.Close();
+            CloseMap(focusScreen.Map);
         }
 
         private void undoToolStripMenuItem_Click(object sender, EventArgs e)
@@ -360,6 +378,15 @@ namespace MegaMan_Level_Editor
 
                 openScreens[UniqueName(map)][name] = screenform;
             }
+        }
+
+        private void CloseScreen(ScreenForm screenform)
+        {
+            screenform.GotFocus -= new EventHandler(screenform_GotFocus);
+            screenform.Close();
+
+            openScreens[screenform.Map.Name].Remove(screenform.Name);
+            screenform.Dispose();
         }
 
         private void SaveAs()

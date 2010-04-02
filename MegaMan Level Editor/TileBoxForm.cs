@@ -41,7 +41,15 @@ namespace MegaMan_Level_Editor
             {
                 tileset = value;
                 if (image != null) image.Dispose();
-                image = new Bitmap(tileset.TileSize * tileset.Count, tileset.TileSize);
+
+                if (tileset != null)
+                {
+                    image = new Bitmap(tileset.TileSize * tileset.Count, tileset.TileSize);
+                }
+                else
+                {
+                    image = new Bitmap(1, 1);
+                }
                 tilesetImage.Image = image;
                 tilesetImage.Width = image.Width;
                 tilesetImage.Height = image.Height;
@@ -61,21 +69,24 @@ namespace MegaMan_Level_Editor
         #region Private Methods
         private void ReDraw()
         {
-            if (image == null || tileset == null) return;
+            if (image == null) return;
 
-            foreach (Tile tile in tileset)
+            if (tileset != null)
             {
-                tile.Sprite.Update();
-            }
-
-            using (Graphics g = Graphics.FromImage(image))
-            {
-                for (int i = 0, x = 0; i < tileset.Count; i++, x+= tileset.TileSize)
+                foreach (Tile tile in tileset)
                 {
-                    tileset[i].Draw(g, x, 0);
+                    tile.Sprite.Update();
                 }
-                g.DrawRectangle(hotPen, hot * tileset.TileSize, 0, tileset.TileSize, tileset.TileSize);
-                g.DrawRectangle(highlightPen, Selected * tileset.TileSize, 0, tileset.TileSize, tileset.TileSize);
+
+                using (Graphics g = Graphics.FromImage(image))
+                {
+                    for (int i = 0, x = 0; i < tileset.Count; i++, x += tileset.TileSize)
+                    {
+                        tileset[i].Draw(g, x, 0);
+                    }
+                    g.DrawRectangle(hotPen, hot * tileset.TileSize, 0, tileset.TileSize, tileset.TileSize);
+                    g.DrawRectangle(highlightPen, Selected * tileset.TileSize, 0, tileset.TileSize, tileset.TileSize);
+                }
             }
 
             tilesetImage.Refresh();

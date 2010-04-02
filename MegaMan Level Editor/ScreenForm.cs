@@ -17,6 +17,8 @@ namespace MegaMan_Level_Editor
 
         private MegaMan.Screen myScreen;
 
+        public MegaMan.Screen Screen { get { return myScreen; } }
+
         private ITileBrush currentBrush = null;
         
         private Bitmap tileLayer = null;
