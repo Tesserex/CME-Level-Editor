@@ -18,7 +18,7 @@ namespace MegaMan_Level_Editor
         private TileBoxForm tileForm;
         private BrowseForm browseForm;
         private MapDocument activeMap;
-        private Dictionary<string, MapDocument> openMaps;
+        private List<MapDocument> openMaps;
         private BrushForm brushForm;
 
         private bool drawGrid;
@@ -39,7 +39,7 @@ namespace MegaMan_Level_Editor
                 drawGrid = value;
                 showGridToolStripMenuItem.Checked = value;
 
-                foreach (MapDocument map in openMaps.Values)
+                foreach (MapDocument map in openMaps)
                     map.SetGrid(value);
             }
         }
@@ -52,7 +52,7 @@ namespace MegaMan_Level_Editor
                 drawTiles = value;
                 showBackgroundsToolStripMenuItem.Checked = value;
 
-                foreach (MapDocument map in openMaps.Values) map.SetTiles(value);
+                foreach (MapDocument map in openMaps) map.SetTiles(value);
             }
         }
 
@@ -64,7 +64,7 @@ namespace MegaMan_Level_Editor
                 drawBlock = value;
                 showBlockingToolStripMenuItem.Checked = value;
 
-                foreach (MapDocument map in openMaps.Values) map.SetBlock(value);
+                foreach (MapDocument map in openMaps) map.SetBlock(value);
 
                 tileForm.DrawBlock = value;
             }
@@ -80,7 +80,7 @@ namespace MegaMan_Level_Editor
             InitializeComponent();
             Instance = this;
 
-            openMaps = new Dictionary<string, MapDocument>();
+            openMaps = new List<MapDocument>();
 
             tileForm = new TileBoxForm();
             tileForm.Show();
@@ -177,17 +177,19 @@ namespace MegaMan_Level_Editor
 
         private void OpenMap(string path)
         {
-            if (openMaps.ContainsKey(path))
+            foreach (MapDocument mapdoc in openMaps)
             {
-                // only focus it if it's not already focused
-                if (activeMap.Map != openMaps[path].Map) openMaps[path].ReFocus();
+                if (Path.GetFullPath(mapdoc.Map.FileDir) == Path.GetFullPath(path))
+                {
+                    // only focus it if it's not already focused
+                    if (activeMap.Map != mapdoc.Map) mapdoc.ReFocus();
+                    return;
+                }
             }
-            else
-            {
-                MapDocument map = new MapDocument(path, this);
-                openMaps.Add(path, map);
-                map.ReFocus();
-            }
+
+            MapDocument map = new MapDocument(path, this);
+            openMaps.Add(map);
+            map.ReFocus();
         }
         #endregion Private Methods
         
@@ -205,7 +207,7 @@ namespace MegaMan_Level_Editor
 
         private bool CheckSaveOnClose()
         {
-            foreach (MapDocument map in openMaps.Values)
+            foreach (MapDocument map in openMaps)
             {
                 if (!CloseMap(map)) return false;
             }
@@ -271,7 +273,7 @@ namespace MegaMan_Level_Editor
         {
             if (activeMap == null) return;
 
-            CloseMap(openMaps[activeMap.Map.FileDir]);
+            CloseMap(activeMap);
         }
 
         private void undoToolStripMenuItem_Click(object sender, EventArgs e)
@@ -298,7 +300,7 @@ namespace MegaMan_Level_Editor
             propForm.OkPressed += () => {
                 MapDocument document = new MapDocument(map, this);
                 document.NewScreen();
-                openMaps.Add(map.Name, document);
+                openMaps.Add(document);
             };
         }
 
@@ -337,12 +339,6 @@ namespace MegaMan_Level_Editor
         }
         #endregion Menu Handlers
 
-        private string UniqueName(Map map)
-        {
-            if (map.FileDir != null && map.FileDir.Length > 0) return map.FileDir;
-            return map.Name;
-        }
-
         private void propertiesToolStripMenuItem_Click(object sender, EventArgs e)
         {
             if (activeMap == null) return;
@@ -356,7 +352,7 @@ namespace MegaMan_Level_Editor
 
         private void addScreenToolStripMenuItem1_Click(object sender, EventArgs e)
         {
-            openMaps[activeMap.Map.Name].NewScreen();
+            if (activeMap != null) activeMap.NewScreen();
         }
 
         private void tilesetToolStripMenuItem_Click(object sender, EventArgs e)
