@@ -14,6 +14,40 @@ namespace MegaMan_Level_Editor
 
         private Dictionary<string, ScreenForm> openScreens;
 
+        private bool drawTiles;
+        private bool drawGrid;
+        private bool drawBlock;
+
+        public bool DrawGrid
+        {
+            get { return drawGrid; }
+            set
+            {
+                drawGrid = value;
+                foreach (ScreenForm screen in this.openScreens.Values) screen.DrawGrid = value;
+            }
+        }
+
+        public bool DrawTiles
+        {
+            get { return drawTiles; }
+            set
+            {
+                drawTiles = value;
+                foreach (ScreenForm screen in this.openScreens.Values) screen.DrawTiles = value;
+            }
+        }
+
+        public bool DrawBlock
+        {
+            get { return drawBlock; }
+            set
+            {
+                drawBlock = value;
+                foreach (ScreenForm screen in this.openScreens.Values) screen.DrawBlock = value;
+            }
+        }
+
         public MapDocument(Map map, MainForm parent)
         {
             this.parent = parent;
@@ -37,21 +71,6 @@ namespace MegaMan_Level_Editor
         public void CloseAll()
         {
             foreach (ScreenForm screen in this.openScreens.Values) CloseScreen(screen);
-        }
-
-        public void SetGrid(bool show)
-        {
-            foreach (ScreenForm screen in this.openScreens.Values) screen.DrawGrid = show;
-        }
-
-        public void SetBlock(bool show)
-        {
-            foreach (ScreenForm screen in this.openScreens.Values) screen.DrawBlock = show;
-        }
-
-        public void SetTiles(bool show)
-        {
-            foreach (ScreenForm screen in this.openScreens.Values) screen.DrawTiles = show;
         }
 
         public void NewScreen()
@@ -84,6 +103,10 @@ namespace MegaMan_Level_Editor
                 screenform.MdiParent = parent;
                 screenform.SetScreen(Map.Screens[name]);
                 screenform.GotFocus += new EventHandler(screenform_GotFocus);
+
+                screenform.DrawBlock = this.drawBlock;
+                screenform.DrawGrid = this.drawGrid;
+                screenform.DrawTiles = this.drawTiles;
 
                 openScreens[name] = screenform;
             }

@@ -39,8 +39,7 @@ namespace MegaMan_Level_Editor
                 drawGrid = value;
                 showGridToolStripMenuItem.Checked = value;
 
-                foreach (MapDocument map in openMaps)
-                    map.SetGrid(value);
+                foreach (MapDocument map in openMaps) map.DrawGrid = value;
             }
         }
 
@@ -52,7 +51,7 @@ namespace MegaMan_Level_Editor
                 drawTiles = value;
                 showBackgroundsToolStripMenuItem.Checked = value;
 
-                foreach (MapDocument map in openMaps) map.SetTiles(value);
+                foreach (MapDocument map in openMaps) map.DrawTiles = value;
             }
         }
 
@@ -64,7 +63,7 @@ namespace MegaMan_Level_Editor
                 drawBlock = value;
                 showBlockingToolStripMenuItem.Checked = value;
 
-                foreach (MapDocument map in openMaps) map.SetBlock(value);
+                foreach (MapDocument map in openMaps) map.DrawBlock = value;
 
                 tileForm.DrawBlock = value;
             }
@@ -189,6 +188,11 @@ namespace MegaMan_Level_Editor
             }
 
             MapDocument map = new MapDocument(path, this);
+
+            map.DrawBlock = this.drawBlock;
+            map.DrawGrid = this.drawGrid;
+            map.DrawTiles = this.drawTiles;
+
             openMaps.Add(map);
             map.ReFocus();
         }
