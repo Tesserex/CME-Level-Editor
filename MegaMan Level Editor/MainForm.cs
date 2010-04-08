@@ -132,6 +132,7 @@ namespace MegaMan_Level_Editor
                 return;
             }
             File.WriteAllLines(recentPath, recentFiles.ToArray());
+            e.Cancel = false;
             base.OnClosing(e);
         }
 
