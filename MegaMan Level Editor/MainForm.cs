@@ -17,9 +17,8 @@ namespace MegaMan_Level_Editor
         #region Private Members
         private TileBoxForm tileForm;
         private BrowseForm browseForm;
-        private ScreenDict openScreens;
         private ScreenForm focusScreen;
-        private List<Map> openMaps;
+        private Dictionary<string, MapDocument> openMaps;
         private BrushForm brushForm;
 
         private bool drawGrid;
@@ -40,11 +39,8 @@ namespace MegaMan_Level_Editor
                 drawGrid = value;
                 showGridToolStripMenuItem.Checked = value;
 
-                foreach (Dictionary<string, ScreenForm> map in openScreens.Values)
-                    foreach (ScreenForm screen in map.Values)
-                    {
-                        screen.DrawGrid = value;
-                    }
+                foreach (MapDocument map in openMaps.Values)
+                    map.SetGrid(value);
             }
         }
 
@@ -56,11 +52,7 @@ namespace MegaMan_Level_Editor
                 drawTiles = value;
                 showBackgroundsToolStripMenuItem.Checked = value;
 
-                foreach (Dictionary<string, ScreenForm> map in openScreens.Values)
-                    foreach (ScreenForm screen in map.Values)
-                {
-                    screen.DrawTiles = value;
-                }
+                foreach (MapDocument map in openMaps.Values) map.SetTiles(value);
             }
         }
 
@@ -72,11 +64,7 @@ namespace MegaMan_Level_Editor
                 drawBlock = value;
                 showBlockingToolStripMenuItem.Checked = value;
 
-                foreach (Dictionary<string, ScreenForm> map in openScreens.Values)
-                    foreach (ScreenForm screen in map.Values)
-                {
-                    screen.DrawBlock = value;
-                }
+                foreach (MapDocument map in openMaps.Values) map.SetBlock(value);
 
                 tileForm.DrawBlock = value;
             }
@@ -92,8 +80,7 @@ namespace MegaMan_Level_Editor
             InitializeComponent();
             Instance = this;
 
-            openMaps = new List<Map>();
-            openScreens = new ScreenDict();
+            openMaps = new Dictionary<string, MapDocument>();
 
             tileForm = new TileBoxForm();
             tileForm.Show();
@@ -115,9 +102,14 @@ namespace MegaMan_Level_Editor
             DrawTiles = true;
             DrawBlock = false;
 
-            Application.ApplicationExit += new EventHandler(Application_ApplicationExit);
-
             LoadRecentFiles();
+        }
+
+        public void FocusScreen(ScreenForm screen)
+        {
+            focusScreen = screen;
+            if (tileForm != null) tileForm.Tileset = focusScreen.Map.Tileset;
+            if (brushForm != null) brushForm.ChangeTileset(focusScreen.Map.Tileset);
         }
 
         void brushForm_BrushChanged(BrushChangedEventArgs e)
@@ -132,10 +124,15 @@ namespace MegaMan_Level_Editor
             if (BrushChanged != null) BrushChanged(args);
         }
 
-        void Application_ApplicationExit(object sender, EventArgs e)
+        protected override void OnClosing(CancelEventArgs e)
         {
-            CheckSaveOnClose();
+            if (!CheckSaveOnClose())
+            {
+                e.Cancel = true;
+                return;
+            }
             File.WriteAllLines(recentPath, recentFiles.ToArray());
+            base.OnClosing(e);
         }
 
         #region Private Methods
@@ -180,44 +177,17 @@ namespace MegaMan_Level_Editor
 
         private void OpenMap(string path)
         {
-            if (openScreens.ContainsKey(path))
+            if (openMaps.ContainsKey(path))
             {
-                openScreens[path].First().Value.Focus();
-                return;
+                // only focus it if it's not already focused
+                if (focusScreen.Map != openMaps[path].Map) openMaps[path].ReFocus();
             }
-
-            Map map = new Map(path);
-
-            openMaps.Add(map);
-            openScreens[path] = new Dictionary<string, ScreenForm>();
-
-            KeyValuePair<string, MegaMan.Screen> pair = map.Screens.First();
-
-            ScreenForm screenform = new ScreenForm();
-            screenform.MdiParent = this;
-            screenform.SetScreen(map, pair.Value);
-            screenform.GotFocus += new EventHandler(screenform_GotFocus);
-            screenform.Show();
-
-            AddRecentFile(path);
-
-            openScreens[path][pair.Value.Name] = screenform;
-
-            tileForm.Tileset = map.Tileset;
-            brushForm.ChangeTileset(map.Tileset);
-        }
-
-        void screenform_GotFocus(object sender, EventArgs e)
-        {
-            focusScreen = (ScreenForm)sender;
-            if (tileForm != null) tileForm.Tileset = focusScreen.Map.Tileset;
-            if (brushForm != null) brushForm.ChangeTileset(focusScreen.Map.Tileset);
-        }
-
-        void mapform_FormClosed(object sender, FormClosedEventArgs e)
-        {
-            ScreenForm form = sender as ScreenForm;
-            CloseScreen(form);
+            else
+            {
+                MapDocument map = new MapDocument(path, this);
+                openMaps.Add(path, map);
+                map.ReFocus();
+            }
         }
         #endregion Private Methods
         
@@ -235,39 +205,30 @@ namespace MegaMan_Level_Editor
 
         private bool CheckSaveOnClose()
         {
-            foreach (Map map in openMaps)
+            foreach (MapDocument map in openMaps.Values)
             {
-                if (map.Dirty)
-                {
-                    DialogResult result = MessageBox.Show("Do you want to save changes to " + map.Name + " before closing?", "Save Changes", MessageBoxButtons.YesNoCancel);
-                    if (result == DialogResult.Yes) map.Save();
-                    else if (result == DialogResult.No) continue;
-                    else return false;
-                }
+                if (!CloseMap(map)) return false;
             }
             return true;
         }
 
-        private void CloseMap(Map map)
+        private bool CloseMap(MapDocument map)
         {
-            if (map.Dirty)
+            if (map.Map.Dirty)
             {
-                DialogResult result = MessageBox.Show("Do you want to save changes to " + map.Name + " before closing?", "Save Changes", MessageBoxButtons.YesNoCancel);
-                if (result == DialogResult.Yes) map.Save();
-                else if (result == DialogResult.Cancel) return;
+                DialogResult result = MessageBox.Show("Do you want to save changes to " + map.Map.Name + " before closing?", "Save Changes", MessageBoxButtons.YesNoCancel);
+                if (result == DialogResult.Yes) map.Map.Save();
+                else if (result == DialogResult.Cancel) return false;
             }
 
             // if the tile form is showing this map's tileset, remove it from the form
-            if (focusScreen.Map == map)
+            if (focusScreen.Map == map.Map)
             {
                 tileForm.Tileset = null;
             }
 
-            foreach (ScreenForm screen in openScreens[map.FileDir].Values)
-                CloseScreen(screen);
-
-            openMaps.Remove(map);
-            openScreens.Remove(UniqueName(map));
+            map.CloseAll();
+            return true;
         }
 
         private void quitToolStripMenuItem_Click(object sender, EventArgs e)
@@ -310,7 +271,7 @@ namespace MegaMan_Level_Editor
         {
             if (focusScreen == null) return;
 
-            CloseMap(focusScreen.Map);
+            CloseMap(openMaps[focusScreen.Map.FileDir]);
         }
 
         private void undoToolStripMenuItem_Click(object sender, EventArgs e)
@@ -329,16 +290,15 @@ namespace MegaMan_Level_Editor
             untitledCount++;
             map.Name = "Untitled" + untitledCount.ToString();
 
-            openMaps.Add(map);
-            openScreens[map.Name] = new Dictionary<string, ScreenForm>();
-
             LevelProp propForm = new LevelProp();
             propForm.LoadMap(map);
             propForm.Text = "New Level Properties";
             propForm.Show();
 
             propForm.OkPressed += () => {
-                AddScreen(map);
+                MapDocument document = new MapDocument(map, this);
+                document.NewScreen();
+                openMaps.Add(map.Name, document);
             };
         }
 
@@ -357,36 +317,7 @@ namespace MegaMan_Level_Editor
 
         void browseForm_ScreenChanged(Map map, string screenId)
         {
-            ShowScreen(map, screenId);
-        }
-
-        private void ShowScreen(Map map, string name)
-        {
-            if (openScreens[UniqueName(map)].ContainsKey(name))
-            {
-                openScreens[UniqueName(map)][name].Show();
-                openScreens[UniqueName(map)][name].Focus();
-            }
-            else
-            {
-                ScreenForm screenform = new ScreenForm();
-                screenform.MdiParent = this;
-                screenform.SetScreen(map, map.Screens[name]);
-                screenform.Text = map.Name + " - " + name;
-                screenform.GotFocus += new EventHandler(screenform_GotFocus);
-                screenform.Show();
-
-                openScreens[UniqueName(map)][name] = screenform;
-            }
-        }
-
-        private void CloseScreen(ScreenForm screenform)
-        {
-            screenform.GotFocus -= new EventHandler(screenform_GotFocus);
-            screenform.Close();
-
-            openScreens[screenform.Map.Name].Remove(screenform.Name);
-            screenform.Dispose();
+            
         }
 
         private void SaveAs()
@@ -396,12 +327,7 @@ namespace MegaMan_Level_Editor
             if (result == DialogResult.OK)
             {
                 string path = folderDialog.SelectedPath;
-
-                string oldkey = UniqueName(focusScreen.Map);
                 focusScreen.Map.Save(path);
-                Dictionary<string, ScreenForm> screens = openScreens[oldkey];
-                openScreens.Remove(oldkey);
-                openScreens[UniqueName(focusScreen.Map)] = screens;
             }
         }
 
@@ -430,36 +356,7 @@ namespace MegaMan_Level_Editor
 
         private void addScreenToolStripMenuItem1_Click(object sender, EventArgs e)
         {
-            AddScreen(focusScreen.Map);
-        }
-
-        private void AddScreen(Map map)
-        {
-            MegaMan.Screen screen = new MegaMan.Screen(16, 14, map.Tileset);
-            ScreenProp propForm = new ScreenProp();
-            propForm.LoadScreen(screen);
-            propForm.Show();
-
-            propForm.FormClosing += (s, ev) =>
-            {
-                if (!propForm.Confirmed) return;
-
-                if (screen.Name == null)
-                {
-                    MessageBox.Show("You must give the screen a name.", "Add Screen Error", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                    return;
-                }
-                map.Screens.Add(screen.Name, screen);
-
-                ScreenForm screenform = new ScreenForm();
-                screenform.MdiParent = this;
-                screenform.SetScreen(map, screen);
-                screenform.Text = map.Name + " - " + screen.Name;
-                screenform.GotFocus += new EventHandler(screenform_GotFocus);
-                screenform.Show();
-
-                openScreens[UniqueName(map)][screen.Name] = screenform;
-            };
+            openMaps[focusScreen.Map.Name].NewScreen();
         }
 
         private void tilesetToolStripMenuItem_Click(object sender, EventArgs e)

@@ -35,7 +35,7 @@ namespace MegaMan_Level_Editor
         private Pen highlightPen = new Pen(Color.Green, 2);
 
         #region Properties
-        public Map Map { get; private set; }
+        public Map Map { get { return myScreen.Map; } }
 
         public string Path { get; private set; }
 
@@ -111,13 +111,12 @@ namespace MegaMan_Level_Editor
             if (this.Map.Dirty) this.Text += " *";
         }
 
-        public void SetScreen(Map map, MegaMan.Screen screen)
+        public void SetScreen(MegaMan.Screen screen)
         {
-            Map = map;
             myScreen = screen;
 
             SetText();
-            map.DirtyChanged += (b) => SetText();
+            this.Map.DirtyChanged += (b) => SetText();
 
             InitLayer(ref masterImage);
             InitLayer(ref tileLayer);
