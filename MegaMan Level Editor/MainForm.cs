@@ -310,6 +310,7 @@ namespace MegaMan_Level_Editor
             if (browseForm == null)
             {
                 browseForm = new BrowseForm();
+                browseForm.FormClosed += (s, ev) => { browseForm = null; };
             }
             browseForm.SetMap(activeMap); // forces a refresh of screens
             browseForm.Focus();
