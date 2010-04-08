@@ -12,6 +12,7 @@ namespace MegaMan_Level_Editor
 {
     public partial class BrowseForm : Form
     {
+        private MapDocument document;
         private Map map;
         private Bitmap screenImage;
         private Bitmap mainImage;
@@ -22,16 +23,15 @@ namespace MegaMan_Level_Editor
 
         private Pen hotPen = new Pen(Brushes.Green, 3);
 
-        public event Action<Map, string> ScreenSelected;
-
         public BrowseForm()
         {
             InitializeComponent();
         }
 
-        public void SetMap(Map map)
+        public void SetMap(MapDocument mapdoc)
         {
-            this.map = map;
+            this.document = mapdoc;
+            this.map = mapdoc.Map;
             float width = 0, height = 0;
             foreach (MegaMan.Screen screen in map.Screens.Values)
             {
@@ -98,8 +98,8 @@ namespace MegaMan_Level_Editor
 
         private void screensBox_Click(object sender, EventArgs e)
         {
-            if (ScreenSelected != null) ScreenSelected(map, hotId);
-            this.Hide();
+            document.ShowScreen(hotId);
+            this.Close();
         }
     }
 }

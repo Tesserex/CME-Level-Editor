@@ -310,17 +310,10 @@ namespace MegaMan_Level_Editor
             if (browseForm == null)
             {
                 browseForm = new BrowseForm();
-                //browseForm.MdiParent = this;
-                browseForm.ScreenSelected += new Action<Map, string>(browseForm_ScreenChanged);
             }
-            browseForm.SetMap(activeMap.Map); // forces a refresh of screens
+            browseForm.SetMap(activeMap); // forces a refresh of screens
             browseForm.Focus();
             browseForm.Show();
-        }
-
-        void browseForm_ScreenChanged(Map map, string screenId)
-        {
-            
         }
 
         private void SaveAs()
