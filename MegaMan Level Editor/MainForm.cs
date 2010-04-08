@@ -354,12 +354,14 @@ namespace MegaMan_Level_Editor
         {
             if (tileForm.Visible) tileForm.Hide();
             else tileForm.Show();
+            tilesetToolStripMenuItem.Checked = tileForm.Visible;
         }
 
         private void brushesToolStripMenuItem_Click(object sender, EventArgs e)
         {
             if (brushForm.Visible) brushForm.Hide();
             else brushForm.Show();
+            brushesToolStripMenuItem.Checked = brushForm.Visible;
         }
 
         private void animateToolStripMenuItem_Click(object sender, EventArgs e)

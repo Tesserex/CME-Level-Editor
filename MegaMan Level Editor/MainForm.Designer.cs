@@ -58,6 +58,7 @@
             this.screensMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.addScreenToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.browseToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.manageJoinsMenu = new System.Windows.Forms.ToolStripMenuItem();
             this.propertiesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.screenToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItem2 = new System.Windows.Forms.ToolStripMenuItem();
@@ -73,7 +74,6 @@
             this.tilesetToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.brushesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.folderDialog = new System.Windows.Forms.FolderBrowserDialog();
-            this.manageJoinsMenu = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -106,7 +106,7 @@
             this.quitToolStripMenuItem});
             this.fileToolStripMenuItem.Name = "fileToolStripMenuItem";
             this.fileToolStripMenuItem.Size = new System.Drawing.Size(37, 20);
-            this.fileToolStripMenuItem.Text = "File";
+            this.fileToolStripMenuItem.Text = "&File";
             // 
             // newToolStripMenuItem
             // 
@@ -186,7 +186,7 @@
             this.newBrushToolStripMenuItem});
             this.editToolStripMenuItem.Name = "editToolStripMenuItem";
             this.editToolStripMenuItem.Size = new System.Drawing.Size(39, 20);
-            this.editToolStripMenuItem.Text = "Edit";
+            this.editToolStripMenuItem.Text = "&Edit";
             // 
             // undoToolStripMenuItem
             // 
@@ -252,7 +252,7 @@
             this.animateToolStripMenuItem});
             this.viewToolStripMenuItem.Name = "viewToolStripMenuItem";
             this.viewToolStripMenuItem.Size = new System.Drawing.Size(44, 20);
-            this.viewToolStripMenuItem.Text = "View";
+            this.viewToolStripMenuItem.Text = "&View";
             // 
             // showBackgroundsToolStripMenuItem
             // 
@@ -292,6 +292,7 @@
             // animateToolStripMenuItem
             // 
             this.animateToolStripMenuItem.Name = "animateToolStripMenuItem";
+            this.animateToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.A)));
             this.animateToolStripMenuItem.Size = new System.Drawing.Size(159, 22);
             this.animateToolStripMenuItem.Text = "Animate";
             this.animateToolStripMenuItem.Click += new System.EventHandler(this.animateToolStripMenuItem_Click);
@@ -304,7 +305,7 @@
             this.propertiesToolStripMenuItem});
             this.levelToolStripMenuItem.Name = "levelToolStripMenuItem";
             this.levelToolStripMenuItem.Size = new System.Drawing.Size(44, 20);
-            this.levelToolStripMenuItem.Text = "Level";
+            this.levelToolStripMenuItem.Text = "&Level";
             // 
             // screensMenuItem
             // 
@@ -319,7 +320,7 @@
             // 
             this.addScreenToolStripMenuItem1.Name = "addScreenToolStripMenuItem1";
             this.addScreenToolStripMenuItem1.ShortcutKeys = System.Windows.Forms.Keys.F4;
-            this.addScreenToolStripMenuItem1.Size = new System.Drawing.Size(152, 22);
+            this.addScreenToolStripMenuItem1.Size = new System.Drawing.Size(151, 22);
             this.addScreenToolStripMenuItem1.Text = "Add Screen";
             this.addScreenToolStripMenuItem1.Click += new System.EventHandler(this.addScreenToolStripMenuItem1_Click);
             // 
@@ -327,9 +328,16 @@
             // 
             this.browseToolStripMenuItem.Name = "browseToolStripMenuItem";
             this.browseToolStripMenuItem.ShortcutKeys = System.Windows.Forms.Keys.F5;
-            this.browseToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.browseToolStripMenuItem.Size = new System.Drawing.Size(151, 22);
             this.browseToolStripMenuItem.Text = "Browse";
             this.browseToolStripMenuItem.Click += new System.EventHandler(this.browseToolStripMenuItem_Click);
+            // 
+            // manageJoinsMenu
+            // 
+            this.manageJoinsMenu.Name = "manageJoinsMenu";
+            this.manageJoinsMenu.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.J)));
+            this.manageJoinsMenu.Size = new System.Drawing.Size(182, 22);
+            this.manageJoinsMenu.Text = "Manage Joins";
             // 
             // propertiesToolStripMenuItem
             // 
@@ -350,7 +358,7 @@
             this.clearScreenToolStripMenuItem});
             this.screenToolStripMenuItem.Name = "screenToolStripMenuItem";
             this.screenToolStripMenuItem.Size = new System.Drawing.Size(53, 20);
-            this.screenToolStripMenuItem.Text = "Screen";
+            this.screenToolStripMenuItem.Text = "&Screen";
             // 
             // toolStripMenuItem2
             // 
@@ -421,7 +429,7 @@
             this.brushesToolStripMenuItem});
             this.windowsToolStripMenuItem.Name = "windowsToolStripMenuItem";
             this.windowsToolStripMenuItem.Size = new System.Drawing.Size(68, 20);
-            this.windowsToolStripMenuItem.Text = "Windows";
+            this.windowsToolStripMenuItem.Text = "&Windows";
             // 
             // tilesetToolStripMenuItem
             // 
@@ -436,13 +444,6 @@
             this.brushesToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.brushesToolStripMenuItem.Text = "Brushes";
             this.brushesToolStripMenuItem.Click += new System.EventHandler(this.brushesToolStripMenuItem_Click);
-            // 
-            // manageJoinsMenu
-            // 
-            this.manageJoinsMenu.Name = "manageJoinsMenu";
-            this.manageJoinsMenu.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.J)));
-            this.manageJoinsMenu.Size = new System.Drawing.Size(182, 22);
-            this.manageJoinsMenu.Text = "Manage Joins";
             // 
             // MainForm
             // 
