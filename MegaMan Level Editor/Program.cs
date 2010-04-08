@@ -22,7 +22,6 @@ namespace MegaMan_Level_Editor
             timer = new Timer();
             timer.Interval = (int)(1000 / Const.FPS);
             timer.Tick += new EventHandler(timer_Tick);
-            timer.Start();
 
             Application.Run(new MainForm());
         }
