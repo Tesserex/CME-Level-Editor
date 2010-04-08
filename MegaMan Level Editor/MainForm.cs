@@ -17,7 +17,7 @@ namespace MegaMan_Level_Editor
         #region Private Members
         private TileBoxForm tileForm;
         private BrowseForm browseForm;
-        private ScreenForm focusScreen;
+        private MapDocument activeMap;
         private Dictionary<string, MapDocument> openMaps;
         private BrushForm brushForm;
 
@@ -105,11 +105,11 @@ namespace MegaMan_Level_Editor
             LoadRecentFiles();
         }
 
-        public void FocusScreen(ScreenForm screen)
+        public void FocusScreen(MapDocument map)
         {
-            focusScreen = screen;
-            if (tileForm != null) tileForm.Tileset = focusScreen.Map.Tileset;
-            if (brushForm != null) brushForm.ChangeTileset(focusScreen.Map.Tileset);
+            activeMap = map;
+            if (tileForm != null) tileForm.Tileset = activeMap.Map.Tileset;
+            if (brushForm != null) brushForm.ChangeTileset(activeMap.Map.Tileset);
         }
 
         void brushForm_BrushChanged(BrushChangedEventArgs e)
@@ -180,7 +180,7 @@ namespace MegaMan_Level_Editor
             if (openMaps.ContainsKey(path))
             {
                 // only focus it if it's not already focused
-                if (focusScreen.Map != openMaps[path].Map) openMaps[path].ReFocus();
+                if (activeMap.Map != openMaps[path].Map) openMaps[path].ReFocus();
             }
             else
             {
@@ -222,7 +222,7 @@ namespace MegaMan_Level_Editor
             }
 
             // if the tile form is showing this map's tileset, remove it from the form
-            if (focusScreen.Map == map.Map)
+            if (activeMap == map)
             {
                 tileForm.Tileset = null;
             }
@@ -260,18 +260,18 @@ namespace MegaMan_Level_Editor
 
         private void saveToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            if (focusScreen != null && focusScreen.Map.Loaded)
+            if (activeMap != null && activeMap.Map.Loaded)
             {
-                if (focusScreen.Map.FileDir != null) focusScreen.Map.Save();
+                if (activeMap.Map.FileDir != null) activeMap.Map.Save();
                 else SaveAs();
             }
         }
 
         private void closeToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            if (focusScreen == null) return;
+            if (activeMap == null) return;
 
-            CloseMap(openMaps[focusScreen.Map.FileDir]);
+            CloseMap(openMaps[activeMap.Map.FileDir]);
         }
 
         private void undoToolStripMenuItem_Click(object sender, EventArgs e)
@@ -310,7 +310,7 @@ namespace MegaMan_Level_Editor
                 //browseForm.MdiParent = this;
                 browseForm.ScreenSelected += new Action<Map, string>(browseForm_ScreenChanged);
             }
-            browseForm.SetMap(focusScreen.Map); // forces a refresh of screens
+            browseForm.SetMap(activeMap.Map); // forces a refresh of screens
             browseForm.Focus();
             browseForm.Show();
         }
@@ -322,12 +322,12 @@ namespace MegaMan_Level_Editor
 
         private void SaveAs()
         {
-            if (focusScreen == null) return;
+            if (activeMap == null) return;
             DialogResult result = folderDialog.ShowDialog();
             if (result == DialogResult.OK)
             {
                 string path = folderDialog.SelectedPath;
-                focusScreen.Map.Save(path);
+                activeMap.Map.Save(path);
             }
         }
 
@@ -345,18 +345,18 @@ namespace MegaMan_Level_Editor
 
         private void propertiesToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            if (focusScreen == null) return;
+            if (activeMap == null) return;
 
             LevelProp propForm = new LevelProp();
-            propForm.LoadMap(focusScreen.Map);
-            propForm.Text = focusScreen.Map.Name + " Properties";
+            propForm.LoadMap(activeMap.Map);
+            propForm.Text = activeMap.Map.Name + " Properties";
 
             propForm.Show();
         }
 
         private void addScreenToolStripMenuItem1_Click(object sender, EventArgs e)
         {
-            openMaps[focusScreen.Map.Name].NewScreen();
+            openMaps[activeMap.Map.Name].NewScreen();
         }
 
         private void tilesetToolStripMenuItem_Click(object sender, EventArgs e)
