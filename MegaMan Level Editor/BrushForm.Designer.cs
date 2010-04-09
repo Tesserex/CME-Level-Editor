@@ -60,7 +60,6 @@
             this.Name = "BrushForm";
             this.ShowInTaskbar = false;
             this.Text = "Brushes";
-            this.TopMost = true;
             this.ResumeLayout(false);
 
         }

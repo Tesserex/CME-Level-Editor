@@ -72,7 +72,6 @@
             this.SizeGripStyle = System.Windows.Forms.SizeGripStyle.Show;
             this.StartPosition = System.Windows.Forms.FormStartPosition.Manual;
             this.Text = "Tileset";
-            this.TopMost = true;
             this.MouseClick += new System.Windows.Forms.MouseEventHandler(this.tilesetImage_MouseClick);
             ((System.ComponentModel.ISupportInitialize)(this.tilesetImage)).EndInit();
             this.tilePanel.ResumeLayout(false);
