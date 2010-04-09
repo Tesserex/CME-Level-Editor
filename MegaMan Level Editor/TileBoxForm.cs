@@ -62,15 +62,13 @@ namespace MegaMan_Level_Editor
         {
             InitializeComponent();
 
-            Program.FrameTick += new Action(ReDraw);
+            Program.FrameTick += new Action(TickSprites);
             tilesetImage.MouseClick += new MouseEventHandler(tilesetImage_MouseClick);
         }
 
         #region Private Methods
-        private void ReDraw()
+        private void TickSprites()
         {
-            if (image == null) return;
-
             if (tileset != null)
             {
                 foreach (Tile tile in tileset)
@@ -78,6 +76,16 @@ namespace MegaMan_Level_Editor
                     tile.Sprite.Update();
                 }
 
+                ReDraw();
+            }
+        }
+
+        private void ReDraw()
+        {
+            if (image == null) return;
+
+            if (tileset != null)
+            {
                 using (Graphics g = Graphics.FromImage(image))
                 {
                     for (int i = 0, x = 0; i < tileset.Count; i++, x += tileset.TileSize)
