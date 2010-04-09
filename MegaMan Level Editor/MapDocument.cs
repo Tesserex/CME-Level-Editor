@@ -48,6 +48,8 @@ namespace MegaMan_Level_Editor
             }
         }
 
+        public event Action<MapDocument> Closed;
+
         public MapDocument(Map map, MainForm parent)
         {
             this.parent = parent;
@@ -66,11 +68,6 @@ namespace MegaMan_Level_Editor
         public void ReFocus()
         {
             ShowScreen(Map.Screens.First().Key);
-        }
-
-        public void CloseAll()
-        {
-            foreach (ScreenForm screen in this.openScreens.Values) CloseScreen(screen);
         }
 
         public void NewScreen()
@@ -103,6 +100,7 @@ namespace MegaMan_Level_Editor
                 screenform.MdiParent = parent;
                 screenform.SetScreen(Map.Screens[name]);
                 screenform.GotFocus += new EventHandler(screenform_GotFocus);
+                screenform.FormClosing += new FormClosingEventHandler(screenform_FormClosing);
 
                 screenform.DrawBlock = this.drawBlock;
                 screenform.DrawGrid = this.drawGrid;
@@ -115,12 +113,53 @@ namespace MegaMan_Level_Editor
             openScreens[name].Focus();
         }
 
+        public void Close()
+        {
+            if (Map.Dirty)
+            {
+                DialogResult result = MessageBox.Show("Do you want to save changes to " + Map.Name + " before closing?", "Save Changes", MessageBoxButtons.YesNoCancel);
+                if (result == DialogResult.Yes) Map.Save();
+                else if (result == DialogResult.Cancel) return;
+            }
+
+            CloseAll();
+            if (Closed != null) Closed(this);
+        }
+
+        public bool ConfirmSave()
+        {
+            if (Map.Dirty)
+            {
+                DialogResult result = MessageBox.Show("Do you want to save changes to " + Map.Name + " before closing?", "Save Changes", MessageBoxButtons.YesNoCancel);
+                if (result == DialogResult.Yes) Map.Save();
+                else if (result == DialogResult.Cancel) return false;
+            }
+            return true;
+        }
+
+        private void CloseAll()
+        {
+            foreach (ScreenForm screen in this.openScreens.Values)
+            {
+                screen.FormClosing -= screenform_FormClosing;
+                CloseScreen(screen);
+            }
+        }
+
+        void screenform_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            // closing all screens means we should close completely
+            if (openScreens.Count == 1) // this is the last one
+            {
+                e.Cancel = (!ConfirmSave());
+                if (!e.Cancel && Closed != null) Closed(this);
+            }
+        }
+
         private void CloseScreen(ScreenForm screenform)
         {
             screenform.GotFocus -= new EventHandler(screenform_GotFocus);
             screenform.Close();
-
-            screenform.Dispose();
         }
 
         private void screenform_GotFocus(object sender, EventArgs e)

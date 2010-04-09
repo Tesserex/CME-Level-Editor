@@ -193,8 +193,20 @@ namespace MegaMan_Level_Editor
             map.DrawGrid = this.drawGrid;
             map.DrawTiles = this.drawTiles;
 
+            map.Closed += new Action<MapDocument>(map_Closed);
             openMaps.Add(map);
             map.ReFocus();
+        }
+
+        private void map_Closed(MapDocument mapdoc)
+        {
+            openMaps.Remove(mapdoc);
+
+            // if the tile form is showing this map's tileset, remove it from the form
+            if (activeMap == mapdoc)
+            {
+                tileForm.Tileset = null;
+            }
         }
         #endregion Private Methods
         
@@ -214,27 +226,8 @@ namespace MegaMan_Level_Editor
         {
             foreach (MapDocument map in openMaps)
             {
-                if (!CloseMap(map)) return false;
+                if (!map.ConfirmSave()) return false;
             }
-            return true;
-        }
-
-        private bool CloseMap(MapDocument map)
-        {
-            if (map.Map.Dirty)
-            {
-                DialogResult result = MessageBox.Show("Do you want to save changes to " + map.Map.Name + " before closing?", "Save Changes", MessageBoxButtons.YesNoCancel);
-                if (result == DialogResult.Yes) map.Map.Save();
-                else if (result == DialogResult.Cancel) return false;
-            }
-
-            // if the tile form is showing this map's tileset, remove it from the form
-            if (activeMap == map)
-            {
-                tileForm.Tileset = null;
-            }
-
-            map.CloseAll();
             return true;
         }
 
@@ -278,7 +271,7 @@ namespace MegaMan_Level_Editor
         {
             if (activeMap == null) return;
 
-            CloseMap(activeMap);
+            activeMap.Close();
         }
 
         private void undoToolStripMenuItem_Click(object sender, EventArgs e)
