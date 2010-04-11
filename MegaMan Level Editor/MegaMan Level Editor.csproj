@@ -156,6 +156,9 @@
       <DependentUpon>TileBoxForm.cs</DependentUpon>
     </Compile>
     <Compile Include="TileBrush.cs" />
+    <Compile Include="TileButton.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="UndoRedo.cs" />
   </ItemGroup>
   <ItemGroup>

@@ -55,7 +55,6 @@
             this.propertiesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.screenToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItem2 = new System.Windows.Forms.ToolStripMenuItem();
-            this.addEnemyToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.manageEnemiesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.clearEnemiesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator3 = new System.Windows.Forms.ToolStripSeparator();
@@ -74,6 +73,7 @@
             this.redoToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.copyToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.pasteToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.addEnemyToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -316,14 +316,6 @@
             this.toolStripMenuItem2.Size = new System.Drawing.Size(219, 22);
             this.toolStripMenuItem2.Text = "Entities";
             // 
-            // addEnemyToolStripMenuItem
-            // 
-            this.addEnemyToolStripMenuItem.Image = global::MegaMan_Level_Editor.Properties.Resources.AddEntity;
-            this.addEnemyToolStripMenuItem.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
-            this.addEnemyToolStripMenuItem.Name = "addEnemyToolStripMenuItem";
-            this.addEnemyToolStripMenuItem.Size = new System.Drawing.Size(159, 22);
-            this.addEnemyToolStripMenuItem.Text = "Add Entity";
-            // 
             // manageEnemiesToolStripMenuItem
             // 
             this.manageEnemiesToolStripMenuItem.Name = "manageEnemiesToolStripMenuItem";
@@ -382,14 +374,14 @@
             // tilesetToolStripMenuItem
             // 
             this.tilesetToolStripMenuItem.Name = "tilesetToolStripMenuItem";
-            this.tilesetToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.tilesetToolStripMenuItem.Size = new System.Drawing.Size(115, 22);
             this.tilesetToolStripMenuItem.Text = "Tileset";
             this.tilesetToolStripMenuItem.Click += new System.EventHandler(this.tilesetToolStripMenuItem_Click);
             // 
             // brushesToolStripMenuItem
             // 
             this.brushesToolStripMenuItem.Name = "brushesToolStripMenuItem";
-            this.brushesToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.brushesToolStripMenuItem.Size = new System.Drawing.Size(115, 22);
             this.brushesToolStripMenuItem.Text = "Brushes";
             this.brushesToolStripMenuItem.Click += new System.EventHandler(this.brushesToolStripMenuItem_Click);
             // 
@@ -453,6 +445,14 @@
             this.pasteToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.V)));
             this.pasteToolStripMenuItem.Size = new System.Drawing.Size(246, 22);
             this.pasteToolStripMenuItem.Text = "Paste";
+            // 
+            // addEnemyToolStripMenuItem
+            // 
+            this.addEnemyToolStripMenuItem.Image = global::MegaMan_Level_Editor.Properties.Resources.AddEntity;
+            this.addEnemyToolStripMenuItem.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
+            this.addEnemyToolStripMenuItem.Name = "addEnemyToolStripMenuItem";
+            this.addEnemyToolStripMenuItem.Size = new System.Drawing.Size(159, 22);
+            this.addEnemyToolStripMenuItem.Text = "Add Entity";
             // 
             // MainForm
             // 

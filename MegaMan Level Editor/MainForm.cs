@@ -196,6 +196,9 @@ namespace MegaMan_Level_Editor
             map.Closed += new Action<MapDocument>(map_Closed);
             openMaps.Add(map);
             map.ReFocus();
+
+            // place tiles in bar
+            
         }
 
         private void map_Closed(MapDocument mapdoc)
