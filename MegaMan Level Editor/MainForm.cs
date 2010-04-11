@@ -209,6 +209,7 @@ namespace MegaMan_Level_Editor
             if (activeMap == mapdoc)
             {
                 tileForm.Tileset = null;
+                activeMap == null;
             }
         }
         #endregion Private Methods
