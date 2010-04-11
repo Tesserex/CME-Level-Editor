@@ -82,8 +82,6 @@ namespace MegaMan_Level_Editor
             screenImage.MouseDown += new System.Windows.Forms.MouseEventHandler(screenImage_MouseDown);
             screenImage.MouseUp += new MouseEventHandler(screenImage_MouseUp);
 
-            this.FormClosing += new FormClosingEventHandler(MapForm_FormClosing);
-
             Program.FrameTick += new Action(Program_FrameTick);
 
             MainForm.Instance.BrushChanged += new BrushChangedHandler(parent_BrushChanged);
@@ -98,11 +96,6 @@ namespace MegaMan_Level_Editor
         {
             ReDrawTiles();
             ReDrawMaster();
-        }
-
-        private void MapForm_FormClosing(object sender, FormClosingEventArgs e)
-        {
-            
         }
 
         private void SetText()
