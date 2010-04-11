@@ -152,6 +152,7 @@ namespace MegaMan_Level_Editor
             if (openScreens.Count == 1) // this is the last one
             {
                 e.Cancel = (!ConfirmSave());
+                if (!e.Cancel) (sender as ScreenForm).Dispose();
                 if (!e.Cancel && Closed != null) Closed(this);
             }
         }
