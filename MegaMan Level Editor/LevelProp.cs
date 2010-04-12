@@ -24,6 +24,7 @@ namespace MegaMan_Level_Editor
         public void LoadMap(Map map)
         {
             this.map = map;
+            nameField.Text = map.Name;
             tilesetField.Text = map.TilePath;
         }
 
