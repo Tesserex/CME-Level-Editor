@@ -15,6 +15,7 @@ namespace MegaMan_Level_Editor
         private Map map;
 
         public event Action OkPressed;
+        public event Action Saved;
 
         public LevelProp()
         {
@@ -55,6 +56,7 @@ namespace MegaMan_Level_Editor
             {
                 map.Name = nameField.Text;
                 map.ChangeTileset(tilesetField.Text);
+                if (Saved != null) Saved();
                 return true;
             }
             catch

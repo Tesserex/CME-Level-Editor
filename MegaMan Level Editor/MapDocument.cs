@@ -65,6 +65,11 @@ namespace MegaMan_Level_Editor
             openScreens = new Dictionary<string, ScreenForm>();
         }
 
+        public void RefreshInfo()
+        {
+            foreach (ScreenForm screen in this.openScreens.Values) screen.SetText();
+        }
+
         public void ReFocus()
         {
             ShowScreen(Map.Screens.First().Key);

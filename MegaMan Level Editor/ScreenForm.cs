@@ -98,7 +98,7 @@ namespace MegaMan_Level_Editor
             ReDrawMaster();
         }
 
-        private void SetText()
+        public void SetText()
         {
             this.Text = this.Map.Name + " - " + myScreen.Name;
             if (this.Map.Dirty) this.Text += " *";

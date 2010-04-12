@@ -353,9 +353,12 @@ namespace MegaMan_Level_Editor
         {
             if (ActiveMap == null) return;
 
+            MapDocument propDoc = ActiveMap;
             LevelProp propForm = new LevelProp();
-            propForm.LoadMap(ActiveMap.Map);
+            propForm.LoadMap(propDoc.Map);
             propForm.Text = ActiveMap.Map.Name + " Properties";
+
+            propForm.Saved += () => propDoc.RefreshInfo();
 
             propForm.Show();
         }
