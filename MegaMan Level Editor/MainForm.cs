@@ -102,6 +102,9 @@ namespace MegaMan_Level_Editor
             DrawBlock = false;
 
             LoadRecentFiles();
+
+            TilesetStrip tilestrip = new TilesetStrip();
+            this.Controls.Add(tilestrip);
         }
 
         public void FocusScreen(MapDocument map)

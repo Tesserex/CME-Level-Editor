@@ -8,8 +8,10 @@ using MegaMan;
 
 namespace MegaMan_Level_Editor
 {
-    public class TileButton : ToolStripLabel
+    public class TileButton : Label
     {
+        private static Pen highlightPen = new Pen(Color.Orange, 2);
+
         private Tile tile;
         private bool hover;
 
@@ -31,11 +33,13 @@ namespace MegaMan_Level_Editor
         void DisableHover(object sender, EventArgs e)
         {
             this.hover = false;
+            Invalidate();
         }
 
         private void EnableHover(object sender, EventArgs e)
         {
             this.hover = true;
+            Invalidate();
         }
 
         private void Program_FrameTick()
@@ -46,6 +50,7 @@ namespace MegaMan_Level_Editor
         protected override void OnPaint(PaintEventArgs e)
         {
             tile.Draw(e.Graphics, 0, 0);
+            if (hover) e.Graphics.DrawRectangle(highlightPen, this.Bounds);
             base.OnPaint(e);
         }
     }

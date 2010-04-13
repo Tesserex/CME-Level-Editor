@@ -159,6 +159,9 @@
     <Compile Include="TileButton.cs">
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="TilesetStrip.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="UndoRedo.cs" />
   </ItemGroup>
   <ItemGroup>
