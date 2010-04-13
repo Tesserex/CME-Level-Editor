@@ -54,6 +54,8 @@ namespace MegaMan_Level_Editor
         {
             this.parent = parent;
             this.Map = map;
+
+            openScreens = new Dictionary<string, ScreenForm>();
         }
 
         public MapDocument(string path, MainForm parent)
@@ -77,7 +79,7 @@ namespace MegaMan_Level_Editor
 
         public void NewScreen()
         {
-            MegaMan.Screen screen = new MegaMan.Screen(16, 14, Map.Tileset);
+            MegaMan.Screen screen = new MegaMan.Screen(16, 14, Map);
             ScreenProp propForm = new ScreenProp();
             propForm.LoadScreen(screen);
             propForm.Show();
