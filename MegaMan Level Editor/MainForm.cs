@@ -28,6 +28,8 @@ namespace MegaMan_Level_Editor
         private string recentPath = Application.StartupPath + "\\recent.ini";
         private List<string> recentFiles = new List<string>(10);
         private int untitledCount = 0;
+
+        TilesetStrip tilestrip;
         #endregion Private Members
 
         #region Properties
@@ -77,6 +79,10 @@ namespace MegaMan_Level_Editor
         public MainForm()
         {
             InitializeComponent();
+            tilestrip = new TilesetStrip();
+            this.Controls.Add(tilestrip);
+            tilestrip.BringToFront();
+
             Instance = this;
 
             openMaps = new List<MapDocument>();
@@ -102,19 +108,23 @@ namespace MegaMan_Level_Editor
             DrawBlock = false;
 
             LoadRecentFiles();
-
-            TilesetStrip tilestrip = new TilesetStrip();
-            this.Controls.Add(tilestrip);
         }
 
         public void FocusScreen(MapDocument map)
         {
             activeMap = map;
-            if (tileForm != null) tileForm.Tileset = activeMap.Map.Tileset;
-            if (brushForm != null) brushForm.ChangeTileset(activeMap.Map.Tileset);
+            ChangeTileset(map.Map.Tileset);
         }
 
-        void brushForm_BrushChanged(BrushChangedEventArgs e)
+        private void ChangeTileset(Tileset tileset)
+        {
+            if (tileForm != null) tileForm.Tileset = activeMap.Map.Tileset;
+            if (brushForm != null) brushForm.ChangeTileset(activeMap.Map.Tileset);
+
+            tilestrip.ChangeTileset(tileset);
+        }
+
+        private void brushForm_BrushChanged(BrushChangedEventArgs e)
         {
             if (BrushChanged != null) BrushChanged(e);
         }

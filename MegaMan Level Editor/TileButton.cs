@@ -8,7 +8,7 @@ using MegaMan;
 
 namespace MegaMan_Level_Editor
 {
-    public class TileButton : Label
+    public class TileButton : ToolStripLabel
     {
         private static Pen highlightPen = new Pen(Color.Orange, 2);
 
@@ -19,11 +19,15 @@ namespace MegaMan_Level_Editor
         {
             this.tile = tile;
             this.Margin = new Padding(0);
-            this.Padding = new Padding(0);
+            this.Padding = new Padding(2);
             this.Text = "";
             this.AutoSize = false;
-            this.Width = tile.Sprite.Width;
-            this.Height = tile.Sprite.Height;
+
+            if (tile != null)
+            {
+                this.Width = tile.Sprite.Width;
+                this.Height = tile.Sprite.Height;
+            }
 
             Program.FrameTick += new Action(Program_FrameTick);
             this.MouseEnter += new EventHandler(EnableHover);
@@ -49,8 +53,9 @@ namespace MegaMan_Level_Editor
 
         protected override void OnPaint(PaintEventArgs e)
         {
-            tile.Draw(e.Graphics, 0, 0);
-            if (hover) e.Graphics.DrawRectangle(highlightPen, this.Bounds);
+            if (tile == null) e.Graphics.FillRectangle(Brushes.Black, e.ClipRectangle);
+            else tile.Draw(e.Graphics, 0, 0);
+            if (hover) e.Graphics.DrawRectangle(highlightPen, e.ClipRectangle);
             base.OnPaint(e);
         }
     }
