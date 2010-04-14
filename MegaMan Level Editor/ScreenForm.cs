@@ -32,7 +32,7 @@ namespace MegaMan_Level_Editor
         private bool drawTiles;
         private bool drawBlock;
 
-        private Pen highlightPen = new Pen(Color.Green, 2);
+        private int hover_x, hover_y;
 
         #region Properties
         public Map Map { get { return myScreen.Map; } }
@@ -95,6 +95,7 @@ namespace MegaMan_Level_Editor
         void Program_FrameTick()
         {
             ReDrawTiles();
+            ReDrawMouse();
             ReDrawMaster();
         }
 
@@ -229,7 +230,6 @@ namespace MegaMan_Level_Editor
         }
         #endregion Form Event Handlers
 
-        #region screenImage Event Handlers
         private void screenImage_MouseDown(object sender, MouseEventArgs e)
         {
             drawing = true;
@@ -254,18 +254,22 @@ namespace MegaMan_Level_Editor
         {
             if (mouseLayer == null) return;
 
-            int tx = (e.X / myScreen.Tileset.TileSize) * myScreen.Tileset.TileSize;
-            int ty = (e.Y / myScreen.Tileset.TileSize) * myScreen.Tileset.TileSize;
+            hover_x = (e.X / myScreen.Tileset.TileSize) * myScreen.Tileset.TileSize;
+            hover_y = (e.Y / myScreen.Tileset.TileSize) * myScreen.Tileset.TileSize;
 
-            using (Graphics g = Graphics.FromImage(mouseLayer))
-            {
-                g.Clear(Color.Transparent);
-                g.DrawRectangle(highlightPen, tx, ty, myScreen.Tileset.TileSize - 1, myScreen.Tileset.TileSize - 1);
-            }
+            ReDrawMouse();
 
             DrawTile(e.Location.X / myScreen.Tileset.TileSize, e.Y / myScreen.Tileset.TileSize);
             ReDrawMaster();
         }
-        #endregion screenImage Event Handlers
+
+        private void ReDrawMouse()
+        {
+            using (Graphics g = Graphics.FromImage(mouseLayer))
+            {
+                g.Clear(Color.Transparent);
+                if (currentBrush != null) currentBrush.DrawOn(g, hover_x, hover_y);
+            }
+        }
     }
 }
