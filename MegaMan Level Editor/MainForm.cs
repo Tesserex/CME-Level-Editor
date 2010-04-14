@@ -82,18 +82,11 @@ namespace MegaMan_Level_Editor
             tilestrip = new TilesetStrip();
             this.Controls.Add(tilestrip);
             tilestrip.BringToFront();
+            tilestrip.TileChanged += TileChanged;
 
             Instance = this;
 
             openMaps = new List<MapDocument>();
-
-            tileForm = new TileBoxForm();
-            tileForm.Show();
-            tileForm.SelectedChanged += new Action(tileForm_SelectedChanged);
-            tileForm.Shown += (s,e) => tilesetToolStripMenuItem.Checked = true;
-            tileForm.FormClosing += (s, e) => { e.Cancel = true; tileForm.Hide(); tilesetToolStripMenuItem.Checked = false; };
-            tileForm.Anchor = AnchorStyles.Top;
-            tileForm.Owner = this;
 
             brushForm = new BrushForm();
             brushForm.Show();
@@ -129,9 +122,9 @@ namespace MegaMan_Level_Editor
             if (BrushChanged != null) BrushChanged(e);
         }
 
-        void tileForm_SelectedChanged()
+        private void TileChanged(Tile tile)
         {
-            ITileBrush brush = new SingleTileBrush(tileForm.Selected);
+            ITileBrush brush = new SingleTileBrush(tile.Id);
             BrushChangedEventArgs args = new BrushChangedEventArgs(brush);
             if (BrushChanged != null) BrushChanged(args);
         }

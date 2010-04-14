@@ -11,15 +11,15 @@ namespace MegaMan_Level_Editor
     public class TileButton : ToolStripLabel
     {
         private static Pen highlightPen = new Pen(Color.Orange, 2);
-
-        private Tile tile;
         private bool hover;
+
+        public Tile Tile { get; set; }
 
         public TileButton(Tile tile)
         {
-            this.tile = tile;
-            this.Margin = new Padding(0);
-            this.Padding = new Padding(2);
+            this.Tile = tile;
+            this.Margin = new Padding(2);
+            this.Padding = new Padding(0);
             this.Text = "";
             this.AutoSize = false;
 
@@ -53,8 +53,8 @@ namespace MegaMan_Level_Editor
 
         protected override void OnPaint(PaintEventArgs e)
         {
-            if (tile == null) e.Graphics.FillRectangle(Brushes.Black, e.ClipRectangle);
-            else tile.Draw(e.Graphics, 0, 0);
+            if (Tile == null) e.Graphics.FillRectangle(Brushes.Black, e.ClipRectangle);
+            else Tile.Draw(e.Graphics, 0, 0);
             if (hover) e.Graphics.DrawRectangle(highlightPen, e.ClipRectangle);
             base.OnPaint(e);
         }

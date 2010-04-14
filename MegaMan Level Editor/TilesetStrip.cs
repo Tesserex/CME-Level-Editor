@@ -13,10 +13,13 @@ namespace MegaMan_Level_Editor
         private TileButton selected;
         private ToolStripSeparator sep;
 
+        public event Action<Tile> TileChanged;
+
         public TilesetStrip()
         {
             this.AutoSize = true;
-            this.Padding = new Padding(4);
+            this.Padding = new Padding(0);
+            this.Margin = new Padding(0);
 
             selected = new TileButton(null);
             selected.Margin = new Padding(10, 0, 5, 0);
@@ -39,8 +42,19 @@ namespace MegaMan_Level_Editor
 
             foreach (Tile tile in tileset)
             {
-                this.Items.Add(new TileButton(tile));
+                TileButton button = new TileButton(tile);
+                button.Click += new EventHandler(button_Click);
+                this.Items.Add(button);
             }
+        }
+
+        private void button_Click(object sender, EventArgs e)
+        {
+            TileButton button = sender as TileButton;
+            selected.Tile = button.Tile;
+            selected.Invalidate();
+
+            if (TileChanged != null) TileChanged(selected.Tile);
         }
     }
 }
