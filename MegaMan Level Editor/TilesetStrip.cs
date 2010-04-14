@@ -10,6 +10,7 @@ namespace MegaMan_Level_Editor
 {
     public class TilesetStrip : ToolStrip
     {
+        private Tileset tileset;
         private TileButton selected;
         private ToolStripSeparator sep;
 
@@ -30,11 +31,16 @@ namespace MegaMan_Level_Editor
             sep.Margin = new Padding(5, 2, 10, 2);
             sep.Padding = new Padding(0);
             this.Items.Add(sep);
+
+            Program.FrameTick += new Action(TickSprites);
         }
 
         public void ChangeTileset(Tileset tileset)
         {
             this.Items.Clear();
+
+            this.tileset = tileset;
+            if (tileset == null) return;
 
             selected.Size = new Size(tileset.TileSize, tileset.TileSize);
             this.Items.Add(selected);
@@ -45,6 +51,19 @@ namespace MegaMan_Level_Editor
                 TileButton button = new TileButton(tile);
                 button.Click += new EventHandler(button_Click);
                 this.Items.Add(button);
+            }
+        }
+
+        private void TickSprites()
+        {
+            if (tileset != null)
+            {
+                foreach (Tile tile in tileset)
+                {
+                    tile.Sprite.Update();
+                }
+
+                
             }
         }
 
