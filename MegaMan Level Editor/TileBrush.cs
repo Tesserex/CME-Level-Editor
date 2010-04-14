@@ -10,6 +10,7 @@ namespace MegaMan_Level_Editor
     public interface ITileBrush
     {
         ITileBrush DrawOn(Screen screen, int tile_x, int tile_y);
+        void DrawOn(Graphics g, int x, int y);
         IEnumerable<TileBrushCell> Cells();
     }
 
@@ -17,9 +18,9 @@ namespace MegaMan_Level_Editor
     {
         public int x;
         public int y;
-        public int tile;
+        public Tile tile;
 
-        public TileBrushCell(int x, int y, int tile)
+        public TileBrushCell(int x, int y, Tile tile)
         {
             this.x = x;
             this.y = y;
@@ -29,16 +30,21 @@ namespace MegaMan_Level_Editor
 
     public class SingleTileBrush : ITileBrush
     {
-        private int tile;
+        private Tile tile;
 
-        public SingleTileBrush(int tile)
+        public SingleTileBrush(Tile tile)
         {
             this.tile = tile;
         }
 
+        public void DrawOn(Graphics g, int x, int y)
+        {
+            tile.Draw(g, x, y);
+        }
+
         public ITileBrush DrawOn(Screen screen, int tile_x, int tile_y)
         {
-            screen.ChangeTile(tile_x, tile_y, tile);
+            screen.ChangeTile(tile_x, tile_y, tile.Id);
             return this;
         }
 
@@ -65,7 +71,7 @@ namespace MegaMan_Level_Editor
             Width = width;
         }
 
-        public void AddTile(int tile, int x, int y)
+        public void AddTile(Tile tile, int x, int y)
         {
             TileBrushCell cell = new TileBrushCell();
             cell.x = x;
@@ -87,21 +93,21 @@ namespace MegaMan_Level_Editor
             bool changed = false;
             foreach (TileBrushCell[] col in cells) foreach (TileBrushCell cell in col)
             {
-                int old = screen.TileIndexAt(cell.x + tile_x, cell.y + tile_y) ?? -1;
-                if (old < 0) continue;
+                Tile old = screen.TileAt(cell.x + tile_x, cell.y + tile_y);
+                if (old == null) continue;
                 undo.AddTile(old, cell.x, cell.y);
-                if (old != cell.tile) changed = true;
-                screen.ChangeTile(cell.x + tile_x, cell.y + tile_y, cell.tile);
+                if (old.Id != cell.tile.Id) changed = true;
+                screen.ChangeTile(cell.x + tile_x, cell.y + tile_y, cell.tile.Id);
             }
             if (!changed) return null;
             return undo;
         }
 
-        public void DrawOn(Graphics g, Tileset tileset)
+        public void DrawOn(Graphics g, int x, int y)
         {
             foreach (TileBrushCell cell in Cells())
             {
-                tileset[cell.tile].Draw(g, cell.x * tileset.TileSize, cell.y * tileset.TileSize);
+                cell.tile.Draw(g, x + cell.x * cell.tile.Width, y + cell.y * cell.tile.Height);
             }
         }
 

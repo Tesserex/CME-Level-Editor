@@ -50,7 +50,7 @@ namespace MegaMan_Level_Editor
             using (Graphics g = Graphics.FromImage(brushPict.Image))
             {
                 g.Clear(Color.Black);
-                brush.DrawOn(g, Tileset);
+                brush.DrawOn(g, 0, 0);
             }
             brushPict.Refresh();
         }

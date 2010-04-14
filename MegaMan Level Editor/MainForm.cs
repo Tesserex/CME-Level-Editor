@@ -122,7 +122,7 @@ namespace MegaMan_Level_Editor
 
         private void TileChanged(Tile tile)
         {
-            ITileBrush brush = new SingleTileBrush(tile.Id);
+            ITileBrush brush = new SingleTileBrush(tile);
             BrushChangedEventArgs args = new BrushChangedEventArgs(brush);
             if (BrushChanged != null) BrushChanged(args);
         }
