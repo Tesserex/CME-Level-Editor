@@ -210,8 +210,7 @@ namespace MegaMan_Level_Editor
             openMaps.Add(map);
             map.ReFocus();
 
-            // place tiles in bar
-            
+            AddRecentFile(path);            
         }
 
         private void map_Closed(MapDocument mapdoc)
