@@ -15,7 +15,6 @@ namespace MegaMan_Level_Editor
     public partial class MainForm : Form
     {
         #region Private Members
-        private TileBoxForm tileForm;
         private BrowseForm browseForm;
         private MapDocument activeMap;
         private List<MapDocument> openMaps;
@@ -28,6 +27,8 @@ namespace MegaMan_Level_Editor
         private string recentPath = Application.StartupPath + "\\recent.ini";
         private List<string> recentFiles = new List<string>(10);
         private int untitledCount = 0;
+
+        TilesetStrip tilestrip;
         #endregion Private Members
 
         #region Properties
@@ -79,7 +80,7 @@ namespace MegaMan_Level_Editor
 
                 foreach (MapDocument map in openMaps) map.DrawBlock = value;
 
-                tileForm.DrawBlock = value;
+                //tileForm.DrawBlock = value;
             }
         }
         #endregion
@@ -91,17 +92,14 @@ namespace MegaMan_Level_Editor
         public MainForm()
         {
             InitializeComponent();
+            tilestrip = new TilesetStrip();
+            this.Controls.Add(tilestrip);
+            tilestrip.BringToFront();
+            tilestrip.TileChanged += TileChanged;
+
             Instance = this;
 
             openMaps = new List<MapDocument>();
-
-            tileForm = new TileBoxForm();
-            tileForm.Show();
-            tileForm.SelectedChanged += new Action(tileForm_SelectedChanged);
-            tileForm.Shown += (s,e) => tilesetToolStripMenuItem.Checked = true;
-            tileForm.FormClosing += (s, e) => { e.Cancel = true; tileForm.Hide(); tilesetToolStripMenuItem.Checked = false; };
-            tileForm.Anchor = AnchorStyles.Top;
-            tileForm.Owner = this;
 
             brushForm = new BrushForm();
             brushForm.Show();
@@ -120,19 +118,25 @@ namespace MegaMan_Level_Editor
 
         public void FocusScreen(MapDocument map)
         {
-            ActiveMap = map;
-            if (tileForm != null) tileForm.Tileset = ActiveMap.Map.Tileset;
-            if (brushForm != null) brushForm.ChangeTileset(ActiveMap.Map.Tileset);
+            activeMap = map;
+            ChangeTileset(map.Map.Tileset);
         }
 
-        void brushForm_BrushChanged(BrushChangedEventArgs e)
+        private void ChangeTileset(Tileset tileset)
+        {
+            if (brushForm != null) brushForm.ChangeTileset(activeMap.Map.Tileset);
+
+            tilestrip.ChangeTileset(tileset);
+        }
+
+        private void brushForm_BrushChanged(BrushChangedEventArgs e)
         {
             if (BrushChanged != null) BrushChanged(e);
         }
 
-        void tileForm_SelectedChanged()
+        private void TileChanged(Tile tile)
         {
-            ITileBrush brush = new SingleTileBrush(tileForm.Selected);
+            ITileBrush brush = new SingleTileBrush(tile);
             BrushChangedEventArgs args = new BrushChangedEventArgs(brush);
             if (BrushChanged != null) BrushChanged(args);
         }
@@ -221,8 +225,7 @@ namespace MegaMan_Level_Editor
             // if the tile form is showing this map's tileset, remove it from the form
             if (ActiveMap == mapdoc)
             {
-                tileForm.Tileset = null;
-                ActiveMap = null;
+                tilestrip.ChangeTileset(null);
             }
         }
         #endregion Private Methods
@@ -365,13 +368,6 @@ namespace MegaMan_Level_Editor
         private void addScreenToolStripMenuItem1_Click(object sender, EventArgs e)
         {
             if (ActiveMap != null) ActiveMap.NewScreen();
-        }
-
-        private void tilesetToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            if (tileForm.Visible) tileForm.Hide();
-            else tileForm.Show();
-            tilesetToolStripMenuItem.Checked = tileForm.Visible;
         }
 
         private void brushesToolStripMenuItem_Click(object sender, EventArgs e)

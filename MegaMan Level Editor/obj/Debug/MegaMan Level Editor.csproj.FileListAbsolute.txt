@@ -7,7 +7,6 @@ D:\junk\programming\C#\MegaMan Level Editor\MegaMan Level Editor\obj\Debug\MegaM
 D:\junk\programming\C#\MegaMan Level Editor\MegaMan Level Editor\obj\Debug\MegaMan Level Editor.exe
 D:\junk\programming\C#\MegaMan Level Editor\MegaMan Level Editor\obj\Debug\MegaMan Level Editor.pdb
 D:\junk\programming\C#\MegaMan Level Editor\MegaMan Level Editor\obj\Debug\MegaMan_Level_Editor.BrowseForm.resources
-D:\junk\programming\C#\MegaMan Level Editor\MegaMan Level Editor\obj\Debug\MegaMan_Level_Editor.TileBoxForm.resources
 D:\junk\programming\C#\MegaMan Level Editor\MegaMan Level Editor\obj\Debug\MegaMan_Level_Editor.BrushForm.resources
 D:\junk\programming\C#\MegaMan Level Editor\MegaMan Level Editor\obj\Debug\MegaMan_Level_Editor.ScreenForm.resources
 D:\junk\programming\C#\MegaMan Level Editor\MegaMan Level Editor\bin\Debug\Mega Man Common.dll

@@ -10,18 +10,24 @@ namespace MegaMan_Level_Editor
 {
     public class TileButton : ToolStripLabel
     {
-        private Tile tile;
+        private static Pen highlightPen = new Pen(Color.Orange, 2);
         private bool hover;
+
+        public Tile Tile { get; set; }
 
         public TileButton(Tile tile)
         {
-            this.tile = tile;
-            this.Margin = new Padding(0);
+            this.Tile = tile;
+            this.Margin = new Padding(2);
             this.Padding = new Padding(0);
             this.Text = "";
             this.AutoSize = false;
-            this.Width = tile.Sprite.Width;
-            this.Height = tile.Sprite.Height;
+
+            if (tile != null)
+            {
+                this.Width = tile.Sprite.Width;
+                this.Height = tile.Sprite.Height;
+            }
 
             Program.FrameTick += new Action(Program_FrameTick);
             this.MouseEnter += new EventHandler(EnableHover);
@@ -31,11 +37,13 @@ namespace MegaMan_Level_Editor
         void DisableHover(object sender, EventArgs e)
         {
             this.hover = false;
+            Invalidate();
         }
 
         private void EnableHover(object sender, EventArgs e)
         {
             this.hover = true;
+            Invalidate();
         }
 
         private void Program_FrameTick()
@@ -45,7 +53,9 @@ namespace MegaMan_Level_Editor
 
         protected override void OnPaint(PaintEventArgs e)
         {
-            tile.Draw(e.Graphics, 0, 0);
+            if (Tile == null) e.Graphics.FillRectangle(Brushes.Black, e.ClipRectangle);
+            else Tile.Draw(e.Graphics, 0, 0);
+            if (hover) e.Graphics.DrawRectangle(highlightPen, e.ClipRectangle);
             base.OnPaint(e);
         }
     }

@@ -46,7 +46,7 @@ namespace MegaMan_Level_Editor
                     brushPict.Size = brushPict.Image.Size;
                     using (Graphics g = Graphics.FromImage(brushPict.Image))
                     {
-                        brush.DrawOn(g, Tileset);
+                        brush.DrawOn(g, 0, 0);
                     }
                 }
 

@@ -125,10 +125,6 @@
       <DependentUpon>ScreenProp.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="TileBoxForm.resx">
-      <DependentUpon>TileBoxForm.cs</DependentUpon>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DependentUpon>Resources.resx</DependentUpon>
@@ -149,14 +145,11 @@
     <Compile Include="ScreenProp.Designer.cs">
       <DependentUpon>ScreenProp.cs</DependentUpon>
     </Compile>
-    <Compile Include="TileBoxForm.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="TileBoxForm.Designer.cs">
-      <DependentUpon>TileBoxForm.cs</DependentUpon>
-    </Compile>
     <Compile Include="TileBrush.cs" />
     <Compile Include="TileButton.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="TilesetStrip.cs">
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="UndoRedo.cs" />
