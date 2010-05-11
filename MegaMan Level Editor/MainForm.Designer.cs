@@ -441,7 +441,7 @@
             // brushesToolStripMenuItem
             // 
             this.brushesToolStripMenuItem.Name = "brushesToolStripMenuItem";
-            this.brushesToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.brushesToolStripMenuItem.Size = new System.Drawing.Size(115, 22);
             this.brushesToolStripMenuItem.Text = "Brushes";
             this.brushesToolStripMenuItem.Click += new System.EventHandler(this.brushesToolStripMenuItem_Click);
             // 
