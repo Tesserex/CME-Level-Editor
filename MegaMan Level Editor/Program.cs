@@ -3,10 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Forms;
 
-namespace MegaMan_Level_Editor
-{
-    static class Program
-    {
+namespace MegaMan_Level_Editor {
+    static class Program {
         private static Timer timer;
         public static event Action FrameTick;
 

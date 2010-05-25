@@ -1,6 +1,5 @@
-﻿namespace MegaMan_Level_Editor
-{
-    partial class LevelProp
+﻿namespace MegaMan_Level_Editor {
+    partial class StageProp
     {
         /// <summary>
         /// Required designer variable.
@@ -115,7 +114,7 @@
             this.buttonApply.UseVisualStyleBackColor = true;
             this.buttonApply.Click += new System.EventHandler(this.buttonApply_Click);
             // 
-            // LevelProp
+            // StageProp
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
@@ -129,9 +128,9 @@
             this.Controls.Add(this.tilesetChange);
             this.Controls.Add(this.label1);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
-            this.Name = "LevelProp";
+            this.Name = "StageProp";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
-            this.Text = "LevelProp";
+            this.Text = "StageProp";
             this.TopMost = true;
             this.ResumeLayout(false);
             this.PerformLayout();

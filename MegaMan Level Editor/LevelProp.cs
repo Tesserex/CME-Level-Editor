@@ -10,14 +10,14 @@ using MegaMan;
 
 namespace MegaMan_Level_Editor
 {
-    public partial class LevelProp : Form
+    public partial class StageProp : Form
     {
         private Map map;
 
         public event Action OkPressed;
         public event Action Saved;
 
-        public LevelProp()
+        public StageProp()
         {
             InitializeComponent();
         }

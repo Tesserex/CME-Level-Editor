@@ -7,62 +7,67 @@ using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 using System.IO;
-using ScreenDict = System.Collections.Generic.Dictionary<string, System.Collections.Generic.Dictionary<string, MegaMan_Level_Editor.ScreenForm>>;
+using ScreenDict = System.Collections.Generic.Dictionary<string, System.Collections.Generic.Dictionary<string, MegaMan_Level_Editor.StageForm>>;
 using MegaMan;
 
-namespace MegaMan_Level_Editor
-{
-    public partial class MainForm : Form
-    {
-        #region Private Members
-        private BrowseForm browseForm;
+namespace MegaMan_Level_Editor {
+    public partial class MainForm : Form {
+
+        #region Public Members
+        /* *
+         * rootPath - The path of the current project
+         * */
+        public String rootPath;
+
+        private TilesetStrip tilestrip;
         private MapDocument activeMap;
-        private List<MapDocument> openMaps;
-        private BrushForm brushForm;
+
+        public List<MapDocument> openMaps = new List<MapDocument>();
+
+        public Dictionary<string, MapDocument> stages = new Dictionary<string, MapDocument>();
+        public Dictionary<string, StageForm> stageForms = new Dictionary<string, StageForm>();
+        public StageForm currentStageForm;
+
+        public BrushForm brushForm;
+        public ProjectForm projectForm;
+        public HistoryForm historyForm;
 
         private bool drawGrid;
         private bool drawTiles;
         private bool drawBlock;
-
+ 
         private string recentPath = Application.StartupPath + "\\recent.ini";
         private List<string> recentFiles = new List<string>(10);
         private int untitledCount = 0;
-
-        TilesetStrip tilestrip;
         #endregion Private Members
-
+        
         #region Properties
-        private MapDocument ActiveMap
-        {
+        public MapDocument ActiveMap {
             get { return activeMap; }
-            set
-            {
+            set {
                 activeMap = value;
                 saveToolStripMenuItem.Enabled = saveAsToolStripMenuItem.Enabled =
                     closeToolStripMenuItem.Enabled = propertiesToolStripMenuItem.Enabled =
-                    addScreenToolStripMenuItem1.Enabled = browseToolStripMenuItem.Enabled =
+                    newScreenMenuItem.Enabled =
                     manageEnemiesToolStripMenuItem.Enabled = mergeScreenToolStripMenuItem.Enabled =
                     splitScreenToolStripMenuItem.Enabled = addEnemyToolStripMenuItem.Enabled = (value != null);
             }
         }
 
-        public bool DrawGrid
-        {
+        public bool DrawGrid {
             get { return drawGrid; }
-            set
-            {
+            set {
                 drawGrid = value;
                 showGridToolStripMenuItem.Checked = value;
 
-                foreach (MapDocument map in openMaps) map.DrawGrid = value;
+                foreach (MapDocument map in openMaps)
+                    map.DrawGrid = value;
             }
         }
 
-        public bool DrawTiles
-        {
+        public bool DrawTiles {
             get { return drawTiles; }
-            set
-            {
+            set {
                 drawTiles = value;
                 showBackgroundsToolStripMenuItem.Checked = value;
 
@@ -70,11 +75,9 @@ namespace MegaMan_Level_Editor
             }
         }
 
-        public bool DrawBlock
-        {
+        public bool DrawBlock {
             get { return drawBlock; }
-            set
-            {
+            set {
                 drawBlock = value;
                 showBlockingToolStripMenuItem.Checked = value;
 
@@ -89,8 +92,7 @@ namespace MegaMan_Level_Editor
 
         public static MainForm Instance { get; private set; }
 
-        public MainForm()
-        {
+        public MainForm() {
             InitializeComponent();
             tilestrip = new TilesetStrip();
             this.Controls.Add(tilestrip);
@@ -99,21 +101,60 @@ namespace MegaMan_Level_Editor
 
             Instance = this;
 
-            openMaps = new List<MapDocument>();
-
-            brushForm = new BrushForm();
-            brushForm.Show();
-            brushForm.BrushChanged += new BrushChangedHandler(brushForm_BrushChanged);
-            brushForm.Shown += (s, e) => brushesToolStripMenuItem.Checked = true;
-            brushForm.FormClosing += (s, e) => { e.Cancel = true; brushForm.Hide(); brushesToolStripMenuItem.Checked = false; };
-            brushForm.Anchor = AnchorStyles.Left;
-            brushForm.Owner = this;
+            CreateBrushForm();
+            CreateProjectForm();
+            CreateHistoryForm();
 
             DrawGrid = false;
             DrawTiles = true;
             DrawBlock = false;
 
             LoadRecentFiles();
+            LoadWindowPositions();
+        }
+
+        public void LoadWindowPositions() {
+            MessageBox.Show("TODO: Load the window positions from last time");
+        }
+
+        void CreateBrushForm() {
+            brushForm = new BrushForm();
+            brushForm.Show();
+            brushForm.BrushChanged += new BrushChangedHandler(brushForm_BrushChanged);
+            brushForm.Shown += (s, e) => brushesToolStripMenuItem.Checked = true;
+            brushForm.FormClosing += (s, e) => { 
+                e.Cancel = true; 
+                brushForm.Hide(); 
+                brushesToolStripMenuItem.Checked = false; 
+            };
+            brushForm.Anchor = AnchorStyles.Left;
+            brushForm.Owner = this;
+        }
+
+        void CreateProjectForm() {
+            projectForm = new ProjectForm();
+            projectForm.Show();
+            projectForm.Shown += (s, e) => projectToolStripMenuItem.Checked = true;
+            projectForm.FormClosing += (s, e) => { 
+                e.Cancel = true; 
+                projectForm.Hide();
+                projectToolStripMenuItem.Checked = false;
+            };
+            projectForm.Anchor = AnchorStyles.Left;
+            projectForm.Owner = this;
+        }
+
+        void CreateHistoryForm() {
+            historyForm = new HistoryForm();
+            historyForm.Show();
+            historyForm.Shown += (s, e) => historyToolStripMenuItem.Checked = true;
+            historyForm.FormClosing += (s, e) => {
+                e.Cancel = true;
+                historyForm.Hide();
+                historyToolStripMenuItem.Checked = false;
+            };
+            historyForm.Anchor = AnchorStyles.Left;
+            historyForm.Owner = this;
         }
 
         public void FocusScreen(MapDocument map)
@@ -141,21 +182,19 @@ namespace MegaMan_Level_Editor
             if (BrushChanged != null) BrushChanged(args);
         }
 
-        protected override void OnClosing(CancelEventArgs e)
-        {
-            if (!CheckSaveOnClose())
-            {
+        protected override void OnClosing(CancelEventArgs e) {
+            if (!CheckSaveOnClose()) {
                 e.Cancel = true;
                 return;
             }
             File.WriteAllLines(recentPath, recentFiles.ToArray());
+            MessageBox.Show("TODO: Save window positions");
             e.Cancel = false;
             base.OnClosing(e);
         }
 
         #region Private Methods
-        private void AddRecentFile(string path)
-        {
+        private void AddRecentFile(string path) {
             if (recentFiles.Contains(path)) // move to top
             {
                 recentFiles.Remove(path);
@@ -164,14 +203,11 @@ namespace MegaMan_Level_Editor
             if (recentFiles.Count > 10) recentFiles.RemoveRange(0, recentFiles.Count - 10);
         }
 
-        private void LoadRecentFiles()
-        {
-            try
-            {
+        private void LoadRecentFiles() {
+            try {
                 string[] recent = File.ReadAllLines(recentPath);
                 int i = 0;
-                foreach (string path in recent)
-                {
+                foreach (string path in recent) {
                     recentFiles.Add(path);
                     ToolStripMenuItem r = new ToolStripMenuItem(path);
                     r.Click += new EventHandler(RecentMenu_Click);
@@ -181,45 +217,71 @@ namespace MegaMan_Level_Editor
                     i++;
                     if (i >= 10) break;
                 }
-                if (recentFiles.Count > 0)
-                {
+                if (recentFiles.Count > 0) {
                     string path = recentFiles[0].Remove(recentFiles[0].LastIndexOf('\\'));
                     folderDialog.SelectedPath = path;
                 }
-            }
-            catch (FileNotFoundException)
-            {
+            } catch (FileNotFoundException) {
                 File.Create(recentPath);
             }
         }
 
-        private void OpenMap(string path)
-        {
-            foreach (MapDocument mapdoc in openMaps)
-            {
-                if (Path.GetFullPath(mapdoc.Map.FileDir) == Path.GetFullPath(path))
-                {
+        /* *
+         * OpenStage - Open up a stage from the /stages/ directory
+         * path = relative path to the root project directory
+         * */
+        public List<MegaMan.Screen> OpenStage(string stageName, string path) {
+            // TODO: Start adding a Util class to MegaMan common so we can
+            // refactor out stuff like "StagePathFor(path)", instead of
+            // what we have here..
+
+            var stagePath = StagePathFor(stageName);
+            if (File.Exists(stagePath)) {
+                return LoadStageFromPath(stageName, path);
+            } else {
+                MessageBox.Show("Sorry, but this is not a stage directory! Stage path was : " + stagePath);
+                return new List<MegaMan.Screen>();
+            }
+        }
+
+        public static string StagePathFor(string stageName) {
+            var stagePath = Path.Combine(Path.Combine(MainForm.Instance.rootPath, "stages"), stageName);
+            return Path.Combine(stagePath, "map.xml");
+        }
+
+        public static string ScreenPathFor(string stageName, string screenName) {
+            var stagePath = Path.Combine(Path.Combine(MainForm.Instance.rootPath, "stages"), stageName);
+            return Path.Combine(stagePath, screenName + ".scn");
+        }
+
+        /* *
+         * LoadMapFromPath - Load the stage based on the path (underlying implementation of OpenMap)
+         * path = relative path to the root project directory
+         * */
+        public List<MegaMan.Screen> LoadStageFromPath(String stageName, String path) {
+            foreach (var mapdoc in openMaps) {
+                if (Path.GetFullPath(mapdoc.Map.FileDir) == Path.GetFullPath(path)) {
                     // only focus it if it's not already focused
-                    if (ActiveMap.Map != mapdoc.Map) mapdoc.ReFocus();
-                    return;
+                    if (ActiveMap.Map != mapdoc.Map) 
+                        mapdoc.ReFocus();
                 }
             }
 
-            MapDocument map = new MapDocument(path, this);
+            var stage = new MapDocument(path, this);
+            stages[stageName] = stage;
 
-            map.DrawBlock = this.drawBlock;
-            map.DrawGrid = this.drawGrid;
-            map.DrawTiles = this.drawTiles;
+            stage.DrawBlock = this.drawBlock;
+            stage.DrawGrid  = this.drawGrid;
+            stage.DrawTiles = this.drawTiles;
 
-            map.Closed += new Action<MapDocument>(map_Closed);
-            openMaps.Add(map);
-            map.ReFocus();
+            stage.Closed += new Action<MapDocument>(map_Closed);
+            openMaps.Add(stage);
+            stage.ReFocus();
 
-            AddRecentFile(path);            
+            return stage.Map.Screens.Select((pair) => { return pair.Value; }).ToList();
         }
 
-        private void map_Closed(MapDocument mapdoc)
-        {
+        private void map_Closed(MapDocument mapdoc) {
             openMaps.Remove(mapdoc);
 
             // if the tile form is showing this map's tileset, remove it from the form
@@ -229,134 +291,135 @@ namespace MegaMan_Level_Editor
             }
         }
         #endregion Private Methods
-        
-        #region Menu Handlers
-        private void openToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            DialogResult result = folderDialog.ShowDialog();
-            if (result == DialogResult.OK)
-            {
-                string path = folderDialog.SelectedPath;
 
-                OpenMap(path);
+
+        /* *
+         * OpenProject - Set root path for maps and show list of maps to user
+         * */
+        void OpenProject(String rootPath) {
+            //TODO: Make sure path contains "game.xml"
+            if (File.Exists(System.IO.Path.Combine(rootPath, "game.xml"))) {
+                this.rootPath = rootPath;
+                AddRecentFile(rootPath);
+                projectForm.OpenProject(rootPath);
+            } else {
+                MessageBox.Show("Sorry, but this is not a CME project!");
             }
         }
 
-        private bool CheckSaveOnClose()
-        {
-            foreach (MapDocument map in openMaps)
-            {
+        void ShowStages() {
+            projectForm.Show();
+        }
+
+        private bool CheckSaveOnClose() {
+            foreach (MapDocument map in openMaps) {
                 if (!map.ConfirmSave()) return false;
             }
             return true;
         }
 
-        private void quitToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            Application.Exit();
-            Environment.Exit(0);
-        }
 
-        private void gridToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            DrawGrid = !DrawGrid;
-        }
-
-        private void RecentMenu_Click(object sender, EventArgs e)
-        {
-            ToolStripMenuItem t = sender as ToolStripMenuItem;
-            OpenMap(t.Text);
-        }
-
-        private void showBackgroundsToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            DrawTiles = !DrawTiles;
-        }
-
-        private void showBlockingToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            DrawBlock = !DrawBlock;
-        }
-
-        private void saveToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            if (ActiveMap != null && ActiveMap.Map.Loaded)
-            {
-                if (ActiveMap.Map.FileDir != null) ActiveMap.Map.Save();
-                else SaveAs();
-            }
-        }
-
-        private void closeToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            if (ActiveMap == null) return;
-
-            ActiveMap.Close();
-        }
-
-        private void undoToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            
-        }
-
-        private void redoToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            
-        }
-
-        private void newToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            Map map = new Map();
-            untitledCount++;
-            map.Name = "Untitled" + untitledCount.ToString();
-
-            LevelProp propForm = new LevelProp();
-            propForm.LoadMap(map);
-            propForm.Text = "New Level Properties";
-            propForm.Show();
-
-            propForm.OkPressed += () => {
-                MapDocument document = new MapDocument(map, this);
-                document.NewScreen();
-                openMaps.Add(document);
-            };
-        }
-
-        private void browseToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            if (browseForm == null)
-            {
-                browseForm = new BrowseForm();
-                browseForm.FormClosed += (s, ev) => { browseForm = null; };
-            }
-            browseForm.SetMap(ActiveMap); // forces a refresh of screens
-            browseForm.Focus();
-            browseForm.Show();
-        }
-
-        private void SaveAs()
-        {
+        private void SaveAs() {
             if (ActiveMap == null) return;
             DialogResult result = folderDialog.ShowDialog();
-            if (result == DialogResult.OK)
-            {
+            if (result == DialogResult.OK) {
                 string path = folderDialog.SelectedPath;
                 ActiveMap.Map.Save(path);
             }
         }
 
-        private void saveAsToolStripMenuItem_Click(object sender, EventArgs e)
-        {
+
+        //***********************
+        // Click Event Handlers *
+        //***********************
+
+        private void openToolStripMenuItem_Click(object sender, EventArgs e) {
+            var result = folderDialog.ShowDialog();
+            if (result == DialogResult.OK) {
+                string path = folderDialog.SelectedPath;
+                OpenProject(path);
+            }
+        }
+
+
+        private void quitToolStripMenuItem_Click(object sender, EventArgs e) {
+            Application.Exit();
+            Environment.Exit(0);
+        }
+
+        private void gridToolStripMenuItem_Click(object sender, EventArgs e) {
+            DrawGrid = !DrawGrid;
+        }
+
+        private void RecentMenu_Click(object sender, EventArgs e) {
+            ToolStripMenuItem t = sender as ToolStripMenuItem;
+            //OpenMap(t.Text);
+            OpenProject(t.Text);
+        }
+
+        private void showBackgroundsToolStripMenuItem_Click(object sender, EventArgs e) {
+            DrawTiles = !DrawTiles;
+        }
+
+        private void showBlockingToolStripMenuItem_Click(object sender, EventArgs e) {
+            DrawBlock = !DrawBlock;
+        }
+
+        private void saveToolStripMenuItem_Click(object sender, EventArgs e) {
+            if (ActiveMap != null && ActiveMap.Map.Loaded) {
+                if (ActiveMap.Map.FileDir != null)
+                    ActiveMap.Map.Save();
+                else
+                    SaveAs();
+            }
+        }
+
+        private void closeToolStripMenuItem_Click(object sender, EventArgs e) {
+            if (ActiveMap == null)
+                return;
+            ActiveMap.Close();
+        }
+
+        //*****************
+        // Undo/Redo Menu *
+        //*****************
+
+        public void undoToolStripMenuItem_Click(object sender, EventArgs e) {
+            // MessageBox.Show("Going to undo last action from stage " + MainForm.Instance.currentStageForm.stageName);
+            MainForm.Instance.currentStageForm.Undo();
+        }
+
+        private void redoToolStripMenuItem_Click(object sender, EventArgs e) {
+            MainForm.Instance.currentStageForm.Redo();
+        }
+
+        private void newToolStripMenuItem_Click(object sender, EventArgs e) {
+            Map map = new Map();
+            untitledCount++;
+            map.Name = "Untitled" + untitledCount.ToString();
+
+            StageProp propForm = new StageProp();
+            propForm.LoadMap(map);
+            propForm.Text = "New Stage Properties";
+            propForm.Show();
+
+            propForm.OkPressed += () => {
+                MapDocument document = new MapDocument(map, this);
+                // document.NewScreen();
+                document.NewStage();
+                openMaps.Add(document);
+            };
+        }
+
+        private void saveAsToolStripMenuItem_Click(object sender, EventArgs e)  {
             SaveAs();
         }
-        #endregion Menu Handlers
 
-        private void propertiesToolStripMenuItem_Click(object sender, EventArgs e)
-        {
+        private void propertiesToolStripMenuItem_Click(object sender, EventArgs e) {
             if (ActiveMap == null) return;
 
             MapDocument propDoc = ActiveMap;
-            LevelProp propForm = new LevelProp();
+            StageProp propForm = new StageProp();
             propForm.LoadMap(propDoc.Map);
             propForm.Text = ActiveMap.Map.Name + " Properties";
 
@@ -365,22 +428,75 @@ namespace MegaMan_Level_Editor
             propForm.Show();
         }
 
-        private void addScreenToolStripMenuItem1_Click(object sender, EventArgs e)
-        {
-            if (ActiveMap != null) ActiveMap.NewScreen();
-        }
+        //***************
+        // Tool Windows *
+        //***************
 
-        private void brushesToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            if (brushForm.Visible) brushForm.Hide();
-            else brushForm.Show();
+        private void brushesToolStripMenuItem_Click(object sender, EventArgs e) {
+            if (brushForm.Visible)
+                brushForm.Hide();
+            else
+                brushForm.Show();
             brushesToolStripMenuItem.Checked = brushForm.Visible;
         }
 
-        private void animateToolStripMenuItem_Click(object sender, EventArgs e)
-        {
+        private void animateToolStripMenuItem_Click(object sender, EventArgs e) {
             Program.Animated = !Program.Animated;
             animateToolStripMenuItem.Checked = Program.Animated;
         }
+
+        private void projectToolStripMenuItem_Click(object sender, EventArgs e) {
+            if (projectForm.Visible) 
+                projectForm.Hide();
+            else 
+                projectForm.Show();
+
+            projectToolStripMenuItem.Checked = projectForm.Visible;
+        }
+
+        private void historyToolStripMenuItem_Click(object sender, EventArgs e) {
+            if (historyForm.Visible)
+                historyForm.Hide();
+            else
+                historyForm.Show();
+
+            historyToolStripMenuItem.Checked = historyForm.Visible;
+        }
+
+        private void windowsToolStripMenuItem_Click(object sender, EventArgs e) {
+
+        }
+
+        /* *
+         * Utility methods...
+         * */
+        public static MegaMan.Map GetStage(string stageName) {
+            return MainForm.Instance.stages[stageName].Map;
+        }
+
+        public static MegaMan.Screen GetScreen(string stageName, string screenName) {
+            return GetStage(stageName).Screens[screenName];
+        }
+
+        public static void UpdateScreenName(string stageName, string oldScreenName, string newScreenName) {
+            if (oldScreenName != newScreenName) {
+                var screen = GetScreen(stageName, oldScreenName);
+                screen.Name = newScreenName;
+                MainForm.Instance.stages[stageName].Map.Screens.Add(newScreenName, screen);
+                MainForm.Instance.stages[stageName].Map.Screens.Remove(oldScreenName);
+            }
+        }
+
+        private void newScreenStripMenuItem_Click(object sender, EventArgs e) {
+            var screenPropForm = new ScreenProp();
+            screenPropForm.Show();
+        }
+
+        private void menuStrip1_ItemClicked(object sender, ToolStripItemClickedEventArgs e) {
+
+        }
+
+
     }
 }
+

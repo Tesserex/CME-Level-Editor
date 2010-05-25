@@ -8,17 +8,14 @@ using System.Text;
 using System.Windows.Forms;
 using MegaMan;
 
-namespace MegaMan_Level_Editor
-{
-    public partial class EditBrushForm : Form
-    {
+namespace MegaMan_Level_Editor {
+    public partial class EditBrushForm : Form {
         private TileBrush brush;
         private Tileset Tileset;
 
         private ITileBrush cursorBrush;
 
-        public EditBrushForm(TileBrush brush, Tileset tileset)
-        {
+        public EditBrushForm(TileBrush brush, Tileset tileset) {
             InitializeComponent();
             this.Tileset = tileset;
             this.brush = brush;
@@ -30,8 +27,7 @@ namespace MegaMan_Level_Editor
             Reset(2, 2);
         }
 
-        void brushPict_MouseDown(object sender, MouseEventArgs e)
-        {
+        void brushPict_MouseDown(object sender, MouseEventArgs e) {
             if (cursorBrush == null) return;
 
             int tx = e.X / Tileset.TileSize;
@@ -45,23 +41,19 @@ namespace MegaMan_Level_Editor
             ReDraw();
         }
 
-        private void ReDraw()
-        {
-            using (Graphics g = Graphics.FromImage(brushPict.Image))
-            {
+        private void ReDraw() {
+            using (Graphics g = Graphics.FromImage(brushPict.Image)) {
                 g.Clear(Color.Black);
                 brush.DrawOn(g, 0, 0);
             }
             brushPict.Refresh();
         }
 
-        void Instance_BrushChanged(BrushChangedEventArgs e)
-        {
+        void Instance_BrushChanged(BrushChangedEventArgs e) {
             this.cursorBrush = e.Brush;
         }
 
-        private void resetButton_Click(object sender, EventArgs e)
-        {
+        private void resetButton_Click(object sender, EventArgs e) {
             int width;
             int height;
             if (!int.TryParse(widthBox.Text, out width)) return;

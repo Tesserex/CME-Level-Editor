@@ -4,12 +4,13 @@ using System.Linq;
 using System.Text;
 using System.Drawing;
 using MegaMan;
+using System.Windows.Forms;
 
 namespace MegaMan_Level_Editor
 {
     public interface ITileBrush
     {
-        ITileBrush DrawOn(Screen screen, int tile_x, int tile_y);
+        ITileBrush DrawOn(MegaMan.Screen screen, int tile_x, int tile_y);
         void DrawOn(Graphics g, int x, int y);
         IEnumerable<TileBrushCell> Cells();
     }
@@ -42,10 +43,23 @@ namespace MegaMan_Level_Editor
             tile.Draw(g, x, y);
         }
 
-        public ITileBrush DrawOn(Screen screen, int tile_x, int tile_y)
-        {
-            screen.ChangeTile(tile_x, tile_y, tile.Id);
-            return this;
+        public ITileBrush DrawOn(MegaMan.Screen screen, int tile_x, int tile_y) {
+            var old = screen.TileAt(tile_x, tile_y);
+            
+            if (old == null)
+                return null;
+
+            if (old.Id == this.tile.Id) {
+                return null;
+            } else {
+//                MessageBox.Show("Drawing tile " + this.tile + " where previously we had " + old);
+                screen.ChangeTile(tile_x, tile_y, tile.Id);
+                return new SingleTileBrush(old);
+            }
+        }
+
+        public override String ToString() {
+            return "Tile Id: (" + this.tile + ")";
         }
 
         public IEnumerable<TileBrushCell> Cells() { yield return new TileBrushCell(0, 0, this.tile); }
@@ -87,20 +101,25 @@ namespace MegaMan_Level_Editor
         /// Returns an "undo brush" - a brush of all tiles that were overwritten.
         /// Returns null if no tiles were changed.
         /// </summary>
-        public ITileBrush DrawOn(Screen screen, int tile_x, int tile_y)
-        {
+        public ITileBrush DrawOn(MegaMan.Screen screen, int tile_x, int tile_y) {
             TileBrush undo = new TileBrush(Width, Height);
             bool changed = false;
-            foreach (TileBrushCell[] col in cells) foreach (TileBrushCell cell in col)
-            {
-                Tile old = screen.TileAt(cell.x + tile_x, cell.y + tile_y);
-                if (old == null) continue;
-                undo.AddTile(old, cell.x, cell.y);
-                if (old.Id != cell.tile.Id) changed = true;
-                screen.ChangeTile(cell.x + tile_x, cell.y + tile_y, cell.tile.Id);
+            foreach (TileBrushCell[] col in cells) {
+                foreach (TileBrushCell cell in col) {
+                    var old = screen.TileAt(cell.x + tile_x, cell.y + tile_y);
+
+                    if (old == null)
+                        continue;
+                    undo.AddTile(old, cell.x, cell.y);
+                    if (old.Id != cell.tile.Id) {
+                        changed = true;
+                        screen.ChangeTile(cell.x + tile_x, cell.y + tile_y, cell.tile.Id);
+                    }
+                }
             }
-            if (!changed) return null;
-            return undo;
+
+            if (changed) return undo;
+            return null;
         }
 
         public void DrawOn(Graphics g, int x, int y)
@@ -119,3 +138,4 @@ namespace MegaMan_Level_Editor
         #endregion
     }
 }
+

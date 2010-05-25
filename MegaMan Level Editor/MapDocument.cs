@@ -4,126 +4,109 @@ using System.Linq;
 using System.Text;
 using MegaMan;
 using System.Windows.Forms;
+using System.IO;
 
-namespace MegaMan_Level_Editor
-{
-    public class MapDocument
-    {
-        private MainForm parent;
+namespace MegaMan_Level_Editor {
+    public class MapDocument {
+        public MainForm parent;
         public Map Map { get; private set; }
 
-        private Dictionary<string, ScreenForm> openScreens;
+        private Dictionary<string, StageForm> openScreens;
 
         private bool drawTiles;
         private bool drawGrid;
         private bool drawBlock;
 
-        public bool DrawGrid
-        {
+        public bool DrawGrid {
             get { return drawGrid; }
-            set
-            {
+            set {
                 drawGrid = value;
-                foreach (ScreenForm screen in this.openScreens.Values) screen.DrawGrid = value;
+                foreach (StageForm screen in this.openScreens.Values) screen.DrawGrid = value;
             }
         }
 
-        public bool DrawTiles
-        {
+        public bool DrawTiles {
             get { return drawTiles; }
-            set
-            {
+            set {
                 drawTiles = value;
-                foreach (ScreenForm screen in this.openScreens.Values) screen.DrawTiles = value;
+                foreach (StageForm screen in this.openScreens.Values) screen.DrawTiles = value;
             }
         }
 
-        public bool DrawBlock
-        {
+        public bool DrawBlock {
             get { return drawBlock; }
-            set
-            {
+            set {
                 drawBlock = value;
-                foreach (ScreenForm screen in this.openScreens.Values) screen.DrawBlock = value;
+                foreach (StageForm screen in this.openScreens.Values) screen.DrawBlock = value;
             }
         }
 
         public event Action<MapDocument> Closed;
 
-        public MapDocument(Map map, MainForm parent)
-        {
+        public MapDocument(Map map, MainForm parent) {
             this.parent = parent;
             this.Map = map;
 
-            openScreens = new Dictionary<string, ScreenForm>();
+            openScreens = new Dictionary<string, StageForm>();
         }
 
-        public MapDocument(string path, MainForm parent)
-        {
+        // TODO : Rename Map to Stages.. More consistent naming
+        public MapDocument(string path, MainForm parent) {
             this.parent = parent;
-
-            this.Map = new Map(path);
-
-            openScreens = new Dictionary<string, ScreenForm>();
+            this.Map = new Map(MainForm.Instance.rootPath, path);
+            openScreens = new Dictionary<string, StageForm>();
         }
 
-        public void RefreshInfo()
-        {
-            foreach (ScreenForm screen in this.openScreens.Values) screen.SetText();
+        public void RefreshInfo() {
+            foreach (StageForm screen in this.openScreens.Values) screen.SetText();
         }
 
-        public void ReFocus()
-        {
-            ShowScreen(Map.Screens.First().Key);
+        public void ReFocus() {
+//            ShowScreen(Map.Screens.First().Key);
+            ShowStage(Map);
         }
 
-        public void NewScreen()
-        {
+        //TODO Write NewStage
+        public void NewStage() {
+            MessageBox.Show("I don't do anything yet! Fix this!");
+        }
+
+        public void NewScreen() {
             MegaMan.Screen screen = new MegaMan.Screen(16, 14, Map);
             ScreenProp propForm = new ScreenProp();
-            propForm.LoadScreen(screen);
+            //propForm.LoadScreen(screen);
             propForm.Show();
 
-            propForm.FormClosing += (s, ev) =>
-            {
+            propForm.FormClosing += (s, ev) => {
                 if (!propForm.Confirmed) return;
 
-                if (screen.Name == null)
-                {
+                if (screen.Name == null) {
                     MessageBox.Show("You must give the screen a name.", "Add Screen Error", MessageBoxButtons.OK, MessageBoxIcon.Information);
                     return;
                 }
                 Map.Screens.Add(screen.Name, screen);
 
-                ShowScreen(screen.Name);
+                //ShowStage(screen);
+
             };
         }
+        
+        public void ShowStage(Map stage) {
+            var stageForm = new StageForm(stage);
+            stageForm.MdiParent = parent;
+            stageForm.GotFocus += new EventHandler(StageForm_GotFocus);
+            stageForm.FormClosing += new FormClosingEventHandler(StageForm_FormClosing);
 
-        public void ShowScreen(string name)
-        {
-            if (!openScreens.ContainsKey(name))
-            {
-                ScreenForm screenform = new ScreenForm();
-                screenform.MdiParent = parent;
-                screenform.SetScreen(Map.Screens[name]);
-                screenform.GotFocus += new EventHandler(screenform_GotFocus);
-                screenform.FormClosing += new FormClosingEventHandler(screenform_FormClosing);
+            stageForm.DrawBlock = this.drawBlock;
+            stageForm.DrawGrid = this.drawGrid;
+            stageForm.DrawTiles = this.drawTiles;
 
-                screenform.DrawBlock = this.drawBlock;
-                screenform.DrawGrid = this.drawGrid;
-                screenform.DrawTiles = this.drawTiles;
-
-                openScreens[name] = screenform;
-            }
-
-            openScreens[name].Show();
-            openScreens[name].Focus();
+            stageForm.Show();
+            stageForm.Focus();
         }
 
-        public void Close()
-        {
-            if (Map.Dirty)
-            {
+        public void Close() {
+            if (Map.Dirty) {
                 DialogResult result = MessageBox.Show("Do you want to save changes to " + Map.Name + " before closing?", "Save Changes", MessageBoxButtons.YesNoCancel);
                 if (result == DialogResult.Yes) Map.Save();
                 else if (result == DialogResult.Cancel) return;
@@ -133,10 +116,8 @@ namespace MegaMan_Level_Editor
             if (Closed != null) Closed(this);
         }
 
-        public bool ConfirmSave()
-        {
-            if (Map.Dirty)
-            {
+        public bool ConfirmSave() {
+            if (Map.Dirty) {
                 DialogResult result = MessageBox.Show("Do you want to save changes to " + Map.Name + " before closing?", "Save Changes", MessageBoxButtons.YesNoCancel);
                 if (result == DialogResult.Yes) Map.Save();
                 else if (result == DialogResult.Cancel) return false;
@@ -144,34 +125,29 @@ namespace MegaMan_Level_Editor
             return true;
         }
 
-        private void CloseAll()
-        {
-            foreach (ScreenForm screen in this.openScreens.Values)
-            {
-                screen.FormClosing -= screenform_FormClosing;
+        private void CloseAll() {
+            foreach (StageForm screen in this.openScreens.Values) {
+                screen.FormClosing -= StageForm_FormClosing;
                 CloseScreen(screen);
             }
         }
 
-        void screenform_FormClosing(object sender, FormClosingEventArgs e)
-        {
+        void StageForm_FormClosing(object sender, FormClosingEventArgs e) {
             // closing all screens means we should close completely
             if (openScreens.Count == 1) // this is the last one
             {
                 e.Cancel = (!ConfirmSave());
-                if (!e.Cancel) (sender as ScreenForm).Dispose();
+                if (!e.Cancel) (sender as StageForm).Dispose();
                 if (!e.Cancel && Closed != null) Closed(this);
             }
         }
 
-        private void CloseScreen(ScreenForm screenform)
-        {
-            screenform.GotFocus -= new EventHandler(screenform_GotFocus);
-            screenform.Close();
+        private void CloseScreen(StageForm StageForm) {
+            StageForm.GotFocus -= new EventHandler(StageForm_GotFocus);
+            StageForm.Close();
         }
 
-        private void screenform_GotFocus(object sender, EventArgs e)
-        {
+        private void StageForm_GotFocus(object sender, EventArgs e) {
             parent.FocusScreen(this);
         }
     }
