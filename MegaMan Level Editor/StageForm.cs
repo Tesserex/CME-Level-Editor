@@ -11,9 +11,10 @@ using MegaMan;
 
 namespace MegaMan_Level_Editor
 {
-    public partial class StageForm : Form {
+    public partial class StageForm : Form
+    {
 
-        public static Brush blockBrush  = new SolidBrush(Color.FromArgb(160, Color.OrangeRed));
+        public static Brush blockBrush = new SolidBrush(Color.FromArgb(160, Color.OrangeRed));
         public static Brush ladderBrush = new SolidBrush(Color.FromArgb(160, Color.Yellow));
         public Pen highlightPen = new Pen(Color.Green, 2);
 
@@ -23,26 +24,35 @@ namespace MegaMan_Level_Editor
         public History history;
         public ITileBrush currentBrush = null;
         public Dictionary<string, ScreenDrawingSurface> surfaces;
-        
-        public bool DrawGrid {
-            set {
-                foreach (var pair in surfaces) {
+
+        public bool DrawGrid
+        {
+            set
+            {
+                foreach (var pair in surfaces)
+                {
                     pair.Value.DrawGrid = value;
                 }
             }
         }
 
-        public bool DrawTiles {
-            set {
-                foreach (var pair in surfaces) {
+        public bool DrawTiles
+        {
+            set
+            {
+                foreach (var pair in surfaces)
+                {
                     pair.Value.DrawTiles = value;
                 }
             }
         }
 
-        public bool DrawBlock {
-            set {
-                foreach (var pair in surfaces) {
+        public bool DrawBlock
+        {
+            set
+            {
+                foreach (var pair in surfaces)
+                {
                     pair.Value.DrawBlock = value;
                 }
             }
@@ -53,12 +63,14 @@ namespace MegaMan_Level_Editor
         /* *
          * DrawAction - An action that is saved into history
          * */
-        public class DrawAction {
+        public class DrawAction
+        {
             public int x, y;
             public ITileBrush current, previous;
             public MegaMan.Screen screen;
 
-            public DrawAction(int x, int y, ITileBrush current, ITileBrush previous, MegaMan.Screen screen) {
+            public DrawAction(int x, int y, ITileBrush current, ITileBrush previous, MegaMan.Screen screen)
+            {
                 this.x = x;
                 this.y = y;
                 this.current = current;
@@ -66,11 +78,13 @@ namespace MegaMan_Level_Editor
                 this.screen = screen;
             }
 
-            override public String ToString() {
+            override public String ToString()
+            {
                 return "(x, y) : (" + x + "," + y + ")  current : " + current.ToString() + " previous : " + previous.ToString();
             }
 
-            public DrawAction Reverse() {
+            public DrawAction Reverse()
+            {
                 return new DrawAction(x, y, previous, current, screen);
             }
         }
@@ -78,13 +92,15 @@ namespace MegaMan_Level_Editor
         /* *
          * History - Saves previous actions for "undo"/"redo" functionality
          * */
-        public class History {
+        public class History
+        {
             // TODO: Make the stack a type "Action[]" where an Action is anything
             // we may want to undo.
             public List<DrawAction> stack;
             public int currentAction;
 
-            public History() {
+            public History()
+            {
                 this.currentAction = -1;
                 this.stack = new List<DrawAction>();
             }
@@ -119,74 +135,92 @@ namespace MegaMan_Level_Editor
              * This behavior would be consistent with popular graphics programs like Photoshop and GIMP
              * 
              * */
-            public void Push(int x, int y, ITileBrush current, ITileBrush previous, MegaMan.Screen screen) {
+            public void Push(int x, int y, ITileBrush current, ITileBrush previous, MegaMan.Screen screen)
+            {
                 currentAction += 1;
                 stack.Add(new DrawAction(x, y, current, previous, screen));
                 UpdateHistoryForm();
-           }
-            
-            public DrawAction Undo() {
-                if (currentAction >= 0) {
-                    var action = stack[currentAction];
-                    currentAction -= 1;
-//                    stack.RemoveAt(stack.Count - 1);                    
-                    UpdateHistoryForm();
-                    return action.Reverse();
-                } else {
-                    return null;
-                }                
             }
 
-            public DrawAction Redo() {
-                if (currentAction < stack.Count) {
-                    currentAction += 1;
+            public DrawAction Undo()
+            {
+                if (currentAction >= 0)
+                {
                     var action = stack[currentAction];
+                    currentAction -= 1;
+                    //                    stack.RemoveAt(stack.Count - 1);                    
                     UpdateHistoryForm();
-                    return action;
-                } else {
+                    return action.Reverse();
+                }
+                else
+                {
                     return null;
                 }
             }
 
-            public void UpdateHistoryForm() {
+            public DrawAction Redo()
+            {
+                if (currentAction < stack.Count)
+                {
+                    currentAction += 1;
+                    var action = stack[currentAction];
+                    UpdateHistoryForm();
+                    return action;
+                }
+                else
+                {
+                    return null;
+                }
+            }
+
+            public void UpdateHistoryForm()
+            {
                 MainForm.Instance.historyForm.UpdateHistory(this);
             }
         }
 
         //TODO: Move this back into StageForm
-        public void DrawTile(int x, int y, ScreenDrawingSurface surface) {
+        public void DrawTile(int x, int y, ScreenDrawingSurface surface)
+        {
             if (!surface.drawing || currentBrush == null)
                 return;
 
             var previous = currentBrush.DrawOn(surface.Screen, x, y);
-            if (previous != null) {
+            if (previous != null)
+            {
                 history.Push(x, y, currentBrush, previous, surface.Screen);
             }
 
             surface.ReDrawAll();
         }
 
-        public void Undo() {
+        public void Undo()
+        {
             var action = history.Undo();
 
-            if (action != null) {
+            if (action != null)
+            {
                 var previous = action.current.DrawOn(action.screen, action.x, action.y);
 
                 // TODO: Use list combinators to select the first element that matches
-                foreach (var surface in surfaces.Values) {
+                foreach (var surface in surfaces.Values)
+                {
                     if (surface.Screen == action.screen)
                         surface.ReDrawAll();
                 }
             }
         }
 
-        public void Redo() {
+        public void Redo()
+        {
             var action = history.Redo();
 
-            if (action != null) {
+            if (action != null)
+            {
                 var future = action.current.DrawOn(action.screen, action.x, action.y);
 
-                foreach (var surface in surfaces.Values) {
+                foreach (var surface in surfaces.Values)
+                {
                     if (surface.Screen == action.screen)
                         surface.ReDrawAll();
                 }
@@ -196,11 +230,12 @@ namespace MegaMan_Level_Editor
 
         public string Path { get; private set; }
 
-        public StageForm(MegaMan.Map stage) {
+        public StageForm(MegaMan.Map stage)
+        {
             InitializeComponent();
 
-            history   = new History();
-            surfaces  = new Dictionary<String, ScreenDrawingSurface>();
+            history = new History();
+            surfaces = new Dictionary<String, ScreenDrawingSurface>();
 
             Program.FrameTick += new Action(Program_FrameTick);
 
@@ -209,19 +244,23 @@ namespace MegaMan_Level_Editor
             SetStage(stage);
         }
 
-        public void RenameSurface(string oldScreenName, string newScreenName) {
+        public void RenameSurface(string oldScreenName, string newScreenName)
+        {
             var surface = surfaces[oldScreenName];
             surface.screenName = newScreenName;
             surfaces.Add(newScreenName, surface);
             surfaces.Remove(oldScreenName);
         }
 
-        void parent_BrushChanged(BrushChangedEventArgs e) {
+        void parent_BrushChanged(BrushChangedEventArgs e)
+        {
             SetBrush(e.Brush);
         }
 
-        void Program_FrameTick() {
-            foreach (var pair in surfaces) {
+        void Program_FrameTick()
+        {
+            foreach (var pair in surfaces)
+            {
                 pair.Value.ReDrawAll();
             }
         }
@@ -229,7 +268,8 @@ namespace MegaMan_Level_Editor
         /* *
          * SetText - Name the window
          * */
-        public void SetText() {
+        public void SetText()
+        {
             this.Text = this.stage.Name;
             if (this.stage.Dirty) this.Text += " *";
         }
@@ -237,14 +277,16 @@ namespace MegaMan_Level_Editor
         /* *
          * SetStage - Decide the stage object that will be edited
          * */
-        public void SetStage(MegaMan.Map stage) {
+        public void SetStage(MegaMan.Map stage)
+        {
             this.stage = stage;
             this.stageName = stage.Name;
 
             SetText();
             this.stage.DirtyChanged += (b) => SetText();
 
-            foreach (var pair in stage.Screens) {              
+            foreach (var pair in stage.Screens)
+            {
                 var surface = CreateScreenSurface(stage.Name, pair.Key);
                 surface.screenImage.Location = new Point(0, 0);
             }
@@ -252,40 +294,53 @@ namespace MegaMan_Level_Editor
             AlignScreenSurfaces();
         }
 
-        public void AlignScreenSurfaces() {
-            foreach (var pair in surfaces) {
+        public void AlignScreenSurfaces()
+        {
+            foreach (var pair in surfaces)
+            {
                 if (stage.StartScreen == pair.Key)
                     pair.Value.placed = true;
                 else
                     pair.Value.placed = false;
             }
 
-            foreach (var join in stage.Joins) {
+            foreach (var join in stage.Joins)
+            {
                 AlignScreenSurfaceUsingJoin(surfaces[join.screenOne], surfaces[join.screenTwo], join);
             }
         }
 
-        public void AlignScreenSurfaceUsingJoin(ScreenDrawingSurface surface, ScreenDrawingSurface secondSurface, Join join) {
+        public void AlignScreenSurfaceUsingJoin(ScreenDrawingSurface surface, ScreenDrawingSurface secondSurface, Join join)
+        {
             var offset = (join.offsetTwo - join.offsetOne) * join.Size;
 
-            if (surface.placed) {
+            if (surface.placed)
+            {
                 // TODO: WTF? Why does horizontal mean vertical and vertical mean horizontal?
-                if (join.type == JoinType.Horizontal) {
+                if (join.type == JoinType.Horizontal)
+                {
                     // Place image below
                     var p = new Point(surface.screenImage.Location.X - offset, surface.screenImage.Location.Y + surface.screenImage.Size.Height);
                     secondSurface.screenImage.Location = p;
-                } else {
+                }
+                else
+                {
                     // Place image to the right
                     var p = new Point(surface.screenImage.Location.X + surface.screenImage.Size.Width, surface.screenImage.Location.Y - offset);
                     secondSurface.screenImage.Location = p;
                 }
                 secondSurface.placed = true;
-            } else if (secondSurface.placed) {
-                if (join.type == JoinType.Horizontal) {
+            }
+            else if (secondSurface.placed)
+            {
+                if (join.type == JoinType.Horizontal)
+                {
                     // Place image above
                     var p = new Point(secondSurface.screenImage.Location.X - offset, secondSurface.screenImage.Location.Y - surface.screenImage.Size.Height);
                     surface.screenImage.Location = p;
-                } else {
+                }
+                else
+                {
                     // Place image to the left
                     var p = new Point(secondSurface.screenImage.Location.X - surface.screenImage.Size.Width, secondSurface.screenImage.Location.Y - offset);
                     surface.screenImage.Location = p;
@@ -294,14 +349,16 @@ namespace MegaMan_Level_Editor
             }
         }
 
-        public ScreenDrawingSurface CreateScreenSurface(string stageName, string screenName) {
+        public ScreenDrawingSurface CreateScreenSurface(string stageName, string screenName)
+        {
             var surface = new ScreenDrawingSurface(stageName, screenName, this);
             surface.ReDrawAll();
             surfaces.Add(screenName, surface);
             return surface;
         }
 
-        private void SetBrush(ITileBrush brush) {
+        private void SetBrush(ITileBrush brush)
+        {
             currentBrush = brush;
         }
 
@@ -310,11 +367,13 @@ namespace MegaMan_Level_Editor
          * */
 
 
-        public void StageForm_Load(object sender, EventArgs e) {
+        public void StageForm_Load(object sender, EventArgs e)
+        {
 
         }
-        
-        public void StageForm_GotFocus(object sender, EventArgs e) {
+
+        public void StageForm_GotFocus(object sender, EventArgs e)
+        {
             MainForm.Instance.currentStageForm = this;
             // MessageBox.Show("I just got focus! " + this.stageName);
         }

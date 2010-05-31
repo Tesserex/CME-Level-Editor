@@ -6,8 +6,10 @@ using MegaMan;
 using System.Windows.Forms;
 using System.IO;
 
-namespace MegaMan_Level_Editor {
-    public class MapDocument {
+namespace MegaMan_Level_Editor
+{
+    public class MapDocument
+    {
         public MainForm parent;
         public Map Map { get; private set; }
 
@@ -17,25 +19,31 @@ namespace MegaMan_Level_Editor {
         private bool drawGrid;
         private bool drawBlock;
 
-        public bool DrawGrid {
+        public bool DrawGrid
+        {
             get { return drawGrid; }
-            set {
+            set
+            {
                 drawGrid = value;
                 foreach (StageForm screen in this.openScreens.Values) screen.DrawGrid = value;
             }
         }
 
-        public bool DrawTiles {
+        public bool DrawTiles
+        {
             get { return drawTiles; }
-            set {
+            set
+            {
                 drawTiles = value;
                 foreach (StageForm screen in this.openScreens.Values) screen.DrawTiles = value;
             }
         }
 
-        public bool DrawBlock {
+        public bool DrawBlock
+        {
             get { return drawBlock; }
-            set {
+            set
+            {
                 drawBlock = value;
                 foreach (StageForm screen in this.openScreens.Values) screen.DrawBlock = value;
             }
@@ -43,7 +51,8 @@ namespace MegaMan_Level_Editor {
 
         public event Action<MapDocument> Closed;
 
-        public MapDocument(Map map, MainForm parent) {
+        public MapDocument(Map map, MainForm parent)
+        {
             this.parent = parent;
             this.Map = map;
 
@@ -51,36 +60,43 @@ namespace MegaMan_Level_Editor {
         }
 
         // TODO : Rename Map to Stages.. More consistent naming
-        public MapDocument(string path, MainForm parent) {
+        public MapDocument(string path, MainForm parent)
+        {
             this.parent = parent;
             this.Map = new Map(MainForm.Instance.rootPath, path);
             openScreens = new Dictionary<string, StageForm>();
         }
 
-        public void RefreshInfo() {
+        public void RefreshInfo()
+        {
             foreach (StageForm screen in this.openScreens.Values) screen.SetText();
         }
 
-        public void ReFocus() {
-//            ShowScreen(Map.Screens.First().Key);
+        public void ReFocus()
+        {
+            //            ShowScreen(Map.Screens.First().Key);
             ShowStage(Map);
         }
 
         //TODO Write NewStage
-        public void NewStage() {
+        public void NewStage()
+        {
             MessageBox.Show("I don't do anything yet! Fix this!");
         }
 
-        public void NewScreen() {
+        public void NewScreen()
+        {
             MegaMan.Screen screen = new MegaMan.Screen(16, 14, Map);
             ScreenProp propForm = new ScreenProp();
             //propForm.LoadScreen(screen);
             propForm.Show();
 
-            propForm.FormClosing += (s, ev) => {
+            propForm.FormClosing += (s, ev) =>
+            {
                 if (!propForm.Confirmed) return;
 
-                if (screen.Name == null) {
+                if (screen.Name == null)
+                {
                     MessageBox.Show("You must give the screen a name.", "Add Screen Error", MessageBoxButtons.OK, MessageBoxIcon.Information);
                     return;
                 }
@@ -90,8 +106,9 @@ namespace MegaMan_Level_Editor {
 
             };
         }
-        
-        public void ShowStage(Map stage) {
+
+        public void ShowStage(Map stage)
+        {
             var stageForm = new StageForm(stage);
             stageForm.MdiParent = parent;
             stageForm.GotFocus += new EventHandler(StageForm_GotFocus);
@@ -105,8 +122,10 @@ namespace MegaMan_Level_Editor {
             stageForm.Focus();
         }
 
-        public void Close() {
-            if (Map.Dirty) {
+        public void Close()
+        {
+            if (Map.Dirty)
+            {
                 DialogResult result = MessageBox.Show("Do you want to save changes to " + Map.Name + " before closing?", "Save Changes", MessageBoxButtons.YesNoCancel);
                 if (result == DialogResult.Yes) Map.Save();
                 else if (result == DialogResult.Cancel) return;
@@ -116,8 +135,10 @@ namespace MegaMan_Level_Editor {
             if (Closed != null) Closed(this);
         }
 
-        public bool ConfirmSave() {
-            if (Map.Dirty) {
+        public bool ConfirmSave()
+        {
+            if (Map.Dirty)
+            {
                 DialogResult result = MessageBox.Show("Do you want to save changes to " + Map.Name + " before closing?", "Save Changes", MessageBoxButtons.YesNoCancel);
                 if (result == DialogResult.Yes) Map.Save();
                 else if (result == DialogResult.Cancel) return false;
@@ -125,14 +146,17 @@ namespace MegaMan_Level_Editor {
             return true;
         }
 
-        private void CloseAll() {
-            foreach (StageForm screen in this.openScreens.Values) {
+        private void CloseAll()
+        {
+            foreach (StageForm screen in this.openScreens.Values)
+            {
                 screen.FormClosing -= StageForm_FormClosing;
                 CloseScreen(screen);
             }
         }
 
-        void StageForm_FormClosing(object sender, FormClosingEventArgs e) {
+        void StageForm_FormClosing(object sender, FormClosingEventArgs e)
+        {
             // closing all screens means we should close completely
             if (openScreens.Count == 1) // this is the last one
             {
@@ -142,12 +166,14 @@ namespace MegaMan_Level_Editor {
             }
         }
 
-        private void CloseScreen(StageForm StageForm) {
+        private void CloseScreen(StageForm StageForm)
+        {
             StageForm.GotFocus -= new EventHandler(StageForm_GotFocus);
             StageForm.Close();
         }
 
-        private void StageForm_GotFocus(object sender, EventArgs e) {
+        private void StageForm_GotFocus(object sender, EventArgs e)
+        {
             parent.FocusScreen(this);
         }
     }
