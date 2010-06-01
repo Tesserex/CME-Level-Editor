@@ -23,7 +23,7 @@ namespace MegaMan_Level_Editor
         private TilesetStrip tilestrip;
         private MapDocument activeMap;
 
-        public Dictionary<string, MapDocument> stages = new Dictionary<string, MapDocument>();
+        private Dictionary<string, MapDocument> stages = new Dictionary<string, MapDocument>();
         public Dictionary<string, StageForm> stageForms = new Dictionary<string, StageForm>();
 
         public BrushForm brushForm;

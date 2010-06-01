@@ -91,7 +91,7 @@ namespace MegaMan_Level_Editor
         {
             var stageName = node.Parent.Name;
             var screenName = node.Name;
-            var screen = MainForm.Instance.stages[stageName].Map.Screens[screenName];
+            var screen = MainForm.GetScreen(stageName, screenName);
             var screenProps = new ScreenProp(screen);
             screenProps.Show();
         }
