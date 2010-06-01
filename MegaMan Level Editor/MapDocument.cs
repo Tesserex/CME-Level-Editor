@@ -75,7 +75,7 @@ namespace MegaMan_Level_Editor
 
         public void ReFocus()
         {
-            ShowStage(Map);
+            ShowStage();
         }
 
         //TODO Write NewStage
@@ -107,11 +107,11 @@ namespace MegaMan_Level_Editor
             };
         }
 
-        public void ShowStage(Map stage)
+        public void ShowStage()
         {
             if (this.stageForm == null)
             {
-                this.stageForm = new StageForm(stage);
+                this.stageForm = new StageForm(this.Map);
                 stageForm.MdiParent = parent;
                 stageForm.GotFocus += new EventHandler(StageForm_GotFocus);
                 stageForm.FormClosing += new FormClosingEventHandler(StageForm_FormClosing);
