@@ -256,10 +256,5 @@ namespace MegaMan_Level_Editor
         {
             currentBrush = brush;
         }
-
-        public void StageForm_GotFocus(object sender, EventArgs e)
-        {
-            MainForm.Instance.currentStageForm = this;
-        }
     }
 }

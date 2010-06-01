@@ -14,6 +14,7 @@ namespace MegaMan_Level_Editor
         public Map Map { get; private set; }
 
         private Dictionary<string, StageForm> openScreens;
+        private StageForm stageForm;
 
         private bool drawTiles;
         private bool drawGrid;
@@ -109,7 +110,7 @@ namespace MegaMan_Level_Editor
 
         public void ShowStage(Map stage)
         {
-            var stageForm = new StageForm(stage);
+            this.stageForm = new StageForm(stage);
             stageForm.MdiParent = parent;
             stageForm.GotFocus += new EventHandler(StageForm_GotFocus);
             stageForm.FormClosing += new FormClosingEventHandler(StageForm_FormClosing);
@@ -144,6 +145,16 @@ namespace MegaMan_Level_Editor
                 else if (result == DialogResult.Cancel) return false;
             }
             return true;
+        }
+
+        public void Undo()
+        {
+            if (stageForm != null) stageForm.Undo();
+        }
+
+        public void Redo()
+        {
+            if (stageForm != null) stageForm.Redo();
         }
 
         private void CloseAll()

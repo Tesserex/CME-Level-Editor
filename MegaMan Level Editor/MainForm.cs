@@ -14,7 +14,6 @@ namespace MegaMan_Level_Editor
 {
     public partial class MainForm : Form
     {
-
         #region Public Members
         /* *
          * rootPath - The path of the current project
@@ -28,7 +27,6 @@ namespace MegaMan_Level_Editor
 
         public Dictionary<string, MapDocument> stages = new Dictionary<string, MapDocument>();
         public Dictionary<string, StageForm> stageForms = new Dictionary<string, StageForm>();
-        public StageForm currentStageForm;
 
         public BrushForm brushForm;
         public ProjectForm projectForm;
@@ -442,13 +440,12 @@ namespace MegaMan_Level_Editor
 
         public void undoToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            // MessageBox.Show("Going to undo last action from stage " + MainForm.Instance.currentStageForm.stageName);
-            MainForm.Instance.currentStageForm.Undo();
+            this.activeMap.Undo();
         }
 
         private void redoToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            MainForm.Instance.currentStageForm.Redo();
+            this.activeMap.Redo();
         }
 
         private void newToolStripMenuItem_Click(object sender, EventArgs e)

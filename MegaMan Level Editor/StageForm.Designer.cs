@@ -50,7 +50,6 @@ namespace MegaMan_Level_Editor {
             this.Controls.Add(this.sizingPanel);
             this.Name = "StageForm";
             this.Text = "StageForm";
-            this.GotFocus += new System.EventHandler(this.StageForm_GotFocus);
             this.ResumeLayout(false);
 
         }
