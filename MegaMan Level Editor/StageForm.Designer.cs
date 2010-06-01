@@ -41,7 +41,6 @@ namespace MegaMan_Level_Editor {
             this.sizingPanel.Name = "sizingPanel";
             this.sizingPanel.Size = new System.Drawing.Size(892, 471);
             this.sizingPanel.TabIndex = 1;
-            this.sizingPanel.Paint += new System.Windows.Forms.PaintEventHandler(this.sizingPanel_Paint);
             // 
             // StageForm
             // 
@@ -56,26 +55,6 @@ namespace MegaMan_Level_Editor {
             this.ResumeLayout(false);
 
         }
-
-        void sizingPanel_Paint(object sender, PaintEventArgs e) {
-            // Get the graphics object 
-            var gfx = e.Graphics;
-            var pen = new Pen(Color.Black);
-
-            var tilesWide = sizingPanel.Width  / stage.Tileset.TileSize;
-            var tilesHigh = sizingPanel.Height / stage.Tileset.TileSize;
-
-            var tileSize = stage.Tileset.TileSize;
-
-            for (int i = 0; i < tilesWide; i++) {
-                for (int j = 0; j < tilesHigh; j++) {
-                    gfx.DrawRectangle(pen,  i * tileSize, j * tileSize, (i+1)*tileSize, (j+1)*tileSize);
-//                    gfx.DrawRectangle(pen,  Util.rectAt(i, j, tilesize()));
-                }
-            }
-
-        }
-
         #endregion
 
         public System.Windows.Forms.Panel sizingPanel;

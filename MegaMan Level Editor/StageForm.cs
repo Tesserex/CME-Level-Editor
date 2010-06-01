@@ -233,6 +233,8 @@ namespace MegaMan_Level_Editor
         {
             InitializeComponent();
 
+            this.SetBackgroundGrid();
+
             history = new History();
             surfaces = new Dictionary<String, ScreenDrawingSurface>();
 
@@ -241,6 +243,19 @@ namespace MegaMan_Level_Editor
             MainForm.Instance.BrushChanged += new BrushChangedHandler(parent_BrushChanged);
             MainForm.Instance.stageForms.Add(stage.Name, this);
             SetStage(stage);
+        }
+
+        private void SetBackgroundGrid()
+        {
+            // just need a tiny tile image
+            Image tile = new Bitmap(16, 16);
+            using (Graphics g = Graphics.FromImage(tile))
+            {
+                g.DrawLine(Pens.Black, 15, 0, 15, 15);
+                g.DrawLine(Pens.Black, 0, 15, 15, 15);
+            }
+            sizingPanel.BackgroundImage = tile;
+            sizingPanel.BackgroundImageLayout = ImageLayout.Tile;
         }
 
         public void RenameSurface(string oldScreenName, string newScreenName)
