@@ -13,7 +13,6 @@ namespace MegaMan_Level_Editor
 {
     public partial class StageForm : Form
     {
-
         public static Brush blockBrush = new SolidBrush(Color.FromArgb(160, Color.OrangeRed));
         public static Brush ladderBrush = new SolidBrush(Color.FromArgb(160, Color.Yellow));
         public Pen highlightPen = new Pen(Color.Green, 2);
@@ -182,7 +181,7 @@ namespace MegaMan_Level_Editor
         //TODO: Move this back into StageForm
         public void DrawTile(int x, int y, ScreenDrawingSurface surface)
         {
-            if (!surface.drawing || currentBrush == null)
+            if (!surface.Drawing || currentBrush == null)
                 return;
 
             var previous = currentBrush.DrawOn(surface.Screen, x, y);
@@ -299,9 +298,9 @@ namespace MegaMan_Level_Editor
             foreach (var pair in surfaces)
             {
                 if (stage.StartScreen == pair.Key)
-                    pair.Value.placed = true;
+                    pair.Value.Placed = true;
                 else
-                    pair.Value.placed = false;
+                    pair.Value.Placed = false;
             }
 
             foreach (var join in stage.Joins)
@@ -314,7 +313,7 @@ namespace MegaMan_Level_Editor
         {
             var offset = (join.offsetTwo - join.offsetOne) * join.Size;
 
-            if (surface.placed)
+            if (surface.Placed)
             {
                 // TODO: WTF? Why does horizontal mean vertical and vertical mean horizontal?
                 if (join.type == JoinType.Horizontal)
@@ -329,9 +328,9 @@ namespace MegaMan_Level_Editor
                     var p = new Point(surface.screenImage.Location.X + surface.screenImage.Size.Width, surface.screenImage.Location.Y - offset);
                     secondSurface.screenImage.Location = p;
                 }
-                secondSurface.placed = true;
+                secondSurface.Placed = true;
             }
-            else if (secondSurface.placed)
+            else if (secondSurface.Placed)
             {
                 if (join.type == JoinType.Horizontal)
                 {
@@ -345,7 +344,7 @@ namespace MegaMan_Level_Editor
                     var p = new Point(secondSurface.screenImage.Location.X - surface.screenImage.Size.Width, secondSurface.screenImage.Location.Y - offset);
                     surface.screenImage.Location = p;
                 }
-                surface.placed = true;
+                surface.Placed = true;
             }
         }
 

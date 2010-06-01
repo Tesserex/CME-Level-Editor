@@ -13,19 +13,19 @@ namespace MegaMan_Level_Editor
      * */
     public class ScreenDrawingSurface
     {
-        public Bitmap tileLayer = null;
-        public Bitmap gridLayer = null;
-        public Bitmap blockLayer = null;
-        public Bitmap mouseLayer = null;
-        public Bitmap masterImage = null;
+        private Bitmap tileLayer = null;
+        private Bitmap gridLayer = null;
+        private Bitmap blockLayer = null;
+        private Bitmap mouseLayer = null;
+        private Bitmap masterImage = null;
 
-        public bool drawing = false;
-        public bool drawGrid;
-        public bool drawTiles;
-        public bool drawBlock;
+        public bool Drawing { get; private set; }
+        private bool drawGrid;
+        private bool drawTiles;
+        private bool drawBlock;
 
-        public bool active = false;
-        public bool placed = false;
+        private bool active = false;
+        public bool Placed { get; set; }
 
         public PictureBox screenImage;
 
@@ -67,8 +67,9 @@ namespace MegaMan_Level_Editor
             }
         }
 
-        public string stageName, screenName;
-        public StageForm parent;
+        public string stageName { get; private set; }
+        public string screenName { get; set; }
+        private StageForm parent;
 
         public ScreenDrawingSurface(string stageName, string screenName, StageForm parent)
         {
@@ -104,13 +105,13 @@ namespace MegaMan_Level_Editor
 
         public void screenImage_MouseDown(object sender, MouseEventArgs e)
         {
-            drawing = true;
+            Drawing = true;
             DrawTile(e.X / Screen.Tileset.TileSize, e.Y / Screen.Tileset.TileSize);
         }
 
         public void screenImage_MouseUp(object sender, MouseEventArgs e)
         {
-            drawing = false;
+            Drawing = false;
         }
 
         public void screenImage_MouseMove(object sender, MouseEventArgs e)
