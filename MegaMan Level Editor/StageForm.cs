@@ -141,7 +141,6 @@ namespace MegaMan_Level_Editor
         public void RenameSurface(string oldScreenName, string newScreenName)
         {
             var surface = surfaces[oldScreenName];
-            surface.screenName = newScreenName;
             surfaces.Add(newScreenName, surface);
             surfaces.Remove(oldScreenName);
         }
@@ -180,7 +179,7 @@ namespace MegaMan_Level_Editor
 
             foreach (var pair in stage.Screens)
             {
-                var surface = CreateScreenSurface(stage.Name, pair.Key);
+                var surface = CreateScreenSurface(pair.Value);
                 surface.screenImage.Location = new Point(0, 0);
             }
 
@@ -242,11 +241,11 @@ namespace MegaMan_Level_Editor
             }
         }
 
-        public ScreenDrawingSurface CreateScreenSurface(string stageName, string screenName)
+        public ScreenDrawingSurface CreateScreenSurface(MegaMan.Screen screen)
         {
-            var surface = new ScreenDrawingSurface(stageName, screenName, this);
+            var surface = new ScreenDrawingSurface(screen, this);
             surface.ReDrawAll();
-            surfaces.Add(screenName, surface);
+            surfaces.Add(screen.Name, surface);
             return surface;
         }
 

@@ -63,22 +63,13 @@ namespace MegaMan_Level_Editor
             }
         }
 
-        public MegaMan.Screen Screen
-        {
-            get
-            {
-                return MainForm.GetScreen(stageName, screenName);
-            }
-        }
+        public MegaMan.Screen Screen { get; private set; }
 
-        public string stageName { get; private set; }
-        public string screenName { get; set; }
         private StageForm parent;
 
-        public ScreenDrawingSurface(string stageName, string screenName, StageForm parent)
+        public ScreenDrawingSurface(MegaMan.Screen screen, StageForm parent)
         {
-            this.stageName = stageName;
-            this.screenName = screenName;
+            this.Screen = screen;
             this.parent = parent;
 
             AddPictureBox();
