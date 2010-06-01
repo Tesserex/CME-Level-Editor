@@ -65,6 +65,7 @@
     <Compile Include="EditBrushForm.Designer.cs">
       <DependentUpon>EditBrushForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="History.cs" />
     <Compile Include="HistoryForm.cs">
       <SubType>Form</SubType>
     </Compile>

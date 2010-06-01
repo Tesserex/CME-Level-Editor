@@ -12,7 +12,7 @@ namespace MegaMan_Level_Editor {
             InitializeComponent();
         }
 
-        public void UpdateHistory(StageForm.History history) {
+        public void UpdateHistory(History history) {
             historyView.Items.Clear();
 
             for (int i = 0; i < history.stack.Count; i++) {
