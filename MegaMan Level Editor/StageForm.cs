@@ -13,8 +13,7 @@ namespace MegaMan_Level_Editor
 {
     public partial class StageForm : Form
     {
-        public MegaMan.Map stage;
-        public string stageName;
+        private MegaMan.Map stage;
 
         private History history;
         private ITileBrush currentBrush = null;
@@ -175,7 +174,6 @@ namespace MegaMan_Level_Editor
         public void SetStage(MegaMan.Map stage)
         {
             this.stage = stage;
-            this.stageName = stage.Name;
 
             SetText();
             this.stage.DirtyChanged += (b) => SetText();
