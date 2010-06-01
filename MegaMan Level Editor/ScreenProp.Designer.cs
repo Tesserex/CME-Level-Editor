@@ -30,11 +30,13 @@
         {
             this.label1 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
-            this.textWidth = new System.Windows.Forms.TextBox();
-            this.textHeight = new System.Windows.Forms.TextBox();
             this.label3 = new System.Windows.Forms.Label();
             this.textName = new System.Windows.Forms.TextBox();
             this.buttonOK = new System.Windows.Forms.Button();
+            this.widthField = new System.Windows.Forms.NumericUpDown();
+            this.heightField = new System.Windows.Forms.NumericUpDown();
+            ((System.ComponentModel.ISupportInitialize)(this.widthField)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.heightField)).BeginInit();
             this.SuspendLayout();
             // 
             // label1
@@ -55,20 +57,6 @@
             this.label2.TabIndex = 1;
             this.label2.Text = "Height";
             // 
-            // textWidth
-            // 
-            this.textWidth.Location = new System.Drawing.Point(70, 43);
-            this.textWidth.Name = "textWidth";
-            this.textWidth.Size = new System.Drawing.Size(40, 20);
-            this.textWidth.TabIndex = 2;
-            // 
-            // textHeight
-            // 
-            this.textHeight.Location = new System.Drawing.Point(169, 43);
-            this.textHeight.Name = "textHeight";
-            this.textHeight.Size = new System.Drawing.Size(39, 20);
-            this.textHeight.TabIndex = 3;
-            // 
             // label3
             // 
             this.label3.AutoSize = true;
@@ -88,7 +76,7 @@
             // buttonOK
             // 
             this.buttonOK.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.buttonOK.Location = new System.Drawing.Point(185, 134);
+            this.buttonOK.Location = new System.Drawing.Point(185, 84);
             this.buttonOK.Name = "buttonOK";
             this.buttonOK.Size = new System.Drawing.Size(51, 22);
             this.buttonOK.TabIndex = 6;
@@ -96,20 +84,56 @@
             this.buttonOK.UseVisualStyleBackColor = true;
             this.buttonOK.Click += new System.EventHandler(this.buttonOK_Click);
             // 
+            // widthField
+            // 
+            this.widthField.Location = new System.Drawing.Point(68, 44);
+            this.widthField.Minimum = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            this.widthField.Name = "widthField";
+            this.widthField.Size = new System.Drawing.Size(37, 20);
+            this.widthField.TabIndex = 7;
+            this.widthField.Value = new decimal(new int[] {
+            16,
+            0,
+            0,
+            0});
+            // 
+            // heightField
+            // 
+            this.heightField.Location = new System.Drawing.Point(169, 44);
+            this.heightField.Minimum = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            this.heightField.Name = "heightField";
+            this.heightField.Size = new System.Drawing.Size(36, 20);
+            this.heightField.TabIndex = 8;
+            this.heightField.Value = new decimal(new int[] {
+            14,
+            0,
+            0,
+            0});
+            // 
             // ScreenProp
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(248, 168);
+            this.ClientSize = new System.Drawing.Size(248, 118);
+            this.Controls.Add(this.heightField);
+            this.Controls.Add(this.widthField);
             this.Controls.Add(this.buttonOK);
             this.Controls.Add(this.textName);
             this.Controls.Add(this.label3);
-            this.Controls.Add(this.textHeight);
-            this.Controls.Add(this.textWidth);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.label1);
             this.Name = "ScreenProp";
             this.Text = "ScreenProp";
+            ((System.ComponentModel.ISupportInitialize)(this.widthField)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.heightField)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -119,10 +143,10 @@
 
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Label label2;
-        private System.Windows.Forms.TextBox textWidth;
-        private System.Windows.Forms.TextBox textHeight;
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.TextBox textName;
         private System.Windows.Forms.Button buttonOK;
+        private System.Windows.Forms.NumericUpDown widthField;
+        private System.Windows.Forms.NumericUpDown heightField;
     }
 }

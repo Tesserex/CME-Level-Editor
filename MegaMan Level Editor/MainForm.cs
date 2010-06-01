@@ -491,6 +491,57 @@ namespace MegaMan_Level_Editor
         // Tool Windows *
         //***************
 
+        private void newScreenStripMenuItem_Click(object sender, EventArgs e)
+        {
+            var screenPropForm = new ScreenProp();
+            screenPropForm.OK += new Action<ScreenProp>(screenPropForm_OK);
+            screenPropForm.Show();
+        }
+
+        private void screenPropForm_OK(ScreenProp prop)
+        {
+            if (prop.Screen == null)
+            {
+                var screen = new MegaMan.Screen(prop.Width, prop.Height, this.activeMap.Map);
+                screen.Name = prop.ScreenName;
+                this.activeMap.Map.Screens.Add(prop.ScreenName, screen);
+                screen.Save(ScreenPathFor(MainForm.Instance.ActiveMap.Map.Name, prop.ScreenName));
+            }
+            else
+            {
+                // Rename the screen
+                var screen = prop.Screen;
+                string oldName = screen.Name;
+
+                // this DEFINITELY needs to be a method of Map - "RenameScreen" or something
+                // it's dangerously risky doing it this way in the client code if we forget one time
+                // this is why "everything public" == bad, encapsulation == good
+                screen.Name = prop.ScreenName;
+                screen.Map.Screens.Remove(oldName);
+                screen.Map.Screens.Add(prop.ScreenName, screen);
+
+                screen.Resize(prop.ScreenWidth, prop.ScreenHeight);
+
+                // Update the project tree
+                var projectForm = MainForm.Instance.projectForm;
+                var stageNode = projectForm.projectView.Nodes.Find(screen.Map.Name, true).First();
+                var screens = MainForm.GetStage(screen.Map.Name).Screens.Select((pair) => { return pair.Value; }).ToList();
+                projectForm.LoadScreenSubtree(stageNode, screens);
+
+                var stageForm = MainForm.Instance.stageForms[screen.Map.Name];
+                var surface = stageForm.GetSurface(oldName);
+
+                // Update the screen surfaces
+                if (oldName != prop.ScreenName)
+                {
+                    stageForm.RenameSurface(oldName, prop.ScreenName);
+                }
+
+                surface.ResizeLayers();
+                stageForm.AlignScreenSurfaces();
+            }
+        }
+
         private void brushesToolStripMenuItem_Click(object sender, EventArgs e)
         {
             if (brushForm.Visible)
@@ -532,7 +583,7 @@ namespace MegaMan_Level_Editor
         }
 
         /* *
-         * Utility methods...
+         * Utility methods... smells like they belong in common library
          * */
         public static MegaMan.Map GetStage(string stageName)
         {
@@ -553,12 +604,6 @@ namespace MegaMan_Level_Editor
                 MainForm.Instance.stages[stageName].Map.Screens.Add(newScreenName, screen);
                 MainForm.Instance.stages[stageName].Map.Screens.Remove(oldScreenName);
             }
-        }
-
-        private void newScreenStripMenuItem_Click(object sender, EventArgs e)
-        {
-            var screenPropForm = new ScreenProp();
-            screenPropForm.Show();
         }
 
         private void menuStrip1_ItemClicked(object sender, ToolStripItemClickedEventArgs e)

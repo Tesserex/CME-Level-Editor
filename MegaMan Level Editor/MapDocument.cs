@@ -86,6 +86,8 @@ namespace MegaMan_Level_Editor
 
         public void NewScreen()
         {
+            /* I'm never called - please kill me!
+             * 
             MegaMan.Screen screen = new MegaMan.Screen(16, 14, Map);
             ScreenProp propForm = new ScreenProp();
             //propForm.LoadScreen(screen);
@@ -105,6 +107,7 @@ namespace MegaMan_Level_Editor
                 //ShowStage(screen);
 
             };
+             */
         }
 
         public void ShowStage()
