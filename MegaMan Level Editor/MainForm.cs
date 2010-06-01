@@ -23,8 +23,6 @@ namespace MegaMan_Level_Editor
         private TilesetStrip tilestrip;
         private MapDocument activeMap;
 
-        public List<MapDocument> openMaps = new List<MapDocument>();
-
         public Dictionary<string, MapDocument> stages = new Dictionary<string, MapDocument>();
         public Dictionary<string, StageForm> stageForms = new Dictionary<string, StageForm>();
 
@@ -64,7 +62,7 @@ namespace MegaMan_Level_Editor
                 drawGrid = value;
                 showGridToolStripMenuItem.Checked = value;
 
-                foreach (MapDocument map in openMaps)
+                foreach (MapDocument map in stages.Values)
                     map.DrawGrid = value;
             }
         }
@@ -77,7 +75,7 @@ namespace MegaMan_Level_Editor
                 drawTiles = value;
                 showBackgroundsToolStripMenuItem.Checked = value;
 
-                foreach (MapDocument map in openMaps) map.DrawTiles = value;
+                foreach (MapDocument map in stages.Values) map.DrawTiles = value;
             }
         }
 
@@ -89,9 +87,7 @@ namespace MegaMan_Level_Editor
                 drawBlock = value;
                 showBlockingToolStripMenuItem.Checked = value;
 
-                foreach (MapDocument map in openMaps) map.DrawBlock = value;
-
-                //tileForm.DrawBlock = value;
+                foreach (MapDocument map in stages.Values) map.DrawBlock = value;
             }
         }
         #endregion
@@ -291,7 +287,7 @@ namespace MegaMan_Level_Editor
          * */
         public List<MegaMan.Screen> LoadStageFromPath(String stageName, String path)
         {
-            foreach (var mapdoc in openMaps)
+            foreach (var mapdoc in stages.Values)
             {
                 if (Path.GetFullPath(mapdoc.Map.FileDir) == Path.GetFullPath(path))
                 {
@@ -302,14 +298,13 @@ namespace MegaMan_Level_Editor
             }
 
             var stage = new MapDocument(path, this);
-            stages[stageName] = stage;
+            stages[stage.Map.Name] = stage;
 
             stage.DrawBlock = this.drawBlock;
             stage.DrawGrid = this.drawGrid;
             stage.DrawTiles = this.drawTiles;
 
             stage.Closed += new Action<MapDocument>(map_Closed);
-            openMaps.Add(stage);
             stage.ReFocus();
 
             return stage.Map.Screens.Select((pair) => { return pair.Value; }).ToList();
@@ -317,7 +312,7 @@ namespace MegaMan_Level_Editor
 
         private void map_Closed(MapDocument mapdoc)
         {
-            openMaps.Remove(mapdoc);
+            stages.Remove(mapdoc.Map.Name);
 
             // if the tile form is showing this map's tileset, remove it from the form
             if (ActiveMap == mapdoc)
@@ -353,7 +348,7 @@ namespace MegaMan_Level_Editor
 
         private bool CheckSaveOnClose()
         {
-            foreach (MapDocument map in openMaps)
+            foreach (MapDocument map in stages.Values)
             {
                 if (!map.ConfirmSave()) return false;
             }
@@ -464,7 +459,7 @@ namespace MegaMan_Level_Editor
                 MapDocument document = new MapDocument(map, this);
                 // document.NewScreen();
                 document.NewStage();
-                openMaps.Add(document);
+                stages.Add(map.Name, document);
             };
         }
 
