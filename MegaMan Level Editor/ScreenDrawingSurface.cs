@@ -13,6 +13,10 @@ namespace MegaMan_Level_Editor
      * */
     public class ScreenDrawingSurface
     {
+        private static Brush blockBrush = new SolidBrush(Color.FromArgb(160, Color.OrangeRed));
+        private static Brush ladderBrush = new SolidBrush(Color.FromArgb(160, Color.Yellow));
+        private static Pen highlightPen = new Pen(Color.Green, 2);
+
         private Bitmap tileLayer = null;
         private Bitmap gridLayer = null;
         private Bitmap blockLayer = null;
@@ -91,7 +95,7 @@ namespace MegaMan_Level_Editor
         // Event Handlers *
         //*****************
 
-        public void AddScreenImageHandlers()
+        private void AddScreenImageHandlers()
         {
             screenImage.MouseLeave += (s, ev) => { this.active = false; ReDrawTiles(); ReDrawMaster(); };
             screenImage.MouseEnter += (s, ev) => { this.active = true; ReDrawTiles(); ReDrawMaster(); };
@@ -103,18 +107,18 @@ namespace MegaMan_Level_Editor
             //                screenImage.MouseCaptureChanged += (s, ev) => { this.active = !this.active; };
         }
 
-        public void screenImage_MouseDown(object sender, MouseEventArgs e)
+        private void screenImage_MouseDown(object sender, MouseEventArgs e)
         {
             Drawing = true;
             DrawTile(e.X / Screen.Tileset.TileSize, e.Y / Screen.Tileset.TileSize);
         }
 
-        public void screenImage_MouseUp(object sender, MouseEventArgs e)
+        private void screenImage_MouseUp(object sender, MouseEventArgs e)
         {
             Drawing = false;
         }
 
-        public void screenImage_MouseMove(object sender, MouseEventArgs e)
+        private void screenImage_MouseMove(object sender, MouseEventArgs e)
         {
             if (mouseLayer == null) return;
 
@@ -124,7 +128,7 @@ namespace MegaMan_Level_Editor
             using (Graphics g = Graphics.FromImage(mouseLayer))
             {
                 g.Clear(Color.Transparent);
-                g.DrawRectangle(parent.highlightPen, tx, ty, Screen.Tileset.TileSize - 1, Screen.Tileset.TileSize - 1);
+                g.DrawRectangle(highlightPen, tx, ty, Screen.Tileset.TileSize - 1, Screen.Tileset.TileSize - 1);
             }
 
             DrawTile(e.Location.X / Screen.Tileset.TileSize, e.Y / Screen.Tileset.TileSize);
@@ -132,7 +136,7 @@ namespace MegaMan_Level_Editor
         }
 
 
-        public void AddPictureBox()
+        private void AddPictureBox()
         {
             this.screenImage = new System.Windows.Forms.PictureBox();
             this.screenImage.BackColor = System.Drawing.SystemColors.Control;
@@ -150,8 +154,7 @@ namespace MegaMan_Level_Editor
             ReDrawGrid();
         }
 
-
-        public void ReDrawTiles()
+        private void ReDrawTiles()
         {
             using (Graphics g = Graphics.FromImage(tileLayer))
             {
@@ -163,7 +166,7 @@ namespace MegaMan_Level_Editor
         }
 
 
-        public Image ConvertToGrayscale(Image source)
+        private Image ConvertToGrayscale(Image source)
         {
             var bitmapSource = new Bitmap(source);
 
@@ -187,7 +190,7 @@ namespace MegaMan_Level_Editor
         }
          * */
 
-        public void ReDrawBlocking()
+        private void ReDrawBlocking()
         {
             using (Graphics g = Graphics.FromImage(blockLayer))
             {
@@ -197,19 +200,19 @@ namespace MegaMan_Level_Editor
                     {
                         if (Screen.TileAt(x, y).Properties.Blocking)
                         {
-                            g.FillRectangle(StageForm.blockBrush, x * Screen.Tileset.TileSize, y * Screen.Tileset.TileSize, Screen.Tileset.TileSize, Screen.Tileset.TileSize);
+                            g.FillRectangle(blockBrush, x * Screen.Tileset.TileSize, y * Screen.Tileset.TileSize, Screen.Tileset.TileSize, Screen.Tileset.TileSize);
                         }
 
                         if (Screen.TileAt(x, y).Properties.Climbable)
                         {
-                            g.FillRectangle(StageForm.ladderBrush, x * Screen.Tileset.TileSize, y * Screen.Tileset.TileSize, Screen.Tileset.TileSize, Screen.Tileset.TileSize);
+                            g.FillRectangle(ladderBrush, x * Screen.Tileset.TileSize, y * Screen.Tileset.TileSize, Screen.Tileset.TileSize, Screen.Tileset.TileSize);
                         }
                     }
                 }
             }
         }
 
-        public void ReDrawGrid()
+        private void ReDrawGrid()
         {
             using (Graphics g = Graphics.FromImage(gridLayer))
             {
@@ -227,7 +230,7 @@ namespace MegaMan_Level_Editor
             }
         }
 
-        public void ReDrawMaster()
+        private void ReDrawMaster()
         {
             if (Screen == null)
                 return;
@@ -258,24 +261,24 @@ namespace MegaMan_Level_Editor
             screenImage.Refresh();
         }
 
-        public void DrawTile(int x, int y)
+        private void DrawTile(int x, int y)
         {
             parent.DrawTile(x, y, this);
         }
 
 
-        public void InitLayer(ref Bitmap layer)
+        private void InitLayer(ref Bitmap layer)
         {
             if (layer != null) layer.Dispose();
             ResizeLayer(ref layer);
         }
 
-        public void ResizeLayer(ref Bitmap layer)
+        private void ResizeLayer(ref Bitmap layer)
         {
             layer = new Bitmap(Screen.Width * Screen.Tileset.TileSize, Screen.Height * Screen.Tileset.TileSize);
         }
 
-        public void BuildLayers()
+        private void BuildLayers()
         {
             InitLayer(ref tileLayer);
             InitLayer(ref gridLayer);

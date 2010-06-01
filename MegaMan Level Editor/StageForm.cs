@@ -13,16 +13,12 @@ namespace MegaMan_Level_Editor
 {
     public partial class StageForm : Form
     {
-        public static Brush blockBrush = new SolidBrush(Color.FromArgb(160, Color.OrangeRed));
-        public static Brush ladderBrush = new SolidBrush(Color.FromArgb(160, Color.Yellow));
-        public Pen highlightPen = new Pen(Color.Green, 2);
-
         public MegaMan.Map stage;
         public string stageName;
 
-        public History history;
-        public ITileBrush currentBrush = null;
-        public Dictionary<string, ScreenDrawingSurface> surfaces;
+        private History history;
+        private ITileBrush currentBrush = null;
+        private Dictionary<string, ScreenDrawingSurface> surfaces;
 
         public bool DrawGrid
         {
@@ -55,6 +51,12 @@ namespace MegaMan_Level_Editor
                     pair.Value.DrawBlock = value;
                 }
             }
+        }
+
+        public ScreenDrawingSurface GetSurface(string name)
+        {
+            if (!surfaces.ContainsKey(name)) return null;
+            return surfaces[name];
         }
 
         //TODO: Move this back into StageForm
@@ -255,20 +257,9 @@ namespace MegaMan_Level_Editor
             currentBrush = brush;
         }
 
-        /* *
-         * Redo - Reiterate the history stack
-         * */
-
-
-        public void StageForm_Load(object sender, EventArgs e)
-        {
-
-        }
-
         public void StageForm_GotFocus(object sender, EventArgs e)
         {
             MainForm.Instance.currentStageForm = this;
-            // MessageBox.Show("I just got focus! " + this.stageName);
         }
     }
 }

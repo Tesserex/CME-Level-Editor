@@ -77,7 +77,7 @@ namespace MegaMan_Level_Editor
             projectForm.LoadScreenSubtree(stageNode, screens);
 
             var stageForm = MainForm.Instance.stageForms[stageName];
-            var surface = stageForm.surfaces[oldScreenName];
+            var surface = stageForm.GetSurface(oldScreenName);
 
             // Update the screen surfaces
             if (oldScreenName != newScreenName)
