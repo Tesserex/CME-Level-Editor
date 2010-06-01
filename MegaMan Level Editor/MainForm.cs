@@ -508,12 +508,7 @@ namespace MegaMan_Level_Editor
                 var screen = prop.Screen;
                 string oldName = screen.Name;
 
-                // this DEFINITELY needs to be a method of Map - "RenameScreen" or something
-                // it's dangerously risky doing it this way in the client code if we forget one time
-                // this is why "everything public" == bad, encapsulation == good
-                screen.Name = prop.ScreenName;
-                screen.Map.Screens.Remove(oldName);
-                screen.Map.Screens.Add(prop.ScreenName, screen);
+                screen.Map.RenameScreen(screen, prop.ScreenName);
 
                 screen.Resize(prop.ScreenWidth, prop.ScreenHeight);
 
