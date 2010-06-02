@@ -68,6 +68,8 @@ namespace MegaMan_Level_Editor
 
         public MegaMan.Screen Screen { get; private set; }
 
+        public event EventHandler<ScreenDrawEventArgs> DrawnOn;
+
         public ScreenDrawingSurface(MegaMan.Screen screen)
         {
             this.Screen = screen;
@@ -265,10 +267,7 @@ namespace MegaMan_Level_Editor
                 return;
 
             var previous = currentBrush.DrawOn(Screen, x, y);
-            if (previous != null)
-            {
-                //history.Push(x, y, currentBrush, previous, surface.Screen);
-            }
+            if (DrawnOn != null) DrawnOn(this, new ScreenDrawEventArgs(x, y, currentBrush, previous, this.Screen));
 
             ReDrawAll();
         }

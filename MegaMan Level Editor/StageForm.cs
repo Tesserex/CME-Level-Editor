@@ -217,8 +217,17 @@ namespace MegaMan_Level_Editor
             surfaces.Add(screen.Name, surface);
             screen.Renamed += this.RenameSurface;
             screen.Resized += (w, h) => this.AlignScreenSurfaces();
+            surface.DrawnOn += new EventHandler<ScreenDrawEventArgs>(surface_DrawnOn);
             this.sizingPanel.Controls.Add(surface.screenImage);
             return surface;
+        }
+
+        void surface_DrawnOn(object sender, ScreenDrawEventArgs e)
+        {
+            if (e.HistoryBrush != null)
+            {
+                history.Push(e.X, e.Y, e.Brush, e.HistoryBrush, e.Screen);
+            }
         }
     }
 }
