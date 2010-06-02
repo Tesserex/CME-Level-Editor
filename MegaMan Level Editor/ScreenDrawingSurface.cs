@@ -22,6 +22,7 @@ namespace MegaMan_Level_Editor
         private Bitmap blockLayer = null;
         private Bitmap mouseLayer = null;
         private Bitmap masterImage = null;
+        private Bitmap grayTiles = null;
 
         public bool Drawing { get; private set; }
         private bool drawGrid;
@@ -90,8 +91,8 @@ namespace MegaMan_Level_Editor
 
         private void AddScreenImageHandlers()
         {
-            screenImage.MouseLeave += (s, ev) => { this.active = false; ReDrawTiles(); ReDrawMaster(); };
-            screenImage.MouseEnter += (s, ev) => { this.active = true; ReDrawTiles(); ReDrawMaster(); };
+            screenImage.MouseLeave += (s, ev) => { this.active = false; ReDrawMaster(); };
+            screenImage.MouseEnter += (s, ev) => { this.active = true; ReDrawMaster(); };
 
             screenImage.MouseMove += new MouseEventHandler(screenImage_MouseMove);
             screenImage.MouseDown += new MouseEventHandler(screenImage_MouseDown);
@@ -151,26 +152,12 @@ namespace MegaMan_Level_Editor
         {
             using (Graphics g = Graphics.FromImage(tileLayer))
             {
-                if (active)
-                    Screen.Draw(g, 0, 0, Screen.PixelWidth, Screen.PixelHeight);
-                else
-                {
-                    Image gray;
-                    using (Image img = new Bitmap(Screen.PixelWidth, Screen.PixelHeight))
-                    {
-                        using (Graphics img_g = Graphics.FromImage(img))
-                        {
-                            Screen.Draw(img_g, 0, 0, Screen.PixelWidth, Screen.PixelHeight);
-                        }
-                        gray = ConvertToGrayscale(img);
-                    }
-                    g.DrawImage(gray, 0, 0);
-                    gray.Dispose();
-                }
+                Screen.Draw(g, 0, 0, Screen.PixelWidth, Screen.PixelHeight);
             }
+            grayTiles = ConvertToGrayscale(tileLayer);
         }
 
-        private Image ConvertToGrayscale(Image source)
+        private Bitmap ConvertToGrayscale(Image source)
         {
             var bitmapSource = new Bitmap(source);
 
@@ -185,7 +172,7 @@ namespace MegaMan_Level_Editor
                 }
             }
 
-            return (Image)bm;
+            return bm;
         }
 
         private void ReDrawBlocking()
@@ -239,8 +226,17 @@ namespace MegaMan_Level_Editor
 
                 g.CompositingMode = System.Drawing.Drawing2D.CompositingMode.SourceCopy;
 
-                if (DrawTiles && tileLayer != null)
-                    g.DrawImageUnscaled(tileLayer, 0, 0);
+                if (DrawTiles)
+                {
+                    if (active)
+                    {
+                        if (tileLayer != null) g.DrawImageUnscaled(tileLayer, 0, 0);
+                    }
+                    else
+                    {
+                        if (grayTiles != null) g.DrawImageUnscaled(grayTiles, 0, 0);
+                    }
+                }
 
                 g.CompositingMode = System.Drawing.Drawing2D.CompositingMode.SourceOver;
 
@@ -279,6 +275,7 @@ namespace MegaMan_Level_Editor
         private void BuildLayers()
         {
             InitLayer(ref tileLayer);
+            InitLayer(ref grayTiles);
             InitLayer(ref gridLayer);
             InitLayer(ref blockLayer);
             InitLayer(ref mouseLayer);
@@ -288,6 +285,7 @@ namespace MegaMan_Level_Editor
         private void ResizeLayers()
         {
             ResizeLayer(ref tileLayer);
+            ResizeLayer(ref grayTiles);
             ResizeLayer(ref gridLayer);
             ResizeLayer(ref blockLayer);
             ResizeLayer(ref mouseLayer);
