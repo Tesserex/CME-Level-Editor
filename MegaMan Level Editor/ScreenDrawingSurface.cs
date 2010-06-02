@@ -153,11 +153,22 @@ namespace MegaMan_Level_Editor
             {
                 if (active)
                     Screen.Draw(g, 0, 0, Screen.PixelWidth, Screen.PixelHeight);
-                //else
-                //Screen.Draw(g, 0, 0, Screen.PixelWidth, Screen.PixelHeight, ConvertToGrayscale);
+                else
+                {
+                    Image gray;
+                    using (Image img = new Bitmap(Screen.PixelWidth, Screen.PixelHeight))
+                    {
+                        using (Graphics img_g = Graphics.FromImage(img))
+                        {
+                            Screen.Draw(img_g, 0, 0, Screen.PixelWidth, Screen.PixelHeight);
+                        }
+                        gray = ConvertToGrayscale(img);
+                    }
+                    g.DrawImage(gray, 0, 0);
+                    gray.Dispose();
+                }
             }
         }
-
 
         private Image ConvertToGrayscale(Image source)
         {
@@ -176,12 +187,6 @@ namespace MegaMan_Level_Editor
 
             return (Image)bm;
         }
-
-        /*
-        public Image ConvertToGrayscale(Image bitmap) {
-            return bitmap;
-        }
-         * */
 
         private void ReDrawBlocking()
         {
