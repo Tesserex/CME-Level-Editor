@@ -52,12 +52,6 @@ namespace MegaMan_Level_Editor
             }
         }
 
-        public ScreenDrawingSurface GetSurface(string name)
-        {
-            if (!surfaces.ContainsKey(name)) return null;
-            return surfaces[name];
-        }
-
         //TODO: Move this back into StageForm
         public void DrawTile(int x, int y, ScreenDrawingSurface surface)
         {
@@ -105,9 +99,6 @@ namespace MegaMan_Level_Editor
                 }
             }
         }
-
-
-        public string Path { get; private set; }
 
         public StageForm(MegaMan.Map stage)
         {
