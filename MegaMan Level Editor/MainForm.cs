@@ -517,18 +517,6 @@ namespace MegaMan_Level_Editor
                 var stageNode = projectForm.projectView.Nodes.Find(screen.Map.Name, true).First();
                 var screens = MainForm.GetStage(screen.Map.Name).Screens.Select((pair) => { return pair.Value; }).ToList();
                 projectForm.LoadScreenSubtree(stageNode, screens);
-
-                var stageForm = MainForm.Instance.stageForms[screen.Map.Name];
-                var surface = stageForm.GetSurface(oldName);
-
-                // Update the screen surfaces
-                if (oldName != prop.ScreenName)
-                {
-                    stageForm.RenameSurface(oldName, prop.ScreenName);
-                }
-
-                surface.ResizeLayers();
-                stageForm.AlignScreenSurfaces();
             }
         }
 

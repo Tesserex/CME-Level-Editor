@@ -138,7 +138,7 @@ namespace MegaMan_Level_Editor
             sizingPanel.BackgroundImageLayout = ImageLayout.Tile;
         }
 
-        public void RenameSurface(string oldScreenName, string newScreenName)
+        private void RenameSurface(string oldScreenName, string newScreenName)
         {
             var surface = surfaces[oldScreenName];
             surfaces.Add(newScreenName, surface);
@@ -246,6 +246,8 @@ namespace MegaMan_Level_Editor
             var surface = new ScreenDrawingSurface(screen, this);
             surface.ReDrawAll();
             surfaces.Add(screen.Name, surface);
+            screen.Renamed += this.RenameSurface;
+            screen.Resized += (w, h) => this.AlignScreenSurfaces();
             return surface;
         }
 

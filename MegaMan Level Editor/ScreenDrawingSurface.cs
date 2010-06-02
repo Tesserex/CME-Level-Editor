@@ -80,6 +80,8 @@ namespace MegaMan_Level_Editor
             DrawGrid = false;
             DrawTiles = true;
             DrawBlock = false;
+
+            this.Screen.Resized += (w, h) => this.ResizeLayers();
         }
 
         //*****************
@@ -278,7 +280,7 @@ namespace MegaMan_Level_Editor
             InitLayer(ref masterImage);
         }
 
-        public void ResizeLayers()
+        private void ResizeLayers()
         {
             ResizeLayer(ref tileLayer);
             ResizeLayer(ref gridLayer);
