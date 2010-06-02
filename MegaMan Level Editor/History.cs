@@ -50,7 +50,7 @@ namespace MegaMan_Level_Editor
 
         /*
          * push - Adds a new action to the stack. If the stack already has actions after the current,
-         * we delete them.
+         * why not insert them? Even better than photoshop!
          * 
          * Ex: 
          * 
@@ -68,20 +68,23 @@ namespace MegaMan_Level_Editor
          *   (1,2,Wall) <- currentAction
          *   (1,1,Wall)
          *   
-         * So what happens if we push another onto the stack? We have to delete the ones *after* current
-         * and push it to the stack.
+         * So what happens if we push another onto the stack? Try inserting!
          *
+         *   (1,4,Wall)
+         *   (1,3,Wall)
          *   (1,3,Enemy) <- currentAction
          *   (1,2,Wall)  
          *   (1,1,Wall)
          *   
-         * This behavior would be consistent with popular graphics programs like Photoshop and GIMP
+         * The only current issue with this is that the action ahead of current doesn't have the correct
+         * "previous" brush, so undoing it won't result in the correct state, you have to undo twice
+         * and then redo to get back to it. This can be corrected.
          * 
          * */
         public void Push(int x, int y, ITileBrush current, ITileBrush previous, MegaMan.Screen screen)
         {
             currentAction += 1;
-            stack.Add(new DrawAction(x, y, current, previous, screen));
+            stack.Insert(currentAction, new DrawAction(x, y, current, previous, screen));
             UpdateHistoryForm();
         }
 
@@ -90,8 +93,7 @@ namespace MegaMan_Level_Editor
             if (currentAction >= 0)
             {
                 var action = stack[currentAction];
-                currentAction -= 1;
-                //                    stack.RemoveAt(stack.Count - 1);                    
+                currentAction -= 1;                  
                 UpdateHistoryForm();
                 return action.Reverse();
             }
