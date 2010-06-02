@@ -24,7 +24,6 @@ namespace MegaMan_Level_Editor
         private MapDocument activeMap;
 
         private Dictionary<string, MapDocument> stages = new Dictionary<string, MapDocument>();
-        public Dictionary<string, StageForm> stageForms = new Dictionary<string, StageForm>();
 
         public BrushForm brushForm;
         public ProjectForm projectForm;

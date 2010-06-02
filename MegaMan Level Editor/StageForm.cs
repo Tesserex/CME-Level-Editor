@@ -121,7 +121,6 @@ namespace MegaMan_Level_Editor
             Program.FrameTick += new Action(Program_FrameTick);
 
             MainForm.Instance.BrushChanged += new BrushChangedHandler(parent_BrushChanged);
-            MainForm.Instance.stageForms.Add(stage.Name, this);
             SetStage(stage);
         }
 
