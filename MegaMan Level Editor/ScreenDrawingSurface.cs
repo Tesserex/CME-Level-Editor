@@ -11,7 +11,7 @@ namespace MegaMan_Level_Editor
      * ScreenDrawingSurface - Draw a screen onto one of these. 
      * Multiple screen surfaces show an entire map in one window
      * */
-    public class ScreenDrawingSurface
+    public class ScreenDrawingSurface : PictureBox
     {
         private static Brush blockBrush = new SolidBrush(Color.FromArgb(160, Color.OrangeRed));
         private static Brush ladderBrush = new SolidBrush(Color.FromArgb(160, Color.Yellow));
@@ -33,8 +33,6 @@ namespace MegaMan_Level_Editor
 
         private bool active = false;
         public bool Placed { get; set; }
-
-        public PictureBox screenImage;
 
         public bool DrawGrid
         {
@@ -74,7 +72,9 @@ namespace MegaMan_Level_Editor
         {
             this.Screen = screen;
 
-            AddPictureBox();
+            this.BackColor = System.Drawing.SystemColors.Control;
+            this.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
+
             AddScreenImageHandlers();
 
             BuildLayers();
@@ -99,14 +99,12 @@ namespace MegaMan_Level_Editor
 
         private void AddScreenImageHandlers()
         {
-            screenImage.MouseLeave += (s, ev) => { this.active = false; ReDrawMaster(); };
-            screenImage.MouseEnter += (s, ev) => { this.active = true; ReDrawMaster(); };
+            this.MouseLeave += (s, ev) => { this.active = false; ReDrawMaster(); };
+            this.MouseEnter += (s, ev) => { this.active = true; ReDrawMaster(); };
 
-            screenImage.MouseMove += new MouseEventHandler(screenImage_MouseMove);
-            screenImage.MouseDown += new MouseEventHandler(screenImage_MouseDown);
-            screenImage.MouseUp += new MouseEventHandler(screenImage_MouseUp);
-            //                screenImage.MouseHover += (s, ev) => { this.active = true; };
-            //                screenImage.MouseCaptureChanged += (s, ev) => { this.active = !this.active; };
+            this.MouseMove += new MouseEventHandler(screenImage_MouseMove);
+            this.MouseDown += new MouseEventHandler(screenImage_MouseDown);
+            this.MouseUp += new MouseEventHandler(screenImage_MouseUp);
         }
 
         private void screenImage_MouseDown(object sender, MouseEventArgs e)
@@ -135,15 +133,6 @@ namespace MegaMan_Level_Editor
 
             DrawTile(e.Location.X / Screen.Tileset.TileSize, e.Y / Screen.Tileset.TileSize);
             ReDrawMaster();
-        }
-
-
-        private void AddPictureBox()
-        {
-            this.screenImage = new System.Windows.Forms.PictureBox();
-            this.screenImage.BackColor = System.Drawing.SystemColors.Control;
-            this.screenImage.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
-            this.screenImage.Location = new System.Drawing.Point(0, 0);
         }
 
         public void ReDrawAll()
@@ -255,10 +244,10 @@ namespace MegaMan_Level_Editor
                 g.DrawImageUnscaled(mouseLayer, 0, 0);
             }
 
-            screenImage.Image = masterImage;
-            screenImage.Width = masterImage.Width;
-            screenImage.Height = masterImage.Height;
-            screenImage.Refresh();
+            this.Image = masterImage;
+            this.Width = masterImage.Width;
+            this.Height = masterImage.Height;
+            this.Refresh();
         }
 
         private void DrawTile(int x, int y)

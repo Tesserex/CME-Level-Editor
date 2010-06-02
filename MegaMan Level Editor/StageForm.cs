@@ -149,7 +149,7 @@ namespace MegaMan_Level_Editor
             foreach (var pair in stage.Screens)
             {
                 var surface = CreateScreenSurface(pair.Value);
-                surface.screenImage.Location = new Point(0, 0);
+                surface.Location = new Point(0, 0);
             }
 
             AlignScreenSurfaces();
@@ -181,14 +181,14 @@ namespace MegaMan_Level_Editor
                 if (join.type == JoinType.Horizontal)
                 {
                     // Place image below
-                    var p = new Point(surface.screenImage.Location.X - offset, surface.screenImage.Location.Y + surface.screenImage.Size.Height);
-                    secondSurface.screenImage.Location = p;
+                    var p = new Point(surface.Location.X - offset, surface.Location.Y + surface.Size.Height);
+                    secondSurface.Location = p;
                 }
                 else
                 {
                     // Place image to the right
-                    var p = new Point(surface.screenImage.Location.X + surface.screenImage.Size.Width, surface.screenImage.Location.Y - offset);
-                    secondSurface.screenImage.Location = p;
+                    var p = new Point(surface.Location.X + surface.Size.Width, surface.Location.Y - offset);
+                    secondSurface.Location = p;
                 }
                 secondSurface.Placed = true;
             }
@@ -197,14 +197,14 @@ namespace MegaMan_Level_Editor
                 if (join.type == JoinType.Horizontal)
                 {
                     // Place image above
-                    var p = new Point(secondSurface.screenImage.Location.X - offset, secondSurface.screenImage.Location.Y - surface.screenImage.Size.Height);
-                    surface.screenImage.Location = p;
+                    var p = new Point(secondSurface.Location.X - offset, secondSurface.Location.Y - surface.Size.Height);
+                    surface.Location = p;
                 }
                 else
                 {
                     // Place image to the left
-                    var p = new Point(secondSurface.screenImage.Location.X - surface.screenImage.Size.Width, secondSurface.screenImage.Location.Y - offset);
-                    surface.screenImage.Location = p;
+                    var p = new Point(secondSurface.Location.X - surface.Size.Width, secondSurface.Location.Y - offset);
+                    surface.Location = p;
                 }
                 surface.Placed = true;
             }
@@ -218,7 +218,7 @@ namespace MegaMan_Level_Editor
             screen.Renamed += this.RenameSurface;
             screen.Resized += (w, h) => this.AlignScreenSurfaces();
             surface.DrawnOn += new EventHandler<ScreenDrawEventArgs>(surface_DrawnOn);
-            this.sizingPanel.Controls.Add(surface.screenImage);
+            this.sizingPanel.Controls.Add(surface);
             return surface;
         }
 

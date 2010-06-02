@@ -141,7 +141,9 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
-    <Compile Include="ScreenDrawingSurface.cs" />
+    <Compile Include="ScreenDrawingSurface.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="ScreenProp.cs">
       <SubType>Form</SubType>
     </Compile>
