@@ -16,7 +16,7 @@ namespace MegaMan_Level_Editor
         private MegaMan.Map stage;
 
         private History history;
-        private ITileBrush currentBrush = null;
+        
         private Dictionary<string, ScreenDrawingSurface> surfaces;
 
         public bool DrawGrid
@@ -50,21 +50,6 @@ namespace MegaMan_Level_Editor
                     pair.Value.DrawBlock = value;
                 }
             }
-        }
-
-        //TODO: Move this back into StageForm
-        public void DrawTile(int x, int y, ScreenDrawingSurface surface)
-        {
-            if (!surface.Drawing || currentBrush == null)
-                return;
-
-            var previous = currentBrush.DrawOn(surface.Screen, x, y);
-            if (previous != null)
-            {
-                history.Push(x, y, currentBrush, previous, surface.Screen);
-            }
-
-            surface.ReDrawAll();
         }
 
         public void Undo()
@@ -111,7 +96,6 @@ namespace MegaMan_Level_Editor
 
             Program.FrameTick += new Action(Program_FrameTick);
 
-            MainForm.Instance.BrushChanged += new BrushChangedHandler(parent_BrushChanged);
             SetStage(stage);
         }
 
@@ -133,11 +117,6 @@ namespace MegaMan_Level_Editor
             var surface = surfaces[oldScreenName];
             surfaces.Add(newScreenName, surface);
             surfaces.Remove(oldScreenName);
-        }
-
-        void parent_BrushChanged(BrushChangedEventArgs e)
-        {
-            SetBrush(e.Brush);
         }
 
         void Program_FrameTick()
@@ -233,17 +212,13 @@ namespace MegaMan_Level_Editor
 
         private ScreenDrawingSurface CreateScreenSurface(MegaMan.Screen screen)
         {
-            var surface = new ScreenDrawingSurface(screen, this);
+            var surface = new ScreenDrawingSurface(screen);
             surface.ReDrawAll();
             surfaces.Add(screen.Name, surface);
             screen.Renamed += this.RenameSurface;
             screen.Resized += (w, h) => this.AlignScreenSurfaces();
+            this.sizingPanel.Controls.Add(surface.screenImage);
             return surface;
-        }
-
-        private void SetBrush(ITileBrush brush)
-        {
-            currentBrush = brush;
         }
     }
 }

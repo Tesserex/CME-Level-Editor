@@ -17,6 +17,8 @@ namespace MegaMan_Level_Editor
         private static Brush ladderBrush = new SolidBrush(Color.FromArgb(160, Color.Yellow));
         private static Pen highlightPen = new Pen(Color.Green, 2);
 
+        private ITileBrush currentBrush = null;
+
         private Bitmap tileLayer = null;
         private Bitmap gridLayer = null;
         private Bitmap blockLayer = null;
@@ -66,12 +68,9 @@ namespace MegaMan_Level_Editor
 
         public MegaMan.Screen Screen { get; private set; }
 
-        private StageForm parent;
-
-        public ScreenDrawingSurface(MegaMan.Screen screen, StageForm parent)
+        public ScreenDrawingSurface(MegaMan.Screen screen)
         {
             this.Screen = screen;
-            this.parent = parent;
 
             AddPictureBox();
             AddScreenImageHandlers();
@@ -83,11 +82,18 @@ namespace MegaMan_Level_Editor
             DrawBlock = false;
 
             this.Screen.Resized += (w, h) => this.ResizeLayers();
+
+            MainForm.Instance.BrushChanged += new BrushChangedHandler(Instance_BrushChanged);
         }
 
         //*****************
         // Event Handlers *
         //*****************
+
+        void Instance_BrushChanged(BrushChangedEventArgs e)
+        {
+            currentBrush = e.Brush;
+        }
 
         private void AddScreenImageHandlers()
         {
@@ -136,8 +142,6 @@ namespace MegaMan_Level_Editor
             this.screenImage.BackColor = System.Drawing.SystemColors.Control;
             this.screenImage.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
             this.screenImage.Location = new System.Drawing.Point(0, 0);
-
-            parent.sizingPanel.Controls.Add(this.screenImage);
         }
 
         public void ReDrawAll()
@@ -257,9 +261,17 @@ namespace MegaMan_Level_Editor
 
         private void DrawTile(int x, int y)
         {
-            parent.DrawTile(x, y, this);
-        }
+            if (!Drawing || currentBrush == null)
+                return;
 
+            var previous = currentBrush.DrawOn(Screen, x, y);
+            if (previous != null)
+            {
+                //history.Push(x, y, currentBrush, previous, surface.Screen);
+            }
+
+            ReDrawAll();
+        }
 
         private void InitLayer(ref Bitmap layer)
         {
