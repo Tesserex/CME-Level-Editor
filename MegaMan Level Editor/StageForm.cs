@@ -160,7 +160,7 @@ namespace MegaMan_Level_Editor
         /* *
          * SetStage - Decide the stage object that will be edited
          * */
-        public void SetStage(MegaMan.Map stage)
+        private void SetStage(MegaMan.Map stage)
         {
             this.stage = stage;
 
