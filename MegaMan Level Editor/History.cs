@@ -103,7 +103,7 @@ namespace MegaMan_Level_Editor
 
         public DrawAction Redo()
         {
-            if (currentAction < stack.Count)
+            if (currentAction < stack.Count - 1)
             {
                 currentAction += 1;
                 var action = stack[currentAction];
