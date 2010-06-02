@@ -185,7 +185,7 @@ namespace MegaMan_Level_Editor
             AlignScreenSurfaces();
         }
 
-        public void AlignScreenSurfaces()
+        private void AlignScreenSurfaces()
         {
             foreach (var pair in surfaces)
             {
@@ -201,7 +201,7 @@ namespace MegaMan_Level_Editor
             }
         }
 
-        public void AlignScreenSurfaceUsingJoin(ScreenDrawingSurface surface, ScreenDrawingSurface secondSurface, Join join)
+        private void AlignScreenSurfaceUsingJoin(ScreenDrawingSurface surface, ScreenDrawingSurface secondSurface, Join join)
         {
             var offset = (join.offsetTwo - join.offsetOne) * join.Size;
 
@@ -240,7 +240,7 @@ namespace MegaMan_Level_Editor
             }
         }
 
-        public ScreenDrawingSurface CreateScreenSurface(MegaMan.Screen screen)
+        private ScreenDrawingSurface CreateScreenSurface(MegaMan.Screen screen)
         {
             var surface = new ScreenDrawingSurface(screen, this);
             surface.ReDrawAll();
