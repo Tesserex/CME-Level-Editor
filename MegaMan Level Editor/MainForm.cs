@@ -250,7 +250,7 @@ namespace MegaMan_Level_Editor
          * OpenStage - Open up a stage from the /stages/ directory
          * path = relative path to the root project directory
          * */
-        public List<MegaMan.Screen> OpenStage(string stageName, string path)
+        public MapDocument OpenStage(string stageName, string path)
         {
             // TODO: Start adding a Util class to MegaMan common so we can
             // refactor out stuff like "StagePathFor(path)", instead of
@@ -264,7 +264,7 @@ namespace MegaMan_Level_Editor
             else
             {
                 MessageBox.Show("Sorry, but this is not a stage directory! Stage path was : " + stagePath);
-                return new List<MegaMan.Screen>();
+                return null;
             }
         }
 
@@ -284,15 +284,13 @@ namespace MegaMan_Level_Editor
          * LoadMapFromPath - Load the stage based on the path (underlying implementation of OpenMap)
          * path = relative path to the root project directory
          * */
-        public List<MegaMan.Screen> LoadStageFromPath(String stageName, String path)
+        public MapDocument LoadStageFromPath(String stageName, String path)
         {
             foreach (var mapdoc in stages.Values)
             {
-                if (Path.GetFullPath(mapdoc.Map.FileDir) == Path.GetFullPath(path))
+                if (mapdoc.Map.FileDir == Path.Combine(this.rootPath, path))
                 {
-                    // only focus it if it's not already focused
-                    if (ActiveMap.Map != mapdoc.Map)
-                        mapdoc.ReFocus();
+                    return mapdoc;
                 }
             }
 
@@ -304,9 +302,8 @@ namespace MegaMan_Level_Editor
             stage.DrawTiles = this.drawTiles;
 
             stage.Closed += new Action<MapDocument>(map_Closed);
-            stage.ReFocus();
 
-            return stage.Map.Screens.Select((pair) => { return pair.Value; }).ToList();
+            return stage;
         }
 
         private void map_Closed(MapDocument mapdoc)

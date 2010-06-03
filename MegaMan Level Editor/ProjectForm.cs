@@ -75,7 +75,9 @@ namespace MegaMan_Level_Editor
 
         public void OpenStage(TreeNode node)
         {
-            LoadScreenSubtree(node, MainForm.Instance.OpenStage(node.Name, LocalStagePathFor(node.Name)));
+            MapDocument stage = MainForm.Instance.OpenStage(node.Name, LocalStagePathFor(node.Name));
+            LoadScreenSubtree(node, stage.Map.Screens.Values);
+            stage.ReFocus();
         }
 
         public void LoadScreenSubtree(TreeNode node, IEnumerable<MegaMan.Screen> screens)
