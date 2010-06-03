@@ -290,6 +290,7 @@ namespace MegaMan_Level_Editor
             ResizeLayer(ref blockLayer);
             ResizeLayer(ref mouseLayer);
             ResizeLayer(ref masterImage);
+            ReDrawAll();
         }
     }
 }

@@ -93,6 +93,7 @@ namespace MegaMan_Level_Editor
             var screenName = node.Name;
             var screen = MainForm.GetScreen(stageName, screenName);
             var screenProps = new ScreenProp(screen);
+            screenProps.OK += new Action<ScreenProp>(screenPropForm_OK);
             screenProps.Show();
         }
 
@@ -109,6 +110,24 @@ namespace MegaMan_Level_Editor
         private void projectView_AfterSelect(object sender, TreeViewEventArgs e)
         {
 
+        }
+
+        private void screenPropForm_OK(ScreenProp prop)
+        {
+            if (prop.Screen == null) return; // but this shouldn't happen
+
+            // Rename the screen
+            var screen = prop.Screen;
+            string oldName = screen.Name;
+
+            screen.Map.RenameScreen(screen, prop.ScreenName);
+
+            screen.Resize(prop.ScreenWidth, prop.ScreenHeight);
+
+            // Update the project tree
+            var stageNode = projectView.Nodes.Find(screen.Map.Name, true).First();
+            var screens = MainForm.GetStage(screen.Map.Name).Screens.Values.ToList();
+            this.LoadScreenSubtree(stageNode, screens);
         }
     }
 }

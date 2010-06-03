@@ -494,29 +494,11 @@ namespace MegaMan_Level_Editor
 
         private void screenPropForm_OK(ScreenProp prop)
         {
-            if (prop.Screen == null)
-            {
-                var screen = new MegaMan.Screen(prop.Width, prop.Height, this.activeMap.Map);
-                screen.Name = prop.ScreenName;
-                this.activeMap.Map.Screens.Add(prop.ScreenName, screen);
-                screen.Save(ScreenPathFor(MainForm.Instance.ActiveMap.Map.Name, prop.ScreenName));
-            }
-            else
-            {
-                // Rename the screen
-                var screen = prop.Screen;
-                string oldName = screen.Name;
-
-                screen.Map.RenameScreen(screen, prop.ScreenName);
-
-                screen.Resize(prop.ScreenWidth, prop.ScreenHeight);
-
-                // Update the project tree
-                var projectForm = MainForm.Instance.projectForm;
-                var stageNode = projectForm.projectView.Nodes.Find(screen.Map.Name, true).First();
-                var screens = MainForm.GetStage(screen.Map.Name).Screens.Select((pair) => { return pair.Value; }).ToList();
-                projectForm.LoadScreenSubtree(stageNode, screens);
-            }
+            if (prop.Screen != null) return; // shouldn't happen
+            var screen = new MegaMan.Screen(prop.Width, prop.Height, this.activeMap.Map);
+            screen.Name = prop.ScreenName;
+            this.activeMap.Map.Screens.Add(prop.ScreenName, screen);
+            screen.Save(ScreenPathFor(MainForm.Instance.ActiveMap.Map.Name, prop.ScreenName));
         }
 
         private void brushesToolStripMenuItem_Click(object sender, EventArgs e)
