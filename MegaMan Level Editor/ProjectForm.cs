@@ -78,7 +78,7 @@ namespace MegaMan_Level_Editor
             LoadScreenSubtree(node, MainForm.Instance.OpenStage(node.Name, LocalStagePathFor(node.Name)));
         }
 
-        public void LoadScreenSubtree(TreeNode node, List<MegaMan.Screen> screens)
+        public void LoadScreenSubtree(TreeNode node, IEnumerable<MegaMan.Screen> screens)
         {
             node.Nodes.Clear();
             foreach (var screen in screens)
@@ -126,7 +126,7 @@ namespace MegaMan_Level_Editor
 
             // Update the project tree
             var stageNode = projectView.Nodes.Find(screen.Map.Name, true).First();
-            var screens = MainForm.GetStage(screen.Map.Name).Screens.Values.ToList();
+            var screens = MainForm.GetStage(screen.Map.Name).Screens.Values;
             this.LoadScreenSubtree(stageNode, screens);
         }
     }
