@@ -165,9 +165,19 @@ namespace MegaMan_Level_Editor
                     pair.Value.Placed = false;
             }
 
-            int placeCount = 1; // seed the placement algorithm
+            int placeCount = 0;
             int minX = 0, minY = 0;
-            while (placeCount < surfaces.Count)
+
+            // account for screens that aren't placed - need to find them
+            var placeable = new HashSet<string>(); // enforces uniqueness
+            foreach (var join in stage.Joins)
+            {
+                placeable.Add(join.screenOne);
+                placeable.Add(join.screenTwo);
+            }
+            placeable.Remove(stage.StartScreen); // this one is already placed
+
+            while (placeCount < placeable.Count)
             {
                 foreach (var join in stage.Joins)
                 {
