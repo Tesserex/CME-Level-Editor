@@ -49,7 +49,7 @@ namespace MegaMan_Level_Editor
 
     public class SingleTileBrush : ITileBrush
     {
-        private Tile tile;
+        protected Tile tile;
 
         public SingleTileBrush(Tile tile)
         {
@@ -61,7 +61,7 @@ namespace MegaMan_Level_Editor
             tile.Draw(g, x, y);
         }
 
-        public ITileBrush DrawOn(MegaMan.Screen screen, int tile_x, int tile_y) {
+        public virtual ITileBrush DrawOn(MegaMan.Screen screen, int tile_x, int tile_y) {
             var old = screen.TileAt(tile_x, tile_y);
             
             if (old == null)
@@ -154,6 +154,41 @@ namespace MegaMan_Level_Editor
         }
 
         #endregion
+    }
+
+    public class FillBrush : SingleTileBrush
+    {
+        public FillBrush(Tile tile) : base(tile) { }
+
+        public override ITileBrush DrawOn(MegaMan.Screen screen, int tile_x, int tile_y)
+        {
+            var old = screen.TileAt(tile_x, tile_y);
+
+            if (old == null)
+                return null;
+
+            if (old.Id == this.tile.Id)
+            {
+                return null;
+            }
+            else
+            {
+                Flood(screen, tile_x, tile_y, old.Id);
+                return new FillBrush(old);
+            }
+        }
+
+        private void Flood(MegaMan.Screen screen, int tile_x, int tile_y, int tile_id)
+        {
+            var old = screen.TileAt(tile_x, tile_y);
+            if (old == null || old.Id != tile_id) return;
+
+            screen.ChangeTile(tile_x, tile_y, this.tile.Id);
+            Flood(screen, tile_x - 1, tile_y, tile_id);
+            Flood(screen, tile_x + 1, tile_y, tile_id);
+            Flood(screen, tile_x, tile_y - 1, tile_id);
+            Flood(screen, tile_x, tile_y + 1, tile_id);
+        }
     }
 }
 
