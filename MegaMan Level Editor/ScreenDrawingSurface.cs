@@ -120,7 +120,7 @@ namespace MegaMan_Level_Editor
 
         private void screenImage_MouseMove(object sender, MouseEventArgs e)
         {
-            if (mouseLayer == null) return;
+            if (mouseLayer == null || currentBrush == null) return;
 
             int tx = (e.X / Screen.Tileset.TileSize) * Screen.Tileset.TileSize;
             int ty = (e.Y / Screen.Tileset.TileSize) * Screen.Tileset.TileSize;
@@ -128,7 +128,7 @@ namespace MegaMan_Level_Editor
             using (Graphics g = Graphics.FromImage(mouseLayer))
             {
                 g.Clear(Color.Transparent);
-                g.DrawRectangle(highlightPen, tx, ty, Screen.Tileset.TileSize - 1, Screen.Tileset.TileSize - 1);
+                currentBrush.DrawOn(g, tx, ty);
             }
 
             DrawTile(e.Location.X / Screen.Tileset.TileSize, e.Y / Screen.Tileset.TileSize);
@@ -241,7 +241,7 @@ namespace MegaMan_Level_Editor
                 if (DrawGrid && gridLayer != null)
                     g.DrawImageUnscaled(gridLayer, 0, 0);
 
-                g.DrawImageUnscaled(mouseLayer, 0, 0);
+                if (active) g.DrawImageUnscaled(mouseLayer, 0, 0);
             }
 
             this.Image = masterImage;
