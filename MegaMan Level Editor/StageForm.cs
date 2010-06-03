@@ -165,49 +165,72 @@ namespace MegaMan_Level_Editor
                     pair.Value.Placed = false;
             }
 
-            foreach (var join in stage.Joins)
+            int placeCount = 1; // seed the placement algorithm
+            int minX = 0, minY = 0;
+            while (placeCount < surfaces.Count)
             {
-                AlignScreenSurfaceUsingJoin(surfaces[join.screenOne], surfaces[join.screenTwo], join);
+                foreach (var join in stage.Joins)
+                {
+                    bool placed = AlignScreenSurfaceUsingJoin(surfaces[join.screenOne], surfaces[join.screenTwo], join);
+                    if (placed)
+                    {
+                        placeCount++;
+                        minX = Math.Min(minX, Math.Min(surfaces[join.screenOne].Location.X, surfaces[join.screenTwo].Location.X));
+                        minY = Math.Min(minY, Math.Min(surfaces[join.screenOne].Location.Y, surfaces[join.screenTwo].Location.Y));
+                    }
+                }
+            }
+
+            if (minX < 0 || minY < 0)
+            {
+                // now readjust to all positive locations
+                foreach (var surface in surfaces.Values)
+                {
+                    surface.Location = new Point(surface.Location.X - minX, surface.Location.Y - minY);
+                }
             }
         }
 
-        private void AlignScreenSurfaceUsingJoin(ScreenDrawingSurface surface, ScreenDrawingSurface secondSurface, Join join)
+        private bool AlignScreenSurfaceUsingJoin(ScreenDrawingSurface surface, ScreenDrawingSurface secondSurface, Join join)
         {
-            var offset = (join.offsetTwo - join.offsetOne) * join.Size;
+            var offset = (join.offsetTwo - join.offsetOne) * surface.Screen.Tileset.TileSize;
 
-            if (surface.Placed)
+            if (surface.Placed && !secondSurface.Placed)
             {
                 // TODO: WTF? Why does horizontal mean vertical and vertical mean horizontal?
                 if (join.type == JoinType.Horizontal)
                 {
                     // Place image below
-                    var p = new Point(surface.Location.X - offset, surface.Location.Y + surface.Size.Height);
+                    var p = new Point(surface.Location.X - offset, surface.Location.Y + surface.Screen.PixelHeight);
                     secondSurface.Location = p;
                 }
                 else
                 {
                     // Place image to the right
-                    var p = new Point(surface.Location.X + surface.Size.Width, surface.Location.Y - offset);
+                    var p = new Point(surface.Location.X + surface.Screen.PixelWidth, surface.Location.Y - offset);
                     secondSurface.Location = p;
                 }
                 secondSurface.Placed = true;
+                return true;
             }
-            else if (secondSurface.Placed)
+            else if (secondSurface.Placed && !surface.Placed)
             {
                 if (join.type == JoinType.Horizontal)
                 {
                     // Place image above
-                    var p = new Point(secondSurface.Location.X - offset, secondSurface.Location.Y - surface.Size.Height);
+                    var p = new Point(secondSurface.Location.X + offset, secondSurface.Location.Y - surface.Screen.PixelHeight);
                     surface.Location = p;
                 }
                 else
                 {
                     // Place image to the left
-                    var p = new Point(secondSurface.Location.X - surface.Size.Width, secondSurface.Location.Y - offset);
+                    var p = new Point(secondSurface.Location.X - surface.Screen.PixelWidth, secondSurface.Location.Y + offset);
                     surface.Location = p;
                 }
                 surface.Placed = true;
+                return true;
             }
+            return false;
         }
 
         private ScreenDrawingSurface CreateScreenSurface(MegaMan.Screen screen)
