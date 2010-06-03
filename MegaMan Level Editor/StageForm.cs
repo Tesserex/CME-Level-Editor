@@ -114,6 +114,7 @@ namespace MegaMan_Level_Editor
 
         private void RenameSurface(string oldScreenName, string newScreenName)
         {
+            if (oldScreenName == newScreenName) return;
             var surface = surfaces[oldScreenName];
             surfaces.Add(newScreenName, surface);
             surfaces.Remove(oldScreenName);
