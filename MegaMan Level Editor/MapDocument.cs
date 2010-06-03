@@ -13,7 +13,6 @@ namespace MegaMan_Level_Editor
         public MainForm parent;
         public Map Map { get; private set; }
 
-        private Dictionary<string, StageForm> openScreens;
         private StageForm stageForm;
 
         private bool drawTiles;
@@ -26,7 +25,7 @@ namespace MegaMan_Level_Editor
             set
             {
                 drawGrid = value;
-                foreach (StageForm screen in this.openScreens.Values) screen.DrawGrid = value;
+                if (stageForm != null) stageForm.DrawGrid = value;
             }
         }
 
@@ -36,7 +35,7 @@ namespace MegaMan_Level_Editor
             set
             {
                 drawTiles = value;
-                foreach (StageForm screen in this.openScreens.Values) screen.DrawTiles = value;
+                if (stageForm != null) stageForm.DrawTiles = value;
             }
         }
 
@@ -46,7 +45,7 @@ namespace MegaMan_Level_Editor
             set
             {
                 drawBlock = value;
-                foreach (StageForm screen in this.openScreens.Values) screen.DrawBlock = value;
+                if (stageForm != null) stageForm.DrawBlock = value;
             }
         }
 
@@ -56,8 +55,6 @@ namespace MegaMan_Level_Editor
         {
             this.parent = parent;
             this.Map = map;
-
-            openScreens = new Dictionary<string, StageForm>();
         }
 
         // TODO : Rename Map to Stages.. More consistent naming
@@ -65,12 +62,11 @@ namespace MegaMan_Level_Editor
         {
             this.parent = parent;
             this.Map = new Map(MainForm.Instance.rootPath, path);
-            openScreens = new Dictionary<string, StageForm>();
         }
 
         public void RefreshInfo()
         {
-            foreach (StageForm screen in this.openScreens.Values) screen.SetText();
+            stageForm.SetText();
         }
 
         public void ReFocus()
@@ -130,14 +126,10 @@ namespace MegaMan_Level_Editor
 
         public void Close()
         {
-            if (Map.Dirty)
-            {
-                DialogResult result = MessageBox.Show("Do you want to save changes to " + Map.Name + " before closing?", "Save Changes", MessageBoxButtons.YesNoCancel);
-                if (result == DialogResult.Yes) Map.Save();
-                else if (result == DialogResult.Cancel) return;
-            }
+            if (!ConfirmSave()) return;
 
-            CloseAll();
+            stageForm.FormClosing -= StageForm_FormClosing;
+            stageForm.Close();
             if (Closed != null) Closed(this);
         }
 
@@ -162,30 +154,13 @@ namespace MegaMan_Level_Editor
             if (stageForm != null) stageForm.Redo();
         }
 
-        private void CloseAll()
-        {
-            foreach (StageForm screen in this.openScreens.Values)
-            {
-                screen.FormClosing -= StageForm_FormClosing;
-                CloseScreen(screen);
-            }
-        }
-
         void StageForm_FormClosing(object sender, FormClosingEventArgs e)
         {
-            // closing all screens means we should close completely
-            if (openScreens.Count == 1) // this is the last one
-            {
-                e.Cancel = (!ConfirmSave());
-                if (!e.Cancel) (sender as StageForm).Dispose();
-                if (!e.Cancel && Closed != null) Closed(this);
-            }
-        }
+            e.Cancel = true;
+            if (!ConfirmSave()) return;
 
-        private void CloseScreen(StageForm StageForm)
-        {
-            StageForm.GotFocus -= new EventHandler(StageForm_GotFocus);
-            StageForm.Close();
+            stageForm.Hide();
+            if (Closed != null) Closed(this);
         }
 
         private void StageForm_GotFocus(object sender, EventArgs e)

@@ -308,8 +308,6 @@ namespace MegaMan_Level_Editor
 
         private void map_Closed(MapDocument mapdoc)
         {
-            stages.Remove(mapdoc.Map.Name);
-
             // if the tile form is showing this map's tileset, remove it from the form
             if (ActiveMap == mapdoc)
             {
