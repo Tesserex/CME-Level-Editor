@@ -26,6 +26,8 @@ namespace MegaMan_Level_Editor
         private Bitmap masterImage = null;
         private Bitmap grayTiles = null;
 
+        private bool grayDirty = false;
+
         public bool Drawing { get; private set; }
         private bool drawGrid;
         private bool drawTiles;
@@ -88,6 +90,9 @@ namespace MegaMan_Level_Editor
             MainForm.Instance.BrushChanged += new BrushChangedHandler(Instance_BrushChanged);
 
             Program.FrameTick += new Action(Program_FrameTick);
+
+            ReDrawAll();
+            DrawGray();
         }
 
         void Program_FrameTick()
@@ -149,7 +154,6 @@ namespace MegaMan_Level_Editor
         public void ReDrawAll()
         {
             ReDrawTiles();
-            DrawGray();
             ReDrawBlocking();
             ReDrawMaster();
             ReDrawGrid();
@@ -161,6 +165,7 @@ namespace MegaMan_Level_Editor
             {
                 Screen.Draw(g, 0, 0, Screen.PixelWidth, Screen.PixelHeight);
             }
+            grayDirty = true;
         }
 
         private void DrawGray()
@@ -244,6 +249,8 @@ namespace MegaMan_Level_Editor
                     }
                     else
                     {
+                        if (grayDirty) DrawGray();
+                        grayDirty = false;
                         if (grayTiles != null) g.DrawImageUnscaled(grayTiles, 0, 0);
                     }
                 }

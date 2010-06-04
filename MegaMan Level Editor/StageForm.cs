@@ -237,7 +237,6 @@ namespace MegaMan_Level_Editor
         private ScreenDrawingSurface CreateScreenSurface(MegaMan.Screen screen)
         {
             var surface = new ScreenDrawingSurface(screen);
-            surface.ReDrawAll();
             surfaces.Add(screen.Name, surface);
             screen.Renamed += this.RenameSurface;
             screen.Resized += (w, h) => this.AlignScreenSurfaces();
