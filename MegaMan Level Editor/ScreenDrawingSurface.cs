@@ -86,6 +86,17 @@ namespace MegaMan_Level_Editor
             this.Screen.Resized += (w, h) => this.ResizeLayers();
 
             MainForm.Instance.BrushChanged += new BrushChangedHandler(Instance_BrushChanged);
+
+            Program.FrameTick += new Action(Program_FrameTick);
+        }
+
+        void Program_FrameTick()
+        {
+            if (active)
+            {
+                ReDrawTiles();
+                ReDrawMaster();
+            }
         }
 
         //*****************
@@ -138,6 +149,7 @@ namespace MegaMan_Level_Editor
         public void ReDrawAll()
         {
             ReDrawTiles();
+            DrawGray();
             ReDrawBlocking();
             ReDrawMaster();
             ReDrawGrid();
@@ -149,19 +161,22 @@ namespace MegaMan_Level_Editor
             {
                 Screen.Draw(g, 0, 0, Screen.PixelWidth, Screen.PixelHeight);
             }
+        }
+
+        private void DrawGray()
+        {
+            if (grayTiles != null) grayTiles.Dispose();
             grayTiles = ConvertToGrayscale(tileLayer);
         }
 
-        private Bitmap ConvertToGrayscale(Image source)
+        private Bitmap ConvertToGrayscale(Bitmap source)
         {
-            var bitmapSource = new Bitmap(source);
-
             Bitmap bm = new Bitmap(source.Width, source.Height);
             for (int y = 0; y < bm.Height; y++)
             {
                 for (int x = 0; x < bm.Width; x++)
                 {
-                    Color c = bitmapSource.GetPixel(x, y);
+                    Color c = source.GetPixel(x, y);
                     int luma = (int)(c.R * 0.3 + c.G * 0.59 + c.B * 0.11);
                     bm.SetPixel(x, y, Color.FromArgb(luma, luma, luma));
                 }

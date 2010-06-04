@@ -94,8 +94,6 @@ namespace MegaMan_Level_Editor
             history = new History();
             surfaces = new Dictionary<String, ScreenDrawingSurface>();
 
-            Program.FrameTick += new Action(Program_FrameTick);
-
             SetStage(stage);
         }
 
@@ -118,14 +116,6 @@ namespace MegaMan_Level_Editor
             var surface = surfaces[oldScreenName];
             surfaces.Add(newScreenName, surface);
             surfaces.Remove(oldScreenName);
-        }
-
-        void Program_FrameTick()
-        {
-            foreach (var pair in surfaces)
-            {
-                pair.Value.ReDrawAll();
-            }
         }
 
         /* *
