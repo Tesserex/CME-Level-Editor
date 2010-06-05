@@ -19,6 +19,8 @@ namespace MegaMan_Level_Editor
         
         private Dictionary<string, ScreenDrawingSurface> surfaces;
 
+        private JoinOverlay joinOverlay;
+
         public bool DrawGrid
         {
             set
@@ -88,6 +90,8 @@ namespace MegaMan_Level_Editor
         public StageForm(MegaMan.Map stage)
         {
             InitializeComponent();
+            joinOverlay = new JoinOverlay();
+            joinOverlay.Owner = this;
 
             this.SetBackgroundGrid();
 
@@ -95,6 +99,17 @@ namespace MegaMan_Level_Editor
             surfaces = new Dictionary<String, ScreenDrawingSurface>();
 
             SetStage(stage);
+        }
+
+        protected override void OnScroll(ScrollEventArgs se)
+        {
+            joinOverlay.Invalidate();
+            base.OnScroll(se);
+        }
+
+        protected override void OnMouseMove(MouseEventArgs e)
+        {
+            base.OnMouseMove(e);
         }
 
         private void SetBackgroundGrid()
@@ -106,8 +121,8 @@ namespace MegaMan_Level_Editor
                 g.DrawLine(Pens.Black, 15, 0, 15, 15);
                 g.DrawLine(Pens.Black, 0, 15, 15, 15);
             }
-            sizingPanel.BackgroundImage = tile;
-            sizingPanel.BackgroundImageLayout = ImageLayout.Tile;
+            this.BackgroundImage = tile;
+            this.BackgroundImageLayout = ImageLayout.Tile;
         }
 
         private void RenameSurface(string oldScreenName, string newScreenName)
@@ -157,7 +172,7 @@ namespace MegaMan_Level_Editor
             }
 
             int placeCount = 0;
-            int minX = 0, minY = 0;
+            int minX = 0, minY = 0, maxX = 0, maxY = 0;
 
             // account for screens that aren't placed - need to find them
             var placeable = new HashSet<string>(); // enforces uniqueness
@@ -190,6 +205,14 @@ namespace MegaMan_Level_Editor
                     surface.Location = new Point(surface.Location.X - minX, surface.Location.Y - minY);
                 }
             }
+
+            foreach (var surface in surfaces.Values)
+            {
+                maxX = Math.Max(maxX, surface.Right);
+                maxY = Math.Max(maxY, surface.Bottom);
+            }
+
+            joinOverlay.Refresh(maxX, maxY, stage.Joins, surfaces);
         }
 
         private bool AlignScreenSurfaceUsingJoin(ScreenDrawingSurface surface, ScreenDrawingSurface secondSurface, Join join)
@@ -241,7 +264,8 @@ namespace MegaMan_Level_Editor
             screen.Renamed += this.RenameSurface;
             screen.Resized += (w, h) => this.AlignScreenSurfaces();
             surface.DrawnOn += new EventHandler<ScreenDrawEventArgs>(surface_DrawnOn);
-            this.sizingPanel.Controls.Add(surface);
+            this.Controls.Add(surface);
+            joinOverlay.Add(surface);
             return surface;
         }
 

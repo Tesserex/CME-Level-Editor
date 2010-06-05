@@ -1,14 +1,13 @@
-﻿using System.Windows.Forms;
-using System.Drawing;
-
-namespace MegaMan_Level_Editor {
-    partial class StageForm {
+﻿namespace CodeProject
+{
+    partial class GraphicalOverlay
+    {
         /// <summary>
         /// Required designer variable.
         /// </summary>
         private System.ComponentModel.IContainer components = null;
 
-        /// <summary>
+        /// <summary> 
         /// Clean up any resources being used.
         /// </summary>
         /// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
@@ -21,7 +20,7 @@ namespace MegaMan_Level_Editor {
             base.Dispose(disposing);
         }
 
-        #region Windows Form Designer generated code
+        #region Component Designer generated code
 
         /// <summary>
         /// Required method for Designer support - do not modify
@@ -29,21 +28,9 @@ namespace MegaMan_Level_Editor {
         /// </summary>
         private void InitializeComponent()
         {
-            this.SuspendLayout();
-            // 
-            // StageForm
-            // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.AutoScroll = true;
-            this.ClientSize = new System.Drawing.Size(892, 471);
-            this.Name = "StageForm";
-            this.Text = "StageForm";
-            this.ResumeLayout(false);
-
+            components = new System.ComponentModel.Container();
         }
-        #endregion
 
-        // private System.Windows.Forms.Panel screenContainer;
+        #endregion
     }
 }
