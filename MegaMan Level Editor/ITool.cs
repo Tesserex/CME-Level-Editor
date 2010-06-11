@@ -28,11 +28,13 @@ namespace MegaMan_Level_Editor
 
     public class Bucket : ITool
     {
+        private ITileBrush brush;
         private MegaMan.Tile[,] cells;
         private int width, height;
 
         public Bucket(ITileBrush brush)
         {
+            this.brush = brush;
             width = brush.Width;
             height = brush.Height;
             cells = new MegaMan.Tile[width, height];
@@ -50,7 +52,9 @@ namespace MegaMan_Level_Editor
             var old = surface.Screen.TileAt(tile_x, tile_y);
 
             Flood(surface.Screen, tile_x, tile_y, old.Id, 0, 0);
-            //return new FillBrush(old);
+
+            // need to manually inform the screen surface that I messed with it
+            surface.RaiseDrawnOn(tile_x, tile_y, brush, new SingleTileBrush(old));
         }
 
         private void Flood(MegaMan.Screen screen, int tile_x, int tile_y, int tile_id, int brush_x, int brush_y)

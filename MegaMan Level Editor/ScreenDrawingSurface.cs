@@ -101,7 +101,12 @@ namespace MegaMan_Level_Editor
             int tile_y = location.Y / this.Screen.Tileset.TileSize;
 
             var previous = brush.DrawOn(Screen, tile_x, tile_y);
-            if (DrawnOn != null) DrawnOn(this, new ScreenDrawEventArgs(tile_x, tile_y, brush, previous, this.Screen));
+            RaiseDrawnOn(tile_x, tile_y, brush, previous);
+        }
+
+        public void RaiseDrawnOn(int tile_x, int tile_y, ITileBrush brush, ITileBrush history)
+        {
+            if (DrawnOn != null) DrawnOn(this, new ScreenDrawEventArgs(tile_x, tile_y, brush, history, this.Screen));
 
             ReDrawAll();
         }
