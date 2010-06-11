@@ -87,7 +87,8 @@ namespace MegaMan_Level_Editor
 
             this.Screen.Resized += (w, h) => this.ResizeLayers();
 
-            MainForm.Instance.BrushChanged += new BrushChangedHandler(Instance_BrushChanged);
+            // this will be replaced
+            //MainForm.Instance.BrushChanged += new BrushChangedHandler(Instance_BrushChanged);
 
             Program.FrameTick += new Action(Program_FrameTick);
 

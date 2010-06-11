@@ -20,7 +20,7 @@ namespace MegaMan_Level_Editor {
             this.Tileset = tileset;
             this.brush = brush;
 
-            MainForm.Instance.BrushChanged += new BrushChangedHandler(Instance_BrushChanged);
+            MainForm.Instance.brushForm.BrushChanged += new BrushChangedHandler(Instance_BrushChanged);
 
             this.brushPict.MouseDown += new MouseEventHandler(brushPict_MouseDown);
 

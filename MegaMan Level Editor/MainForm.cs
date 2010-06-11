@@ -36,6 +36,9 @@ namespace MegaMan_Level_Editor
         private string recentPath = Application.StartupPath + "\\recent.ini";
         private List<string> recentFiles = new List<string>(10);
         private int untitledCount = 0;
+
+        private ITileBrush currentBrush;
+        private ToolType currentToolType;
         #endregion Private Members
 
         #region Properties
@@ -89,9 +92,11 @@ namespace MegaMan_Level_Editor
                 foreach (MapDocument map in stages.Values) map.DrawBlock = value;
             }
         }
+
+        public ITool CurrentTool { get; private set; }
         #endregion
 
-        public event BrushChangedHandler BrushChanged;
+        public event EventHandler<ToolChangedEventArgs> ToolChanged;
 
         public static MainForm Instance { get; private set; }
 
@@ -183,14 +188,14 @@ namespace MegaMan_Level_Editor
 
         private void brushForm_BrushChanged(BrushChangedEventArgs e)
         {
-            if (BrushChanged != null) BrushChanged(e);
+            currentBrush = e.Brush;
+            AssembleTool();
         }
 
         private void TileChanged(Tile tile)
         {
-            ITileBrush brush = new SingleTileBrush(tile);
-            BrushChangedEventArgs args = new BrushChangedEventArgs(brush);
-            if (BrushChanged != null) BrushChanged(args);
+            this.currentBrush = new SingleTileBrush(tile);
+            AssembleTool();
         }
 
         protected override void OnClosing(CancelEventArgs e)
@@ -361,6 +366,25 @@ namespace MegaMan_Level_Editor
             }
         }
 
+        private void AssembleTool()
+        {
+            switch (currentToolType)
+            {
+                case ToolType.Brush:
+                    if (currentBrush != null) this.CurrentTool = new BrushTool(currentBrush);
+                    break;
+
+                case ToolType.Bucket:
+                    if (currentBrush != null) this.CurrentTool = new Bucket(currentBrush);
+                    break;
+
+                case ToolType.Join:
+                    this.CurrentTool = new JoinTool();
+                    break;
+            }
+            
+            if (ToolChanged != null) ToolChanged(this, new ToolChangedEventArgs(CurrentTool));
+        }
 
         //***********************
         // Click Event Handlers *
@@ -563,6 +587,24 @@ namespace MegaMan_Level_Editor
         private void menuStrip1_ItemClicked(object sender, ToolStripItemClickedEventArgs e)
         {
 
+        }
+
+        private void brushToolButton_Click(object sender, EventArgs e)
+        {
+            currentToolType = ToolType.Brush;
+            AssembleTool();
+        }
+
+        private void bucketToolButton_Click(object sender, EventArgs e)
+        {
+            currentToolType = ToolType.Bucket;
+            AssembleTool();
+        }
+
+        private void joinToolButton_Click(object sender, EventArgs e)
+        {
+            currentToolType = ToolType.Join;
+            AssembleTool();
         }
 
 

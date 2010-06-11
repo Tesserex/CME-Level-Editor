@@ -116,4 +116,20 @@ namespace MegaMan_Level_Editor
         {
         }
     }
+
+    public class ToolChangedEventArgs : EventArgs
+    {
+        public ITool Tool { get; private set; }
+        public ToolChangedEventArgs(ITool tool)
+        {
+            this.Tool = tool;
+        }
+    }
+
+    public enum ToolType
+    {
+        Brush,
+        Bucket,
+        Join
+    }
 }
