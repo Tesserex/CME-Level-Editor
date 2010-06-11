@@ -10,7 +10,8 @@ namespace MegaMan_Level_Editor
 {
     public class JoinOverlay : CodeProject.GraphicalOverlay
     {
-        private static Pen pen = new Pen(Color.Red, 3);
+        private static Pen passPen = new Pen(Color.Blue, 4);
+        private static Pen blockPen = new Pen(Color.Red, 4);
         private Bitmap image;
 
         public JoinOverlay()
@@ -62,9 +63,12 @@ namespace MegaMan_Level_Editor
             start += offset * 16;
             int end = start + (join.Size * 16);
             int edge;
+            Pen pen;
+            if (one ? join.direction == JoinDirection.BackwardOnly : join.direction == JoinDirection.ForwardOnly) pen = blockPen;
+            else pen = passPen;
             if (join.type == JoinType.Horizontal)
             {
-                edge = one ? surface.Bottom - 1 : surface.Top + 1;
+                edge = one ? surface.Bottom - 2 : surface.Top + 2;
                 int curl = one ? edge - 6 : edge + 6;
                 g.DrawLine(pen, start, edge, end, edge);
                 g.DrawLine(pen, start+1, edge, start+1, curl);
@@ -72,7 +76,7 @@ namespace MegaMan_Level_Editor
             }
             else
             {
-                edge = one ? surface.Right - 1 : surface.Left + 1;
+                edge = one ? surface.Right - 2 : surface.Left + 2;
                 int curl = one ? edge - 6 : edge + 6;
                 g.DrawLine(pen, edge, start, edge, end);
                 g.DrawLine(pen, edge, start, curl, start);
