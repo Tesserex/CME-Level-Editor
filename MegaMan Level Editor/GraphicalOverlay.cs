@@ -91,21 +91,10 @@ namespace CodeProject
         private void Control_Paint(object sender, PaintEventArgs e)
         {
             Control control = sender as Control;
-            Point location;
 
             if (control == form)
                 return;
 
-            // this part is going to be done by the JoinOverlay
-            /*else
-            {
-                location = form.PointToClient(control.Parent.PointToScreen(control.Location));
-                location += new Size((control.Width - control.ClientSize.Width) / 2, (control.Height - control.ClientSize.Height) / 2);
-            }
-
-            if (control != form)
-                e.Graphics.TranslateTransform(-location.X, -location.Y);
-            */
             OnPaint(sender, e);
         }
 
