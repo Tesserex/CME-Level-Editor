@@ -9,20 +9,41 @@ namespace MegaMan_Level_Editor
     public interface ITool
     {
         void Click(ScreenDrawingSurface surface, Point location);
+        void Move(ScreenDrawingSurface surface, Point location);
+        void Release(ScreenDrawingSurface surface, Point location);
     }
 
     public class BrushTool : ITool
     {
         private ITileBrush brush;
+        private bool held;
+        private Point currentTilePos;
 
         public BrushTool(ITileBrush brush)
         {
             this.brush = brush;
+            held = false;
         }
 
         public void Click(ScreenDrawingSurface surface, Point location)
         {
             surface.DrawBrush(brush, location);
+            held = true;
+            currentTilePos = new Point(location.X / surface.Screen.Tileset.TileSize, location.Y / surface.Screen.Tileset.TileSize);
+        }
+
+        public void Move(ScreenDrawingSurface surface, Point location)
+        {
+            if (!held) return;
+            Point pos = new Point(location.X / surface.Screen.Tileset.TileSize, location.Y / surface.Screen.Tileset.TileSize);
+            if (pos == currentTilePos) return; // don't keep drawing on the same spot
+
+            surface.DrawBrush(brush, location);
+        }
+
+        public void Release(ScreenDrawingSurface surface, Point location)
+        {
+            held = false;
         }
     }
 
@@ -71,11 +92,27 @@ namespace MegaMan_Level_Editor
             Flood(screen, tile_x, tile_y - 1, tile_id, brush_x, (brush_y == 0)? height-1 : brush_y - 1);
             Flood(screen, tile_x, tile_y + 1, tile_id, brush_x, (brush_y == height - 1)? 0 : brush_y + 1);
         }
+
+        public void Move(ScreenDrawingSurface surface, Point location)
+        {
+        }
+
+        public void Release(ScreenDrawingSurface surface, Point location)
+        {
+        }
     }
 
     public class JoinTool : ITool
     {
         public void Click(ScreenDrawingSurface surface, Point location)
+        {
+        }
+
+        public void Move(ScreenDrawingSurface surface, Point location)
+        {
+        }
+
+        public void Release(ScreenDrawingSurface surface, Point location)
         {
         }
     }
