@@ -75,6 +75,7 @@
     <Compile Include="HistoryForm.cs">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Include="ITool.cs" />
     <Compile Include="JoinOverlay.cs">
       <SubType>Component</SubType>
     </Compile>

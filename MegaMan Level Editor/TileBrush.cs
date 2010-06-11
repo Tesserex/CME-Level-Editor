@@ -13,6 +13,8 @@ namespace MegaMan_Level_Editor
         ITileBrush DrawOn(MegaMan.Screen screen, int tile_x, int tile_y);
         void DrawOn(Graphics g, int x, int y);
         IEnumerable<TileBrushCell> Cells();
+        int Height { get; }
+        int Width { get; }
     }
 
     public struct TileBrushCell
@@ -50,6 +52,9 @@ namespace MegaMan_Level_Editor
     public class SingleTileBrush : ITileBrush
     {
         protected Tile tile;
+
+        public int Height { get { return 1; } }
+        public int Width { get { return 1; } }
 
         public SingleTileBrush(Tile tile)
         {
