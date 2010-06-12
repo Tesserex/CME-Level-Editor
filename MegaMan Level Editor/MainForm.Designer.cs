@@ -70,12 +70,12 @@
             this.brushesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.projectToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.folderDialog = new System.Windows.Forms.FolderBrowserDialog();
-            this.toolStrip1 = new System.Windows.Forms.ToolStrip();
+            this.toolBar = new System.Windows.Forms.ToolStrip();
             this.brushToolButton = new System.Windows.Forms.ToolStripButton();
             this.bucketToolButton = new System.Windows.Forms.ToolStripButton();
             this.joinToolButton = new System.Windows.Forms.ToolStripButton();
             this.menuStrip1.SuspendLayout();
-            this.toolStrip1.SuspendLayout();
+            this.toolBar.SuspendLayout();
             this.SuspendLayout();
             // 
             // menuStrip1
@@ -448,18 +448,18 @@
             this.projectToolStripMenuItem.Text = "Project";
             this.projectToolStripMenuItem.Click += new System.EventHandler(this.projectToolStripMenuItem_Click);
             // 
-            // toolStrip1
+            // toolBar
             // 
-            this.toolStrip1.GripStyle = System.Windows.Forms.ToolStripGripStyle.Hidden;
-            this.toolStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.toolBar.GripStyle = System.Windows.Forms.ToolStripGripStyle.Hidden;
+            this.toolBar.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.brushToolButton,
             this.bucketToolButton,
             this.joinToolButton});
-            this.toolStrip1.Location = new System.Drawing.Point(0, 24);
-            this.toolStrip1.Name = "toolStrip1";
-            this.toolStrip1.Size = new System.Drawing.Size(572, 25);
-            this.toolStrip1.TabIndex = 3;
-            this.toolStrip1.Text = "toolStrip1";
+            this.toolBar.Location = new System.Drawing.Point(0, 24);
+            this.toolBar.Name = "toolBar";
+            this.toolBar.Size = new System.Drawing.Size(572, 25);
+            this.toolBar.TabIndex = 3;
+            this.toolBar.Text = "toolStrip1";
             // 
             // brushToolButton
             // 
@@ -496,7 +496,7 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(572, 436);
-            this.Controls.Add(this.toolStrip1);
+            this.Controls.Add(this.toolBar);
             this.Controls.Add(this.menuStrip1);
             this.IsMdiContainer = true;
             this.MainMenuStrip = this.menuStrip1;
@@ -505,8 +505,8 @@
             this.WindowState = System.Windows.Forms.FormWindowState.Maximized;
             this.menuStrip1.ResumeLayout(false);
             this.menuStrip1.PerformLayout();
-            this.toolStrip1.ResumeLayout(false);
-            this.toolStrip1.PerformLayout();
+            this.toolBar.ResumeLayout(false);
+            this.toolBar.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -559,7 +559,7 @@
         private System.Windows.Forms.ToolStripMenuItem projectToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem newScreenMenuItem;
         private System.Windows.Forms.ToolStripMenuItem historyToolStripMenuItem;
-        private System.Windows.Forms.ToolStrip toolStrip1;
+        private System.Windows.Forms.ToolStrip toolBar;
         private System.Windows.Forms.ToolStripButton brushToolButton;
         private System.Windows.Forms.ToolStripButton bucketToolButton;
         private System.Windows.Forms.ToolStripButton joinToolButton;

@@ -593,18 +593,24 @@ namespace MegaMan_Level_Editor
         {
             currentToolType = ToolType.Brush;
             AssembleTool();
+            foreach (ToolStripButton item in toolBar.Items) { item.Checked = false; }
+            brushToolButton.Checked = true;
         }
 
         private void bucketToolButton_Click(object sender, EventArgs e)
         {
             currentToolType = ToolType.Bucket;
             AssembleTool();
+            foreach (ToolStripButton item in toolBar.Items) { item.Checked = false; }
+            bucketToolButton.Checked = true;
         }
 
         private void joinToolButton_Click(object sender, EventArgs e)
         {
             currentToolType = ToolType.Join;
             AssembleTool();
+            foreach (ToolStripButton item in toolBar.Items) { item.Checked = false; }
+            joinToolButton.Checked = true;
         }
 
 
