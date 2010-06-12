@@ -15,6 +15,7 @@ namespace MegaMan_Level_Editor
         IEnumerable<TileBrushCell> Cells();
         int Height { get; }
         int Width { get; }
+        int CellSize { get; }
     }
 
     public struct TileBrushCell
@@ -38,7 +39,7 @@ namespace MegaMan_Level_Editor
         public ITileBrush Brush { get; private set; }
         public ITileBrush HistoryBrush { get; private set; }
         public MegaMan.Screen Screen { get; private set; }
-
+        
         public ScreenDrawEventArgs(int x, int y, ITileBrush brush, ITileBrush history, MegaMan.Screen screen)
         {
             X = x;
@@ -55,6 +56,8 @@ namespace MegaMan_Level_Editor
 
         public int Height { get { return 1; } }
         public int Width { get { return 1; } }
+
+        public int CellSize { get { return (int)tile.Width; } }
 
         public SingleTileBrush(Tile tile)
         {
@@ -95,6 +98,8 @@ namespace MegaMan_Level_Editor
         public int Height { get; private set; }
         public int Width { get; private set; }
 
+        public int CellSize { get; private set; }
+
         public TileBrush(int width, int height)
         {
             Reset(width, height);
@@ -115,6 +120,7 @@ namespace MegaMan_Level_Editor
             cell.y = y;
             cell.tile = tile;
             cells[x][y] = cell;
+            CellSize = (int)tile.Width;
         }
 
         #region ITileBrush Members
@@ -159,41 +165,6 @@ namespace MegaMan_Level_Editor
         }
 
         #endregion
-    }
-
-    public class FillBrush : SingleTileBrush
-    {
-        public FillBrush(Tile tile) : base(tile) { }
-
-        public override ITileBrush DrawOn(MegaMan.Screen screen, int tile_x, int tile_y)
-        {
-            var old = screen.TileAt(tile_x, tile_y);
-
-            if (old == null)
-                return null;
-
-            if (old.Id == this.tile.Id)
-            {
-                return null;
-            }
-            else
-            {
-                Flood(screen, tile_x, tile_y, old.Id);
-                return new FillBrush(old);
-            }
-        }
-
-        private void Flood(MegaMan.Screen screen, int tile_x, int tile_y, int tile_id)
-        {
-            var old = screen.TileAt(tile_x, tile_y);
-            if (old == null || old.Id != tile_id) return;
-
-            screen.ChangeTile(tile_x, tile_y, this.tile.Id);
-            Flood(screen, tile_x - 1, tile_y, tile_id);
-            Flood(screen, tile_x + 1, tile_y, tile_id);
-            Flood(screen, tile_x, tile_y - 1, tile_id);
-            Flood(screen, tile_x, tile_y + 1, tile_id);
-        }
     }
 }
 

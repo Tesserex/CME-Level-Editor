@@ -8,6 +8,7 @@ namespace MegaMan_Level_Editor
 {
     public interface ITool
     {
+        Image Icon { get; }
         void Click(ScreenDrawingSurface surface, Point location);
         void Move(ScreenDrawingSurface surface, Point location);
         void Release(ScreenDrawingSurface surface, Point location);
@@ -19,10 +20,17 @@ namespace MegaMan_Level_Editor
         private bool held;
         private Point currentTilePos;
 
+        public Image Icon { get; private set; }
+
         public BrushTool(ITileBrush brush)
         {
             this.brush = brush;
             held = false;
+            Icon = new Bitmap(brush.Width * brush.CellSize, brush.Height * brush.CellSize);
+            using (Graphics g = Graphics.FromImage(Icon))
+            {
+                brush.DrawOn(g, 0, 0);
+            }
         }
 
         public void Click(ScreenDrawingSurface surface, Point location)
@@ -53,6 +61,8 @@ namespace MegaMan_Level_Editor
         private MegaMan.Tile[,] cells;
         private int width, height;
 
+        public Image Icon { get; private set; }
+
         public Bucket(ITileBrush brush)
         {
             this.brush = brush;
@@ -62,6 +72,11 @@ namespace MegaMan_Level_Editor
             foreach (TileBrushCell cell in brush.Cells())
             {
                 cells[cell.x, cell.y] = cell.tile;
+            }
+            Icon = new Bitmap(brush.Width * brush.CellSize, brush.Height * brush.CellSize);
+            using (Graphics g = Graphics.FromImage(Icon))
+            {
+                brush.DrawOn(g, 0, 0);
             }
         }
 
@@ -104,6 +119,8 @@ namespace MegaMan_Level_Editor
 
     public class JoinTool : ITool
     {
+        public Image Icon { get { return null; } }
+
         public void Click(ScreenDrawingSurface surface, Point location)
         {
         }

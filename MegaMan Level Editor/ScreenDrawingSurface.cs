@@ -17,8 +17,6 @@ namespace MegaMan_Level_Editor
         private static Brush ladderBrush = new SolidBrush(Color.FromArgb(160, Color.Yellow));
         private static Pen highlightPen = new Pen(Color.Green, 2);
 
-        private ITileBrush currentBrush = null;
-
         private Bitmap tileLayer = null;
         private Bitmap gridLayer = null;
         private Bitmap blockLayer = null;
@@ -87,9 +85,6 @@ namespace MegaMan_Level_Editor
 
             this.Screen.Resized += (w, h) => this.ResizeLayers();
 
-            // this will be replaced
-            //MainForm.Instance.BrushChanged += new BrushChangedHandler(Instance_BrushChanged);
-
             Program.FrameTick += new Action(Program_FrameTick);
 
             ReDrawAll();
@@ -125,11 +120,6 @@ namespace MegaMan_Level_Editor
         // Event Handlers *
         //*****************
 
-        void Instance_BrushChanged(BrushChangedEventArgs e)
-        {
-            currentBrush = e.Brush;
-        }
-
         private void AddScreenImageHandlers()
         {
             this.MouseLeave += (s, ev) => { this.active = false; ReDrawMaster(); };
@@ -142,29 +132,31 @@ namespace MegaMan_Level_Editor
 
         private void screenImage_MouseDown(object sender, MouseEventArgs e)
         {
-            Drawing = true;
-            DrawTile(e.X / Screen.Tileset.TileSize, e.Y / Screen.Tileset.TileSize);
+            MainForm.Instance.CurrentTool.Click(this, e.Location);
         }
 
         private void screenImage_MouseUp(object sender, MouseEventArgs e)
         {
-            Drawing = false;
+            MainForm.Instance.CurrentTool.Release(this, e.Location);
         }
 
         private void screenImage_MouseMove(object sender, MouseEventArgs e)
         {
-            if (mouseLayer == null || currentBrush == null) return;
+            if (mouseLayer == null || MainForm.Instance.CurrentTool == null) return;
 
             int tx = (e.X / Screen.Tileset.TileSize) * Screen.Tileset.TileSize;
             int ty = (e.Y / Screen.Tileset.TileSize) * Screen.Tileset.TileSize;
 
-            using (Graphics g = Graphics.FromImage(mouseLayer))
+            if (MainForm.Instance.CurrentTool.Icon != null)
             {
-                g.Clear(Color.Transparent);
-                currentBrush.DrawOn(g, tx, ty);
+                using (Graphics g = Graphics.FromImage(mouseLayer))
+                {
+                    g.Clear(Color.Transparent);
+                    g.DrawImage(MainForm.Instance.CurrentTool.Icon, tx, ty);
+                }
             }
 
-            DrawTile(e.Location.X / Screen.Tileset.TileSize, e.Y / Screen.Tileset.TileSize);
+            MainForm.Instance.CurrentTool.Move(this, e.Location);
             ReDrawMaster();
         }
 
@@ -287,17 +279,6 @@ namespace MegaMan_Level_Editor
             this.Width = masterImage.Width;
             this.Height = masterImage.Height;
             this.Refresh();
-        }
-
-        private void DrawTile(int x, int y)
-        {
-            if (!Drawing || currentBrush == null)
-                return;
-
-            var previous = currentBrush.DrawOn(Screen, x, y);
-            if (DrawnOn != null) DrawnOn(this, new ScreenDrawEventArgs(x, y, currentBrush, previous, this.Screen));
-
-            ReDrawAll();
         }
 
         private void InitLayer(ref Bitmap layer)
