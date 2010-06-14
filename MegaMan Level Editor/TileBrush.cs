@@ -32,24 +32,6 @@ namespace MegaMan_Level_Editor
         }
     }
 
-    public class ScreenDrawEventArgs : EventArgs
-    {
-        public int X { get; private set; }
-        public int Y { get; private set; }
-        public ITileBrush Brush { get; private set; }
-        public ITileBrush HistoryBrush { get; private set; }
-        public MegaMan.Screen Screen { get; private set; }
-        
-        public ScreenDrawEventArgs(int x, int y, ITileBrush brush, ITileBrush history, MegaMan.Screen screen)
-        {
-            X = x;
-            Y = y;
-            Brush = brush;
-            HistoryBrush = history;
-            Screen = screen;
-        }
-    }
-
     public class SingleTileBrush : ITileBrush
     {
         protected Tile tile;

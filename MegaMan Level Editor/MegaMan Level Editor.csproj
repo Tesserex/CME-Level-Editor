@@ -72,6 +72,7 @@
       <DependentUpon>GraphicalOverlay.cs</DependentUpon>
     </Compile>
     <Compile Include="History.cs" />
+    <Compile Include="HistoryAction.cs" />
     <Compile Include="HistoryForm.cs">
       <SubType>Form</SubType>
     </Compile>

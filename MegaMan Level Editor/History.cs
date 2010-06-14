@@ -4,48 +4,19 @@ using System.Collections.Generic;
 namespace MegaMan_Level_Editor
 {
     /* *
-    * DrawAction - An action that is saved into history
-    * */
-    public class DrawAction
-    {
-        public int x, y;
-        public ITileBrush current, previous;
-        public MegaMan.Screen screen;
-
-        public DrawAction(int x, int y, ITileBrush current, ITileBrush previous, MegaMan.Screen screen)
-        {
-            this.x = x;
-            this.y = y;
-            this.current = current;
-            this.previous = previous;
-            this.screen = screen;
-        }
-
-        override public String ToString()
-        {
-            return "(x, y) : (" + x + "," + y + ")  current : " + current.ToString() + " previous : " + previous.ToString();
-        }
-
-        public DrawAction Reverse()
-        {
-            return new DrawAction(x, y, previous, current, screen);
-        }
-    }
-
-    /* *
     * History - Saves previous actions for "undo"/"redo" functionality
     * */
     public class History
     {
         // TODO: Make the stack a type "Action[]" where an Action is anything
         // we may want to undo.
-        public List<DrawAction> stack;
+        public List<HistoryAction> stack;
         public int currentAction;
 
         public History()
         {
             this.currentAction = -1;
-            this.stack = new List<DrawAction>();
+            this.stack = new List<HistoryAction>();
         }
 
         /*
@@ -81,14 +52,14 @@ namespace MegaMan_Level_Editor
          * and then redo to get back to it. This can be corrected.
          * 
          * */
-        public void Push(int x, int y, ITileBrush current, ITileBrush previous, MegaMan.Screen screen)
+        public void Push(HistoryAction action)
         {
             currentAction += 1;
-            stack.Insert(currentAction, new DrawAction(x, y, current, previous, screen));
+            stack.Insert(currentAction, action);
             UpdateHistoryForm();
         }
 
-        public DrawAction Undo()
+        public HistoryAction Undo()
         {
             if (currentAction >= 0)
             {
@@ -103,7 +74,7 @@ namespace MegaMan_Level_Editor
             }
         }
 
-        public DrawAction Redo()
+        public HistoryAction Redo()
         {
             if (currentAction < stack.Count - 1)
             {

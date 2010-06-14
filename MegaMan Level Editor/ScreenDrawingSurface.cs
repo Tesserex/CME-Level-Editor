@@ -7,6 +7,18 @@ using System.Windows.Forms;
 
 namespace MegaMan_Level_Editor
 {
+    public class ScreenDrawEventArgs : EventArgs
+    {
+        public List<TileChange> Changes { get; private set; }
+        public ScreenDrawingSurface Surface { get; private set; }
+
+        public ScreenDrawEventArgs(List<TileChange> changes, ScreenDrawingSurface surface)
+        {
+            Changes = changes;
+            Surface = surface;
+        }
+    }
+
     /* *
      * ScreenDrawingSurface - Draw a screen onto one of these. 
      * Multiple screen surfaces show an entire map in one window
@@ -91,18 +103,9 @@ namespace MegaMan_Level_Editor
             DrawGray();
         }
 
-        public void DrawBrush(ITileBrush brush, Point location)
+        public void RaiseDrawnOn(List<TileChange> changes)
         {
-            int tile_x = location.X / this.Screen.Tileset.TileSize;
-            int tile_y = location.Y / this.Screen.Tileset.TileSize;
-
-            var previous = brush.DrawOn(Screen, tile_x, tile_y);
-            RaiseDrawnOn(tile_x, tile_y, brush, previous);
-        }
-
-        public void RaiseDrawnOn(int tile_x, int tile_y, ITileBrush brush, ITileBrush history)
-        {
-            if (DrawnOn != null) DrawnOn(this, new ScreenDrawEventArgs(tile_x, tile_y, brush, history, this.Screen));
+            if (DrawnOn != null) DrawnOn(this, new ScreenDrawEventArgs(changes, this));
 
             ReDrawAll();
         }

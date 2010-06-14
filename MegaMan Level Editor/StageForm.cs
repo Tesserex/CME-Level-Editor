@@ -60,14 +60,7 @@ namespace MegaMan_Level_Editor
 
             if (action != null)
             {
-                var previous = action.current.DrawOn(action.screen, action.x, action.y);
-
-                // TODO: Use list combinators to select the first element that matches
-                foreach (var surface in surfaces.Values)
-                {
-                    if (surface.Screen == action.screen)
-                        surface.ReDrawAll();
-                }
+                action.Run();
             }
         }
 
@@ -77,13 +70,7 @@ namespace MegaMan_Level_Editor
 
             if (action != null)
             {
-                var future = action.current.DrawOn(action.screen, action.x, action.y);
-
-                foreach (var surface in surfaces.Values)
-                {
-                    if (surface.Screen == action.screen)
-                        surface.ReDrawAll();
-                }
+                action.Run();
             }
         }
 
@@ -271,9 +258,9 @@ namespace MegaMan_Level_Editor
 
         void surface_DrawnOn(object sender, ScreenDrawEventArgs e)
         {
-            if (e.HistoryBrush != null)
+            if (e.Changes.Count > 0)
             {
-                history.Push(e.X, e.Y, e.Brush, e.HistoryBrush, e.Screen);
+                history.Push(new DrawAction(e.Changes, e.Surface));
             }
         }
     }
