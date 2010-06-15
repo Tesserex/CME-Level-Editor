@@ -9,12 +9,12 @@ namespace MegaMan_Level_Editor
 {
     public class ScreenDrawEventArgs : EventArgs
     {
-        public List<TileChange> Changes { get; private set; }
+        public HistoryAction Action { get; private set; }
         public ScreenDrawingSurface Surface { get; private set; }
 
-        public ScreenDrawEventArgs(List<TileChange> changes, ScreenDrawingSurface surface)
+        public ScreenDrawEventArgs(HistoryAction action, ScreenDrawingSurface surface)
         {
-            Changes = changes;
+            Action = action;
             Surface = surface;
         }
     }
@@ -103,9 +103,9 @@ namespace MegaMan_Level_Editor
             DrawGray();
         }
 
-        public void RaiseDrawnOn(List<TileChange> changes)
+        public void RaiseDrawnOn(HistoryAction action)
         {
-            if (DrawnOn != null) DrawnOn(this, new ScreenDrawEventArgs(changes, this));
+            if (DrawnOn != null) DrawnOn(this, new ScreenDrawEventArgs(action, this));
 
             ReDrawAll();
         }

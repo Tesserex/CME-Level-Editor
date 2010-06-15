@@ -38,16 +38,18 @@ namespace MegaMan_Level_Editor
     {
         private List<TileChange> changes;
         private ScreenDrawingSurface surface;
+        private string name;
 
-        public DrawAction(IEnumerable<TileChange> changes, ScreenDrawingSurface surface)
+        public DrawAction(string name, IEnumerable<TileChange> changes, ScreenDrawingSurface surface)
         {
+            this.name = name;
             this.changes = new List<TileChange>(changes);
             this.surface = surface;
         }
 
-        public override String ToString()
+        public override string ToString()
         {
-            return "Draw something";
+            return name;
         }
 
         public void Run()
@@ -63,7 +65,7 @@ namespace MegaMan_Level_Editor
         {
             List<TileChange> ch = new List<TileChange>(changes.Count);
             foreach (TileChange change in changes) ch.Add(change.Reverse());
-            return new DrawAction(ch, surface);
+            return new DrawAction(name, ch, surface);
         }
     }
 }

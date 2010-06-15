@@ -344,10 +344,7 @@ namespace MegaMan_Level_Editor
 
         void surface_DrawnOn(object sender, ScreenDrawEventArgs e)
         {
-            if (e.Changes.Count > 0)
-            {
-                history.Push(new DrawAction(e.Changes, e.Surface));
-            }
+            history.Push(e.Action);
         }
     }
 }
