@@ -87,8 +87,6 @@ namespace MegaMan_Level_Editor
             this.BackColor = System.Drawing.SystemColors.Control;
             this.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
 
-            AddScreenImageHandlers();
-
             BuildLayers();
 
             DrawGrid = false;
@@ -123,27 +121,33 @@ namespace MegaMan_Level_Editor
         // Event Handlers *
         //*****************
 
-        private void AddScreenImageHandlers()
+        protected override void OnMouseEnter(EventArgs e)
         {
-            this.MouseLeave += (s, ev) => { this.active = false; ReDrawMaster(); };
-            this.MouseEnter += (s, ev) => { this.active = true; ReDrawMaster(); };
-
-            this.MouseMove += new MouseEventHandler(screenImage_MouseMove);
-            this.MouseDown += new MouseEventHandler(screenImage_MouseDown);
-            this.MouseUp += new MouseEventHandler(screenImage_MouseUp);
+            this.active = true;
+            ReDrawMaster();
+            base.OnMouseEnter(e);
         }
 
-        private void screenImage_MouseDown(object sender, MouseEventArgs e)
+        protected override void OnMouseLeave(EventArgs e)
+        {
+            this.active = false;
+            ReDrawMaster();
+            base.OnMouseLeave(e);
+        }
+
+        protected override void OnMouseDown(MouseEventArgs e)
         {
             MainForm.Instance.CurrentTool.Click(this, e.Location);
+            base.OnMouseDown(e);
         }
 
-        private void screenImage_MouseUp(object sender, MouseEventArgs e)
+        protected override void OnMouseUp(MouseEventArgs e)
         {
             MainForm.Instance.CurrentTool.Release(this, e.Location);
+            base.OnMouseUp(e);
         }
 
-        private void screenImage_MouseMove(object sender, MouseEventArgs e)
+        protected override void OnMouseMove(MouseEventArgs e)
         {
             if (mouseLayer == null || MainForm.Instance.CurrentTool == null) return;
 
@@ -161,6 +165,7 @@ namespace MegaMan_Level_Editor
 
             MainForm.Instance.CurrentTool.Move(this, e.Location);
             ReDrawMaster();
+            base.OnMouseMove(e);
         }
 
         public void ReDrawAll()
