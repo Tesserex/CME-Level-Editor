@@ -67,10 +67,6 @@ namespace MegaMan_Level_Editor
             {
                 OpenScreenProperties(node);
             }
-            else
-            {
-                MessageBox.Show("Parent name is " + node.Parent.Name + ". How do I handle this?");
-            }
         }
 
         public void OpenStage(TreeNode node)
@@ -101,7 +97,7 @@ namespace MegaMan_Level_Editor
 
         public void HandleRightClick(TreeNode node)
         {
-            MessageBox.Show("You right clicked " + node.Name);
+            
         }
 
         private void StageForm_Load(object sender, EventArgs e)

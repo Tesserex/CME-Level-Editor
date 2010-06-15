@@ -80,32 +80,6 @@ namespace MegaMan_Level_Editor
             MessageBox.Show("I don't do anything yet! Fix this!");
         }
 
-        public void NewScreen()
-        {
-            /* I'm never called - please kill me!
-             * 
-            MegaMan.Screen screen = new MegaMan.Screen(16, 14, Map);
-            ScreenProp propForm = new ScreenProp();
-            //propForm.LoadScreen(screen);
-            propForm.Show();
-
-            propForm.FormClosing += (s, ev) =>
-            {
-                if (!propForm.Confirmed) return;
-
-                if (screen.Name == null)
-                {
-                    MessageBox.Show("You must give the screen a name.", "Add Screen Error", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                    return;
-                }
-                Map.Screens.Add(screen.Name, screen);
-
-                //ShowStage(screen);
-
-            };
-             */
-        }
-
         public void ShowStage()
         {
             if (this.stageForm == null)

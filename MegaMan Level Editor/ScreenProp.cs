@@ -42,13 +42,5 @@ namespace MegaMan_Level_Editor
             if (OK != null) OK(this);
             this.Close();
         }
-
-        // TODO: 
-        //   The pattern "MainForm.Instance.stages[stageName].Map.Screens[screenName]"
-        //   will slowly become the model with the View/Controller being the UI.
-        public void SaveScreenOnClose(string newScreenName, string width, string height)
-        {
-            
-        }
     }
 }

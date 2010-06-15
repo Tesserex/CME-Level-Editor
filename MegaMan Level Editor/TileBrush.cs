@@ -60,7 +60,6 @@ namespace MegaMan_Level_Editor
             if (old.Id == this.tile.Id) {
                 return null;
             } else {
-//                MessageBox.Show("Drawing tile " + this.tile + " where previously we had " + old);
                 screen.ChangeTile(tile_x, tile_y, tile.Id);
                 return new SingleTileBrush(old);
             }

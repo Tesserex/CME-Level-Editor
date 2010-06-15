@@ -8,8 +8,6 @@ namespace MegaMan_Level_Editor
     * */
     public class History
     {
-        // TODO: Make the stack a type "Action[]" where an Action is anything
-        // we may want to undo.
         public List<HistoryAction> stack;
         public int currentAction;
 
