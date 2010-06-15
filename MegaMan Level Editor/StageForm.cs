@@ -225,7 +225,7 @@ namespace MegaMan_Level_Editor
                 {
                     TryToFixCollision(placedScreens, surface);
                     surface.Collision = SurfaceCollides(placedScreens, surface.Surface);
-                } while (surface.Collision.Width > 0 && surface.Collision.Height > 0);
+                } while (surface.Collision != Rectangle.Empty);
 
                 placedScreens.Add(surface.Surface);
                 minX = Math.Min(minX, surface.Surface.Location.X);
@@ -299,7 +299,7 @@ namespace MegaMan_Level_Editor
             foreach (ScreenDrawingSurface surface in placedAlready)
             {
                 Rectangle inter = Rectangle.Intersect(new Rectangle(surface.Location, surface.Size), nextRect);
-                if (inter.Width > 0 && inter.Height > 0)
+                if (inter != Rectangle.Empty)
                 {
                     if (collisions == Rectangle.Empty) collisions = inter;
                     else collisions = Rectangle.Union(collisions, inter);
