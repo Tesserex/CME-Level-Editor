@@ -131,6 +131,13 @@ namespace MegaMan_Level_Editor
         protected override void OnMouseLeave(EventArgs e)
         {
             this.active = false;
+            if (mouseLayer != null)
+            {
+                using (Graphics g = Graphics.FromImage(mouseLayer))
+                {
+                    g.Clear(Color.Transparent);
+                }
+            }
             ReDrawMaster();
             base.OnMouseLeave(e);
         }
