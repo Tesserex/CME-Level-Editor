@@ -148,6 +148,17 @@ namespace MegaMan_Level_Editor
             AlignScreenSurfaces();
         }
 
+        private class SurfaceCollision
+        {
+            public ScreenDrawingSurface Surface;
+            public Rectangle Collision;
+            public SurfaceCollision(ScreenDrawingSurface surface, Rectangle collision)
+            {
+                Surface = surface;
+                Collision = collision;
+            }
+        }
+
         private void AlignScreenSurfaces()
         {
             foreach (var pair in surfaces)
@@ -158,7 +169,8 @@ namespace MegaMan_Level_Editor
                     pair.Value.Placed = false;
             }
 
-            int placeCount = 0;
+            List<ScreenDrawingSurface> placedScreens = new List<ScreenDrawingSurface>();
+            List<SurfaceCollision> collideScreens = new List<SurfaceCollision>();
             int minX = 0, minY = 0, maxX = 0, maxY = 0;
 
             // account for screens that aren't placed - need to find them
@@ -169,19 +181,55 @@ namespace MegaMan_Level_Editor
                 placeable.Add(join.screenTwo);
             }
             placeable.Remove(stage.StartScreen); // this one is already placed
+            placedScreens.Add(surfaces[stage.StartScreen]);
 
-            while (placeCount < placeable.Count)
+            while (placeable.Count > 0)
             {
                 foreach (var join in stage.Joins)
                 {
-                    bool placed = AlignScreenSurfaceUsingJoin(surfaces[join.screenOne], surfaces[join.screenTwo], join);
-                    if (placed)
+                    ScreenDrawingSurface placed = AlignScreenSurfaceUsingJoin(surfaces[join.screenOne], surfaces[join.screenTwo], join);
+                    if (placed != null)
                     {
-                        placeCount++;
-                        minX = Math.Min(minX, Math.Min(surfaces[join.screenOne].Location.X, surfaces[join.screenTwo].Location.X));
-                        minY = Math.Min(minY, Math.Min(surfaces[join.screenOne].Location.Y, surfaces[join.screenTwo].Location.Y));
+                        // check for collisions
+                        Rectangle collision = SurfaceCollides(placedScreens, placed);
+                        if (collision.Width > 0 && collision.Height > 0)
+                        {
+                            // set it aside to be dealt with later. We want as many to fit
+                            // as possible before dealing with these ones.
+                            collideScreens.Add(new SurfaceCollision(placed, collision));
+                        }
+                        else
+                        {
+                            minX = Math.Min(minX, placed.Location.X);
+                            minY = Math.Min(minY, placed.Location.Y);
+                        }
+                        // either way, this one is done with handling (at least for now).
+                        placeable.Remove(placed.Screen.Name);
+                        // it needs to be considered placed, even if it collides,
+                        // so that screens joining it can be placed
+                        placedScreens.Add(placed);
                     }
                 }
+            }
+
+            // remove collisions from placed screens
+            foreach (var surface in collideScreens)
+            {
+                placedScreens.Remove(surface.Surface);
+            }
+
+            // now place the collided screens wherever they fit
+            foreach (var surface in collideScreens)
+            {
+                do
+                {
+                    TryToFixCollision(placedScreens, surface);
+                    surface.Collision = SurfaceCollides(placedScreens, surface.Surface);
+                } while (surface.Collision.Width > 0 && surface.Collision.Height > 0);
+
+                placedScreens.Add(surface.Surface);
+                minX = Math.Min(minX, surface.Surface.Location.X);
+                minY = Math.Min(minY, surface.Surface.Location.Y);
             }
 
             if (minX < 0 || minY < 0)
@@ -202,7 +250,7 @@ namespace MegaMan_Level_Editor
             joinOverlay.Refresh(maxX, maxY, stage.Joins, surfaces);
         }
 
-        private bool AlignScreenSurfaceUsingJoin(ScreenDrawingSurface surface, ScreenDrawingSurface secondSurface, Join join)
+        private ScreenDrawingSurface AlignScreenSurfaceUsingJoin(ScreenDrawingSurface surface, ScreenDrawingSurface secondSurface, Join join)
         {
             var offset = (join.offsetTwo - join.offsetOne) * surface.Screen.Tileset.TileSize;
 
@@ -222,7 +270,7 @@ namespace MegaMan_Level_Editor
                     secondSurface.Location = p;
                 }
                 secondSurface.Placed = true;
-                return true;
+                return secondSurface;
             }
             else if (secondSurface.Placed && !surface.Placed)
             {
@@ -239,9 +287,47 @@ namespace MegaMan_Level_Editor
                     surface.Location = p;
                 }
                 surface.Placed = true;
-                return true;
+                return surface;
             }
-            return false;
+            return null;
+        }
+
+        private Rectangle SurfaceCollides(IEnumerable<ScreenDrawingSurface> placedAlready, ScreenDrawingSurface next)
+        {
+            Rectangle collisions = Rectangle.Empty;
+            Rectangle nextRect = new Rectangle(next.Location, next.Size);
+            foreach (ScreenDrawingSurface surface in placedAlready)
+            {
+                Rectangle inter = Rectangle.Intersect(new Rectangle(surface.Location, surface.Size), nextRect);
+                if (inter.Width > 0 && inter.Height > 0)
+                {
+                    if (collisions == Rectangle.Empty) collisions = inter;
+                    else collisions = Rectangle.Union(collisions, inter);
+                }
+            }
+            return collisions;
+        }
+
+        private void TryToFixCollision(IEnumerable<ScreenDrawingSurface> placedAlready, SurfaceCollision collision)
+        {
+            Point collCenter = collision.Collision.Location;
+            collCenter.Offset(collision.Collision.Width / 2, collision.Collision.Height / 2);
+
+            Point surfCenter = collision.Surface.Location;
+            surfCenter.Offset(collision.Surface.Width / 2, collision.Surface.Height / 2);
+
+            int off_y = surfCenter.Y - collCenter.Y;
+            int off_x = surfCenter.X - collCenter.X;
+            if (Math.Abs(off_y) > Math.Abs(off_x))
+            {
+                if (off_y > 0) collision.Surface.Location = new Point(collision.Surface.Location.X, collision.Surface.Location.Y + collision.Surface.Screen.Tileset.TileSize);
+                else collision.Surface.Location = new Point(collision.Surface.Location.X, collision.Surface.Location.Y - collision.Surface.Screen.Tileset.TileSize);
+            }
+            else
+            {
+                if (off_x > 0) collision.Surface.Location = new Point(collision.Surface.Location.X + collision.Surface.Screen.Tileset.TileSize, collision.Surface.Location.Y);
+                else collision.Surface.Location = new Point(collision.Surface.Location.X - collision.Surface.Screen.Tileset.TileSize, collision.Surface.Location.Y);
+            }
         }
 
         private ScreenDrawingSurface CreateScreenSurface(MegaMan.Screen screen)
