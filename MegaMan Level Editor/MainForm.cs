@@ -119,12 +119,7 @@ namespace MegaMan_Level_Editor
             DrawBlock = false;
 
             LoadRecentFiles();
-            LoadWindowPositions();
-        }
-
-        public void LoadWindowPositions()
-        {
-            MessageBox.Show("TODO: Load the window positions from last time");
+            LoadFormSettings(this, this.projectForm, this.historyForm, this.brushForm);
         }
 
         void CreateBrushForm()
@@ -206,7 +201,9 @@ namespace MegaMan_Level_Editor
                 return;
             }
             File.WriteAllLines(recentPath, recentFiles.ToArray());
-            MessageBox.Show("TODO: Save window positions");
+
+            SaveFormSettings(this, this.historyForm, this.brushForm, this.projectForm);
+
             e.Cancel = false;
             base.OnClosing(e);
         }
@@ -613,7 +610,44 @@ namespace MegaMan_Level_Editor
             joinToolButton.Checked = true;
         }
 
+        private void SaveFormSettings(params Form[] forms)
+        {
+            StringBuilder sb = new StringBuilder();
+            foreach (Form form in forms)
+            {
+                sb.Append(form.Name)
+                    .Append("|").Append(form.Location.X)
+                    .Append("|").Append(form.Location.Y)
+                    .Append("|").Append(form.Width)
+                    .Append("|").Append(form.Height)
+                    .Append("||");
+            }
 
+            Properties.Settings.Default.Windows = sb.ToString();
+            Properties.Settings.Default.Save();
+        }
+
+        private void LoadFormSettings(params Form[] forms)
+        {
+            string settings = Properties.Settings.Default.Windows;
+            if (string.IsNullOrEmpty(settings)) return;
+
+            Dictionary<string, Form> formDict = new Dictionary<string, Form>();
+            foreach (Form f in forms) formDict.Add(f.Name, f);
+
+            string[] formSettingsList = settings.Split(new string[] { "||" }, StringSplitOptions.RemoveEmptyEntries);
+
+            foreach (string formSettings in formSettingsList)
+            {
+                string[] properties = formSettings.Split(new char[] { '|' });
+                if (!formDict.ContainsKey(properties[0])) continue;
+                Form tgtForm = formDict[properties[0]];
+
+                tgtForm.Location = new Point(int.Parse(properties[1]), int.Parse(properties[2]));
+                tgtForm.Width = int.Parse(properties[3]);
+                tgtForm.Height = int.Parse(properties[4]);
+            }
+        }
     }
 }
 
