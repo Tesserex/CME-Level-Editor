@@ -247,7 +247,7 @@ namespace MegaMan_Level_Editor
                 maxY = Math.Max(maxY, surface.Bottom);
             }
 
-            joinOverlay.Refresh(maxX, maxY, stage.Joins, surfaces);
+            joinOverlay.Refresh(this.Width, this.Height, stage.Joins, surfaces);
         }
 
         private ScreenDrawingSurface AlignScreenSurfaceUsingJoin(ScreenDrawingSurface surface, ScreenDrawingSurface secondSurface, Join join)
