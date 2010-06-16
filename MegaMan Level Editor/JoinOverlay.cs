@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 using System.Drawing;
+using System.Drawing.Drawing2D;
 using MegaMan;
 
 namespace MegaMan_Level_Editor
@@ -12,6 +13,7 @@ namespace MegaMan_Level_Editor
     {
         private static Pen passPen = new Pen(Color.Blue, 4);
         private static Pen blockPen = new Pen(Color.Red, 4);
+        private static Pen joinPen = new Pen(Color.Green, 4);
         private Bitmap image;
 
         public JoinOverlay()
@@ -50,6 +52,30 @@ namespace MegaMan_Level_Editor
                     if (surfaces.ContainsKey(join.screenTwo))
                     {
                         DrawJoinEnd(g, surfaces[join.screenTwo], join, false);
+                    }
+
+                    if (surfaces.ContainsKey(join.screenOne) && surfaces.ContainsKey(join.screenTwo))
+                    {
+                        bool separated = false;
+                        Point p1, p2;
+                        if (join.type == JoinType.Horizontal)
+                        {
+                            separated = surfaces[join.screenOne].Bottom != surfaces[join.screenTwo].Top;
+                            p1 = new Point(surfaces[join.screenOne].Left + join.offsetOne * 16 + join.Size * 8, surfaces[join.screenOne].Bottom);
+                            p2 = new Point(surfaces[join.screenTwo].Left + join.offsetTwo * 16 + join.Size * 8, surfaces[join.screenTwo].Top);
+                        }
+                        else
+                        {
+                            separated = surfaces[join.screenOne].Right != surfaces[join.screenTwo].Left;
+                            p1 = new Point(surfaces[join.screenOne].Right, surfaces[join.screenOne].Top + join.offsetOne * 16 + join.Size * 8);
+                            p2 = new Point(surfaces[join.screenTwo].Left, surfaces[join.screenTwo].Top + join.offsetTwo * 16 + join.Size * 8);
+                        }
+
+                        if (separated) // then draw an arrow connecting them
+                        {
+                            GraphicsPath path = new GraphicsPath(new Point[] { p1, p2 }, new byte[] { (byte)PathPointType.Start, (byte)PathPointType.Line });
+                            g.DrawPath(joinPen, path);
+                        }
                     }
                 }
             }
