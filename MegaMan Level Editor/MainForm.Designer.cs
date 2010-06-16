@@ -51,7 +51,6 @@
             this.showEnemiesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.showGridToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.animateToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.historyToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.stageToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.newScreenMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.manageJoinsMenu = new System.Windows.Forms.ToolStripMenuItem();
@@ -74,6 +73,7 @@
             this.brushToolButton = new System.Windows.Forms.ToolStripButton();
             this.bucketToolButton = new System.Windows.Forms.ToolStripButton();
             this.joinToolButton = new System.Windows.Forms.ToolStripButton();
+            this.historyToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
             this.toolBar.SuspendLayout();
             this.SuspendLayout();
@@ -258,8 +258,7 @@
             this.showBlockingToolStripMenuItem,
             this.showEnemiesToolStripMenuItem,
             this.showGridToolStripMenuItem,
-            this.animateToolStripMenuItem,
-            this.historyToolStripMenuItem});
+            this.animateToolStripMenuItem});
             this.viewToolStripMenuItem.Name = "viewToolStripMenuItem";
             this.viewToolStripMenuItem.Size = new System.Drawing.Size(39, 20);
             this.viewToolStripMenuItem.Text = "&View";
@@ -270,7 +269,7 @@
             this.showBackgroundsToolStripMenuItem.CheckState = System.Windows.Forms.CheckState.Checked;
             this.showBackgroundsToolStripMenuItem.Name = "showBackgroundsToolStripMenuItem";
             this.showBackgroundsToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.T)));
-            this.showBackgroundsToolStripMenuItem.Size = new System.Drawing.Size(139, 22);
+            this.showBackgroundsToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.showBackgroundsToolStripMenuItem.Text = "Tiles";
             this.showBackgroundsToolStripMenuItem.Click += new System.EventHandler(this.showBackgroundsToolStripMenuItem_Click);
             // 
@@ -278,7 +277,7 @@
             // 
             this.showBlockingToolStripMenuItem.Name = "showBlockingToolStripMenuItem";
             this.showBlockingToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.B)));
-            this.showBlockingToolStripMenuItem.Size = new System.Drawing.Size(139, 22);
+            this.showBlockingToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.showBlockingToolStripMenuItem.Text = "Blocking";
             this.showBlockingToolStripMenuItem.Click += new System.EventHandler(this.showBlockingToolStripMenuItem_Click);
             // 
@@ -288,14 +287,14 @@
             this.showEnemiesToolStripMenuItem.CheckState = System.Windows.Forms.CheckState.Checked;
             this.showEnemiesToolStripMenuItem.Name = "showEnemiesToolStripMenuItem";
             this.showEnemiesToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.E)));
-            this.showEnemiesToolStripMenuItem.Size = new System.Drawing.Size(139, 22);
+            this.showEnemiesToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.showEnemiesToolStripMenuItem.Text = "Entities";
             // 
             // showGridToolStripMenuItem
             // 
             this.showGridToolStripMenuItem.Name = "showGridToolStripMenuItem";
             this.showGridToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.G)));
-            this.showGridToolStripMenuItem.Size = new System.Drawing.Size(139, 22);
+            this.showGridToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.showGridToolStripMenuItem.Text = "Grid";
             this.showGridToolStripMenuItem.Click += new System.EventHandler(this.gridToolStripMenuItem_Click);
             // 
@@ -303,17 +302,9 @@
             // 
             this.animateToolStripMenuItem.Name = "animateToolStripMenuItem";
             this.animateToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.A)));
-            this.animateToolStripMenuItem.Size = new System.Drawing.Size(139, 22);
+            this.animateToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.animateToolStripMenuItem.Text = "Animate";
             this.animateToolStripMenuItem.Click += new System.EventHandler(this.animateToolStripMenuItem_Click);
-            // 
-            // historyToolStripMenuItem
-            // 
-            this.historyToolStripMenuItem.Name = "historyToolStripMenuItem";
-            this.historyToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.H)));
-            this.historyToolStripMenuItem.Size = new System.Drawing.Size(139, 22);
-            this.historyToolStripMenuItem.Text = "History";
-            this.historyToolStripMenuItem.Click += new System.EventHandler(this.historyToolStripMenuItem_Click);
             // 
             // stageToolStripMenuItem
             // 
@@ -428,7 +419,8 @@
             // 
             this.windowsToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.brushesToolStripMenuItem,
-            this.projectToolStripMenuItem});
+            this.projectToolStripMenuItem,
+            this.historyToolStripMenuItem});
             this.windowsToolStripMenuItem.Name = "windowsToolStripMenuItem";
             this.windowsToolStripMenuItem.Size = new System.Drawing.Size(54, 20);
             this.windowsToolStripMenuItem.Text = "&Windows";
@@ -437,15 +429,15 @@
             // brushesToolStripMenuItem
             // 
             this.brushesToolStripMenuItem.Name = "brushesToolStripMenuItem";
-            this.brushesToolStripMenuItem.Size = new System.Drawing.Size(102, 22);
-            this.brushesToolStripMenuItem.Text = "Brushes";
+            this.brushesToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.brushesToolStripMenuItem.Text = "&Brushes";
             this.brushesToolStripMenuItem.Click += new System.EventHandler(this.brushesToolStripMenuItem_Click);
             // 
             // projectToolStripMenuItem
             // 
             this.projectToolStripMenuItem.Name = "projectToolStripMenuItem";
-            this.projectToolStripMenuItem.Size = new System.Drawing.Size(102, 22);
-            this.projectToolStripMenuItem.Text = "Project";
+            this.projectToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.projectToolStripMenuItem.Text = "&Project";
             this.projectToolStripMenuItem.Click += new System.EventHandler(this.projectToolStripMenuItem_Click);
             // 
             // toolBar
@@ -490,6 +482,12 @@
             this.joinToolButton.Size = new System.Drawing.Size(23, 22);
             this.joinToolButton.Text = "Modify Joins";
             this.joinToolButton.Click += new System.EventHandler(this.joinToolButton_Click);
+            // 
+            // historyToolStripMenuItem
+            // 
+            this.historyToolStripMenuItem.Name = "historyToolStripMenuItem";
+            this.historyToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.historyToolStripMenuItem.Text = "&History";
             // 
             // MainForm
             // 
@@ -558,11 +556,11 @@
         private System.Windows.Forms.ToolStripMenuItem manageJoinsMenu;
         private System.Windows.Forms.ToolStripMenuItem projectToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem newScreenMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem historyToolStripMenuItem;
         private System.Windows.Forms.ToolStrip toolBar;
         private System.Windows.Forms.ToolStripButton brushToolButton;
         private System.Windows.Forms.ToolStripButton bucketToolButton;
         private System.Windows.Forms.ToolStripButton joinToolButton;
+        private System.Windows.Forms.ToolStripMenuItem historyToolStripMenuItem;
     }
 }
 
