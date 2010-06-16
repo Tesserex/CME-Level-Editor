@@ -90,11 +90,6 @@ namespace CodeProject
 
         private void Control_Paint(object sender, PaintEventArgs e)
         {
-            Control control = sender as Control;
-
-            if (control == form)
-                return;
-
             OnPaint(sender, e);
         }
 
