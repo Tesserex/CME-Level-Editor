@@ -39,21 +39,12 @@ namespace MegaMan_Level_Editor
                 if (image != null) image.Dispose();
                 image = new Bitmap(width, height);
             }
-            return;
+            
             using (Graphics g = Graphics.FromImage(image))
             {
                 g.Clear(Color.Transparent);
                 foreach (Join join in joins)
                 {
-                    if (surfaces.ContainsKey(join.screenOne))
-                    {
-                        DrawJoinEnd(g, surfaces[join.screenOne], join, true);
-                    }
-                    if (surfaces.ContainsKey(join.screenTwo))
-                    {
-                        DrawJoinEnd(g, surfaces[join.screenTwo], join, false);
-                    }
-
                     if (surfaces.ContainsKey(join.screenOne) && surfaces.ContainsKey(join.screenTwo))
                     {
                         int mid = join.Size * 8;  // the 8 is from tilesize (16) / 2 for midpoint
@@ -91,34 +82,6 @@ namespace MegaMan_Level_Editor
                 }
             }
             Invalidate();
-        }
-
-        private void DrawJoinEnd(Graphics g, ScreenDrawingSurface surface, Join join, bool one)
-        {
-            int offset = one ? join.offsetOne : join.offsetTwo;
-            int start = (join.type == JoinType.Horizontal)? surface.Left: surface.Top;
-            start += offset * 16;
-            int end = start + (join.Size * 16);
-            int edge;
-            Pen pen;
-            if (one ? join.direction == JoinDirection.BackwardOnly : join.direction == JoinDirection.ForwardOnly) pen = blockPen;
-            else pen = passPen;
-            if (join.type == JoinType.Horizontal)
-            {
-                edge = one ? surface.Bottom - 2 : surface.Top + 2;
-                int curl = one ? edge - 6 : edge + 6;
-                g.DrawLine(pen, start, edge, end, edge);
-                g.DrawLine(pen, start+1, edge, start+1, curl);
-                g.DrawLine(pen, end-1, edge, end-1, curl);
-            }
-            else
-            {
-                edge = one ? surface.Right - 2 : surface.Left + 2;
-                int curl = one ? edge - 6 : edge + 6;
-                g.DrawLine(pen, edge, start, edge, end);
-                g.DrawLine(pen, edge, start, curl, start);
-                g.DrawLine(pen, edge, end, curl, end);
-            }
         }
 
         private void DrawJoinPath(Graphics g, int x1, int x2, int y1, int y2, bool transpose)
