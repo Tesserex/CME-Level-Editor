@@ -21,39 +21,6 @@ namespace MegaMan_Level_Editor
 
         private JoinOverlay joinOverlay;
 
-        public bool DrawGrid
-        {
-            set
-            {
-                foreach (var pair in surfaces)
-                {
-                    pair.Value.DrawGrid = value;
-                }
-            }
-        }
-
-        public bool DrawTiles
-        {
-            set
-            {
-                foreach (var pair in surfaces)
-                {
-                    pair.Value.DrawTiles = value;
-                }
-            }
-        }
-
-        public bool DrawBlock
-        {
-            set
-            {
-                foreach (var pair in surfaces)
-                {
-                    pair.Value.DrawBlock = value;
-                }
-            }
-        }
-
         public void Undo()
         {
             var action = history.Undo();

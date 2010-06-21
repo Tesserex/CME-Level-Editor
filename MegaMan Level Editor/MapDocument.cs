@@ -15,41 +15,6 @@ namespace MegaMan_Level_Editor
 
         private StageForm stageForm;
 
-        private bool drawTiles;
-        private bool drawGrid;
-        private bool drawBlock;
-        private bool drawJoins;
-
-        public bool DrawGrid
-        {
-            get { return drawGrid; }
-            set
-            {
-                drawGrid = value;
-                if (stageForm != null) stageForm.DrawGrid = value;
-            }
-        }
-
-        public bool DrawTiles
-        {
-            get { return drawTiles; }
-            set
-            {
-                drawTiles = value;
-                if (stageForm != null) stageForm.DrawTiles = value;
-            }
-        }
-
-        public bool DrawBlock
-        {
-            get { return drawBlock; }
-            set
-            {
-                drawBlock = value;
-                if (stageForm != null) stageForm.DrawBlock = value;
-            }
-        }
-
         public event Action<MapDocument> Closed;
 
         public MapDocument(Map map, MainForm parent)
@@ -89,10 +54,6 @@ namespace MegaMan_Level_Editor
                 stageForm.MdiParent = parent;
                 stageForm.GotFocus += new EventHandler(StageForm_GotFocus);
                 stageForm.FormClosing += new FormClosingEventHandler(StageForm_FormClosing);
-
-                stageForm.DrawBlock = this.drawBlock;
-                stageForm.DrawGrid = this.drawGrid;
-                stageForm.DrawTiles = this.drawTiles;
             }
 
             stageForm.Show();

@@ -64,9 +64,7 @@ namespace MegaMan_Level_Editor
             {
                 drawGrid = value;
                 showGridToolStripMenuItem.Checked = value;
-
-                foreach (MapDocument map in stages.Values)
-                    map.DrawGrid = value;
+                if (DrawOptionToggled != null) DrawOptionToggled();
             }
         }
 
@@ -77,8 +75,7 @@ namespace MegaMan_Level_Editor
             {
                 drawTiles = value;
                 showBackgroundsToolStripMenuItem.Checked = value;
-
-                foreach (MapDocument map in stages.Values) map.DrawTiles = value;
+                if (DrawOptionToggled != null) DrawOptionToggled();
             }
         }
 
@@ -89,8 +86,7 @@ namespace MegaMan_Level_Editor
             {
                 drawBlock = value;
                 showBlockingToolStripMenuItem.Checked = value;
-
-                foreach (MapDocument map in stages.Values) map.DrawBlock = value;
+                if (DrawOptionToggled != null) DrawOptionToggled();
             }
         }
 
@@ -101,14 +97,14 @@ namespace MegaMan_Level_Editor
             {
                 drawJoins = value;
                 joinsToolStripMenuItem.Checked = value;
-
-                //foreach (MapDocument map in stages.Values) map.DrawJoins = value;
+                if (DrawOptionToggled != null) DrawOptionToggled();
             }
         }
 
         public ITool CurrentTool { get; private set; }
         #endregion
 
+        public event Action DrawOptionToggled;
         public event EventHandler<ToolChangedEventArgs> ToolChanged;
 
         public static MainForm Instance { get; private set; }
@@ -311,10 +307,6 @@ namespace MegaMan_Level_Editor
 
             var stage = new MapDocument(path, this);
             stages[stage.Map.Name] = stage;
-
-            stage.DrawBlock = this.drawBlock;
-            stage.DrawGrid = this.drawGrid;
-            stage.DrawTiles = this.drawTiles;
 
             stage.Closed += new Action<MapDocument>(map_Closed);
 

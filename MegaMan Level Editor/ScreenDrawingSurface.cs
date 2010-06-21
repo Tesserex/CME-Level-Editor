@@ -43,53 +43,9 @@ namespace MegaMan_Level_Editor
         private bool grayDirty = false;
 
         public bool Drawing { get; private set; }
-        private bool drawGrid;
-        private bool drawTiles;
-        private bool drawBlock;
-        private bool drawJoin;
 
         private bool active = false;
         public bool Placed { get; set; }
-
-        public bool DrawGrid
-        {
-            get { return drawGrid; }
-            set
-            {
-                drawGrid = value;
-                ReDrawMaster();
-            }
-        }
-
-        public bool DrawTiles
-        {
-            get { return drawTiles; }
-            set
-            {
-                drawTiles = value;
-                ReDrawMaster();
-            }
-        }
-
-        public bool DrawJoins
-        {
-            get { return drawJoin; }
-            set
-            {
-                drawJoin = value;
-                ReDrawMaster();
-            }
-        }
-
-        public bool DrawBlock
-        {
-            get { return drawBlock; }
-            set
-            {
-                drawBlock = value;
-                ReDrawMaster();
-            }
-        }
 
         public MegaMan.Screen Screen { get; private set; }
 
@@ -104,16 +60,14 @@ namespace MegaMan_Level_Editor
 
             BuildLayers();
 
-            DrawGrid = false;
-            DrawTiles = true;
-            DrawBlock = false;
-
             this.Screen.Resized += (w, h) => this.ResizeLayers();
 
             Program.FrameTick += new Action(Program_FrameTick);
 
             ReDrawAll();
             DrawGray();
+
+            MainForm.Instance.DrawOptionToggled += ReDrawMaster;
         }
 
         public void RaiseDrawnOn(HistoryAction action)
@@ -312,7 +266,7 @@ namespace MegaMan_Level_Editor
 
                 g.CompositingMode = System.Drawing.Drawing2D.CompositingMode.SourceCopy;
 
-                if (DrawTiles)
+                if (MainForm.Instance.DrawTiles)
                 {
                     if (active)
                     {
@@ -328,13 +282,13 @@ namespace MegaMan_Level_Editor
 
                 g.CompositingMode = System.Drawing.Drawing2D.CompositingMode.SourceOver;
 
-                if (DrawBlock && blockLayer != null)
+                if (MainForm.Instance.DrawBlock && blockLayer != null)
                     g.DrawImageUnscaled(blockLayer, 0, 0);
 
-                if (DrawGrid && gridLayer != null)
+                if (MainForm.Instance.DrawGrid && gridLayer != null)
                     g.DrawImageUnscaled(gridLayer, 0, 0);
 
-                //if (DrawJoins && joinLayer != null)
+                if (MainForm.Instance.DrawJoins && joinLayer != null)
                     g.DrawImageUnscaled(joinLayer, 0, 0);
 
                 if (active) g.DrawImageUnscaled(mouseLayer, 0, 0);
