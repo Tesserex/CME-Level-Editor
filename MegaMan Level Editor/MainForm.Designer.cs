@@ -68,12 +68,13 @@
             this.windowsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.brushesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.projectToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.historyToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.folderDialog = new System.Windows.Forms.FolderBrowserDialog();
             this.toolBar = new System.Windows.Forms.ToolStrip();
             this.brushToolButton = new System.Windows.Forms.ToolStripButton();
             this.bucketToolButton = new System.Windows.Forms.ToolStripButton();
             this.joinToolButton = new System.Windows.Forms.ToolStripButton();
-            this.historyToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.joinsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
             this.toolBar.SuspendLayout();
             this.SuspendLayout();
@@ -258,7 +259,8 @@
             this.showBlockingToolStripMenuItem,
             this.showEnemiesToolStripMenuItem,
             this.showGridToolStripMenuItem,
-            this.animateToolStripMenuItem});
+            this.animateToolStripMenuItem,
+            this.joinsToolStripMenuItem});
             this.viewToolStripMenuItem.Name = "viewToolStripMenuItem";
             this.viewToolStripMenuItem.Size = new System.Drawing.Size(39, 20);
             this.viewToolStripMenuItem.Text = "&View";
@@ -429,16 +431,22 @@
             // brushesToolStripMenuItem
             // 
             this.brushesToolStripMenuItem.Name = "brushesToolStripMenuItem";
-            this.brushesToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.brushesToolStripMenuItem.Size = new System.Drawing.Size(102, 22);
             this.brushesToolStripMenuItem.Text = "&Brushes";
             this.brushesToolStripMenuItem.Click += new System.EventHandler(this.brushesToolStripMenuItem_Click);
             // 
             // projectToolStripMenuItem
             // 
             this.projectToolStripMenuItem.Name = "projectToolStripMenuItem";
-            this.projectToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.projectToolStripMenuItem.Size = new System.Drawing.Size(102, 22);
             this.projectToolStripMenuItem.Text = "&Project";
             this.projectToolStripMenuItem.Click += new System.EventHandler(this.projectToolStripMenuItem_Click);
+            // 
+            // historyToolStripMenuItem
+            // 
+            this.historyToolStripMenuItem.Name = "historyToolStripMenuItem";
+            this.historyToolStripMenuItem.Size = new System.Drawing.Size(102, 22);
+            this.historyToolStripMenuItem.Text = "&History";
             // 
             // toolBar
             // 
@@ -483,11 +491,12 @@
             this.joinToolButton.Text = "Modify Joins";
             this.joinToolButton.Click += new System.EventHandler(this.joinToolButton_Click);
             // 
-            // historyToolStripMenuItem
+            // joinsToolStripMenuItem
             // 
-            this.historyToolStripMenuItem.Name = "historyToolStripMenuItem";
-            this.historyToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
-            this.historyToolStripMenuItem.Text = "&History";
+            this.joinsToolStripMenuItem.Name = "joinsToolStripMenuItem";
+            this.joinsToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.joinsToolStripMenuItem.Text = "Joins";
+            this.joinsToolStripMenuItem.Click += new System.EventHandler(this.joinsToolStripMenuItem_Click);
             // 
             // MainForm
             // 
@@ -561,6 +570,7 @@
         private System.Windows.Forms.ToolStripButton bucketToolButton;
         private System.Windows.Forms.ToolStripButton joinToolButton;
         private System.Windows.Forms.ToolStripMenuItem historyToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem joinsToolStripMenuItem;
     }
 }
 

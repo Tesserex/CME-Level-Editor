@@ -39,7 +39,7 @@ namespace MegaMan_Level_Editor
                 if (image != null) image.Dispose();
                 image = new Bitmap(width, height);
             }
-
+            return;
             using (Graphics g = Graphics.FromImage(image))
             {
                 g.Clear(Color.Transparent);

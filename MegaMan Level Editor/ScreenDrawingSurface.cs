@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Drawing;
 using System.Windows.Forms;
+using MegaMan;
 
 namespace MegaMan_Level_Editor
 {
@@ -28,11 +29,14 @@ namespace MegaMan_Level_Editor
         private static Brush blockBrush = new SolidBrush(Color.FromArgb(160, Color.OrangeRed));
         private static Brush ladderBrush = new SolidBrush(Color.FromArgb(160, Color.Yellow));
         private static Pen highlightPen = new Pen(Color.Green, 2);
+        private static Pen passPen = new Pen(Color.Blue, 4);
+        private static Pen blockPen = new Pen(Color.Red, 4);
 
         private Bitmap tileLayer = null;
         private Bitmap gridLayer = null;
         private Bitmap blockLayer = null;
         private Bitmap mouseLayer = null;
+        private Bitmap joinLayer = null;
         private Bitmap masterImage = null;
         private Bitmap grayTiles = null;
 
@@ -42,6 +46,7 @@ namespace MegaMan_Level_Editor
         private bool drawGrid;
         private bool drawTiles;
         private bool drawBlock;
+        private bool drawJoin;
 
         private bool active = false;
         public bool Placed { get; set; }
@@ -62,6 +67,16 @@ namespace MegaMan_Level_Editor
             set
             {
                 drawTiles = value;
+                ReDrawMaster();
+            }
+        }
+
+        public bool DrawJoins
+        {
+            get { return drawJoin; }
+            set
+            {
+                drawJoin = value;
                 ReDrawMaster();
             }
         }
@@ -173,6 +188,38 @@ namespace MegaMan_Level_Editor
             MainForm.Instance.CurrentTool.Move(this, e.Location);
             ReDrawMaster();
             base.OnMouseMove(e);
+        }
+
+        public void DrawJoinEnd(Join join, bool one)
+        {
+            if (joinLayer == null) return;
+            using (Graphics g = Graphics.FromImage(joinLayer))
+            {
+                int offset = one ? join.offsetOne : join.offsetTwo;
+                int start = (join.type == JoinType.Horizontal) ? this.Left : this.Top;
+                start += offset * 16;
+                int end = start + (join.Size * 16);
+                int edge;
+                Pen pen;
+                if (one ? join.direction == JoinDirection.BackwardOnly : join.direction == JoinDirection.ForwardOnly) pen = blockPen;
+                else pen = passPen;
+                if (join.type == JoinType.Horizontal)
+                {
+                    edge = one ? this.Bottom - 2 : this.Top + 2;
+                    int curl = one ? edge - 6 : edge + 6;
+                    g.DrawLine(pen, start, edge, end, edge);
+                    g.DrawLine(pen, start + 1, edge, start + 1, curl);
+                    g.DrawLine(pen, end - 1, edge, end - 1, curl);
+                }
+                else
+                {
+                    edge = one ? this.Right - 2 : this.Left + 2;
+                    int curl = one ? edge - 6 : edge + 6;
+                    g.DrawLine(pen, edge, start, edge, end);
+                    g.DrawLine(pen, edge, start, curl, start);
+                    g.DrawLine(pen, edge, end, curl, end);
+                }
+            }
         }
 
         public void ReDrawAll()
@@ -287,6 +334,9 @@ namespace MegaMan_Level_Editor
                 if (DrawGrid && gridLayer != null)
                     g.DrawImageUnscaled(gridLayer, 0, 0);
 
+                //if (DrawJoins && joinLayer != null)
+                    g.DrawImageUnscaled(joinLayer, 0, 0);
+
                 if (active) g.DrawImageUnscaled(mouseLayer, 0, 0);
             }
 
@@ -304,6 +354,7 @@ namespace MegaMan_Level_Editor
 
         private void ResizeLayer(ref Bitmap layer)
         {
+            if (layer != null) layer.Dispose();
             layer = new Bitmap(Screen.Width * Screen.Tileset.TileSize, Screen.Height * Screen.Tileset.TileSize);
         }
 
@@ -314,6 +365,7 @@ namespace MegaMan_Level_Editor
             InitLayer(ref gridLayer);
             InitLayer(ref blockLayer);
             InitLayer(ref mouseLayer);
+            InitLayer(ref joinLayer);
             InitLayer(ref masterImage);
         }
 
@@ -324,6 +376,7 @@ namespace MegaMan_Level_Editor
             ResizeLayer(ref gridLayer);
             ResizeLayer(ref blockLayer);
             ResizeLayer(ref mouseLayer);
+            ResizeLayer(ref joinLayer);
             ResizeLayer(ref masterImage);
             ReDrawAll();
         }

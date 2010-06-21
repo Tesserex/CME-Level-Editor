@@ -32,6 +32,7 @@ namespace MegaMan_Level_Editor
         private bool drawGrid;
         private bool drawTiles;
         private bool drawBlock;
+        private bool drawJoins;
 
         private string recentPath = Application.StartupPath + "\\recent.ini";
         private List<string> recentFiles = new List<string>(10);
@@ -90,6 +91,18 @@ namespace MegaMan_Level_Editor
                 showBlockingToolStripMenuItem.Checked = value;
 
                 foreach (MapDocument map in stages.Values) map.DrawBlock = value;
+            }
+        }
+
+        public bool DrawJoins
+        {
+            get { return drawJoins; }
+            set
+            {
+                drawJoins = value;
+                joinsToolStripMenuItem.Checked = value;
+
+                //foreach (MapDocument map in stages.Values) map.DrawJoins = value;
             }
         }
 
@@ -647,6 +660,11 @@ namespace MegaMan_Level_Editor
                 tgtForm.Width = int.Parse(properties[3]);
                 tgtForm.Height = int.Parse(properties[4]);
             }
+        }
+
+        private void joinsToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+
         }
     }
 }

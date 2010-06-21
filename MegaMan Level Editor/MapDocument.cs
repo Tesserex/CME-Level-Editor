@@ -18,6 +18,7 @@ namespace MegaMan_Level_Editor
         private bool drawTiles;
         private bool drawGrid;
         private bool drawBlock;
+        private bool drawJoins;
 
         public bool DrawGrid
         {

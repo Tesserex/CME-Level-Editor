@@ -145,6 +145,13 @@ namespace MegaMan_Level_Editor
                 surface.Location = new Point(0, 0);
             }
 
+            // give them joins
+            foreach (var join in stage.Joins)
+            {
+                surfaces[join.screenOne].DrawJoinEnd(join, true);
+                surfaces[join.screenTwo].DrawJoinEnd(join, false);
+            }
+
             AlignScreenSurfaces();
         }
 
