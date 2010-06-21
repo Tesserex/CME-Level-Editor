@@ -656,7 +656,7 @@ namespace MegaMan_Level_Editor
 
         private void joinsToolStripMenuItem_Click(object sender, EventArgs e)
         {
-
+            DrawJoins = !DrawJoins;
         }
     }
 }

@@ -53,6 +53,8 @@ namespace MegaMan_Level_Editor
             surfaces = new Dictionary<String, ScreenDrawingSurface>();
 
             SetStage(stage);
+
+            MainForm.Instance.DrawOptionToggled += () => { joinOverlay.Visible = MainForm.Instance.DrawJoins; };
         }
 
         protected override void OnScroll(ScrollEventArgs se)
@@ -222,6 +224,7 @@ namespace MegaMan_Level_Editor
             }
 
             joinOverlay.Refresh(this.Width, this.Height, stage.Joins, surfaces);
+            joinOverlay.Visible = MainForm.Instance.DrawJoins;
         }
 
         private ScreenDrawingSurface AlignScreenSurfaceUsingJoin(ScreenDrawingSurface surface, ScreenDrawingSurface secondSurface, Join join)

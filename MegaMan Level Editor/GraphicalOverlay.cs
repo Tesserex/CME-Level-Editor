@@ -12,6 +12,17 @@ namespace CodeProject
         private Form form;
         private List<Control> controlList = null;
 
+        private bool visible;
+        public bool Visible
+        {
+            get { return visible; }
+            set
+            {
+                visible = value;
+                Invalidate();
+            }
+        }
+
         public GraphicalOverlay()
         {
             InitializeComponent();
@@ -90,7 +101,7 @@ namespace CodeProject
 
         private void Control_Paint(object sender, PaintEventArgs e)
         {
-            OnPaint(sender, e);
+            if (Visible) OnPaint(sender, e);
         }
 
         private void OnPaint(object sender, PaintEventArgs e)
