@@ -45,6 +45,8 @@
             this.width = new System.Windows.Forms.NumericUpDown();
             this.okButton = new System.Windows.Forms.Button();
             this.cancel = new System.Windows.Forms.Button();
+            this.label2 = new System.Windows.Forms.Label();
+            this.label3 = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.offsetOne)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.offsetTwo)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.width)).BeginInit();
@@ -73,7 +75,7 @@
             // 
             // s1label
             // 
-            this.s1label.Location = new System.Drawing.Point(8, 39);
+            this.s1label.Location = new System.Drawing.Point(8, 45);
             this.s1label.Name = "s1label";
             this.s1label.Size = new System.Drawing.Size(78, 15);
             this.s1label.TabIndex = 2;
@@ -82,7 +84,7 @@
             // 
             // s2label
             // 
-            this.s2label.Location = new System.Drawing.Point(8, 65);
+            this.s2label.Location = new System.Drawing.Point(8, 76);
             this.s2label.Name = "s2label";
             this.s2label.Size = new System.Drawing.Size(78, 14);
             this.s2label.TabIndex = 3;
@@ -92,7 +94,7 @@
             // screenOne
             // 
             this.screenOne.FormattingEnabled = true;
-            this.screenOne.Location = new System.Drawing.Point(92, 36);
+            this.screenOne.Location = new System.Drawing.Point(92, 42);
             this.screenOne.Name = "screenOne";
             this.screenOne.Size = new System.Drawing.Size(82, 21);
             this.screenOne.TabIndex = 4;
@@ -100,7 +102,7 @@
             // screenTwo
             // 
             this.screenTwo.FormattingEnabled = true;
-            this.screenTwo.Location = new System.Drawing.Point(92, 63);
+            this.screenTwo.Location = new System.Drawing.Point(92, 74);
             this.screenTwo.Name = "screenTwo";
             this.screenTwo.Size = new System.Drawing.Size(82, 21);
             this.screenTwo.TabIndex = 5;
@@ -108,7 +110,7 @@
             // label4
             // 
             this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(189, 39);
+            this.label4.Location = new System.Drawing.Point(189, 45);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(49, 13);
             this.label4.TabIndex = 6;
@@ -117,7 +119,7 @@
             // label5
             // 
             this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(189, 66);
+            this.label5.Location = new System.Drawing.Point(189, 77);
             this.label5.Name = "label5";
             this.label5.Size = new System.Drawing.Size(49, 13);
             this.label5.TabIndex = 7;
@@ -125,14 +127,14 @@
             // 
             // offsetOne
             // 
-            this.offsetOne.Location = new System.Drawing.Point(243, 36);
+            this.offsetOne.Location = new System.Drawing.Point(243, 42);
             this.offsetOne.Name = "offsetOne";
             this.offsetOne.Size = new System.Drawing.Size(37, 20);
             this.offsetOne.TabIndex = 8;
             // 
             // offsetTwo
             // 
-            this.offsetTwo.Location = new System.Drawing.Point(244, 63);
+            this.offsetTwo.Location = new System.Drawing.Point(244, 74);
             this.offsetTwo.Name = "offsetTwo";
             this.offsetTwo.Size = new System.Drawing.Size(35, 20);
             this.offsetTwo.TabIndex = 9;
@@ -140,7 +142,7 @@
             // forward
             // 
             this.forward.AutoSize = true;
-            this.forward.Location = new System.Drawing.Point(12, 100);
+            this.forward.Location = new System.Drawing.Point(12, 105);
             this.forward.Name = "forward";
             this.forward.Size = new System.Drawing.Size(97, 17);
             this.forward.TabIndex = 10;
@@ -151,7 +153,7 @@
             // backward
             // 
             this.backward.AutoSize = true;
-            this.backward.Location = new System.Drawing.Point(115, 100);
+            this.backward.Location = new System.Drawing.Point(115, 105);
             this.backward.Name = "backward";
             this.backward.Size = new System.Drawing.Size(90, 17);
             this.backward.TabIndex = 11;
@@ -163,7 +165,7 @@
             // 
             this.bidirectional.AutoSize = true;
             this.bidirectional.Checked = true;
-            this.bidirectional.Location = new System.Drawing.Point(211, 100);
+            this.bidirectional.Location = new System.Drawing.Point(211, 105);
             this.bidirectional.Name = "bidirectional";
             this.bidirectional.Size = new System.Drawing.Size(82, 17);
             this.bidirectional.TabIndex = 12;
@@ -217,11 +219,29 @@
             this.cancel.UseVisualStyleBackColor = true;
             this.cancel.Click += new System.EventHandler(this.cancel_Click);
             // 
+            // label2
+            // 
+            this.label2.BackColor = System.Drawing.SystemColors.ControlDarkDark;
+            this.label2.Location = new System.Drawing.Point(11, 35);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(283, 1);
+            this.label2.TabIndex = 17;
+            // 
+            // label3
+            // 
+            this.label3.BackColor = System.Drawing.SystemColors.ControlDarkDark;
+            this.label3.Location = new System.Drawing.Point(10, 67);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(283, 1);
+            this.label3.TabIndex = 18;
+            // 
             // JoinForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(303, 174);
+            this.Controls.Add(this.label3);
+            this.Controls.Add(this.label2);
             this.Controls.Add(this.cancel);
             this.Controls.Add(this.okButton);
             this.Controls.Add(this.width);
@@ -269,5 +289,7 @@
         private System.Windows.Forms.NumericUpDown width;
         private System.Windows.Forms.Button okButton;
         private System.Windows.Forms.Button cancel;
+        private System.Windows.Forms.Label label2;
+        private System.Windows.Forms.Label label3;
     }
 }
