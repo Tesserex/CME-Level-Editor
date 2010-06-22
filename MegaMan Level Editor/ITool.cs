@@ -279,6 +279,7 @@ namespace MegaMan_Level_Editor
                     surface.Screen.Map.Joins.Add(FormJoin(form));
                     surface.RaiseJoinChange();
                 };
+            form.Show();
         }
 
         private void EditJoin(ScreenDrawingSurface surface, MegaMan.Join join, int index)
@@ -302,6 +303,7 @@ namespace MegaMan_Level_Editor
             form.OffsetOne = join.offsetOne;
             form.OffsetTwo = join.offsetTwo;
             form.JoinWidth = join.Size;
+            form.Direction = join.direction;
             return form;
         }
 
