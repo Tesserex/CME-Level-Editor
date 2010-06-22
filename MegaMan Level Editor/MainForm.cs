@@ -516,10 +516,13 @@ namespace MegaMan_Level_Editor
         private void screenPropForm_OK(ScreenProp prop)
         {
             if (prop.Screen != null) return; // shouldn't happen
-            var screen = new MegaMan.Screen(prop.Width, prop.Height, this.activeMap.Map);
+            var screen = new MegaMan.Screen(prop.ScreenWidth, prop.ScreenHeight, this.activeMap.Map);
             screen.Name = prop.ScreenName;
             this.activeMap.Map.Screens.Add(prop.ScreenName, screen);
             screen.Save(ScreenPathFor(MainForm.Instance.ActiveMap.Map.Name, prop.ScreenName));
+
+            // Update the project tree
+            projectForm.UpdateScreenTree(this.activeMap.Map.Name, this.activeMap.Map.Screens.Values);
         }
 
         private void brushesToolStripMenuItem_Click(object sender, EventArgs e)

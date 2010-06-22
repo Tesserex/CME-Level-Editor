@@ -39,6 +39,11 @@ namespace MegaMan_Level_Editor
 
         private void buttonOK_Click(object sender, EventArgs e)
         {
+            if (ScreenName == "")
+            {
+                MessageBox.Show("Screen must have a name.", "CME Level Editor", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
             if (OK != null) OK(this);
             this.Close();
         }

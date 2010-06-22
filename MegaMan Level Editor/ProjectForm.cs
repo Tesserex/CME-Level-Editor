@@ -76,7 +76,13 @@ namespace MegaMan_Level_Editor
             stage.ReFocus();
         }
 
-        public void LoadScreenSubtree(TreeNode node, IEnumerable<MegaMan.Screen> screens)
+        public void UpdateScreenTree(string mapName, IEnumerable<MegaMan.Screen> screens)
+        {
+            var stageNode = projectView.Nodes.Find(mapName, true).First();
+            this.LoadScreenSubtree(stageNode, screens);
+        }
+
+        private void LoadScreenSubtree(TreeNode node, IEnumerable<MegaMan.Screen> screens)
         {
             node.Nodes.Clear();
             foreach (var screen in screens)
@@ -85,7 +91,7 @@ namespace MegaMan_Level_Editor
             }
         }
 
-        public void OpenScreenProperties(TreeNode node)
+        private void OpenScreenProperties(TreeNode node)
         {
             var stageName = node.Parent.Name;
             var screenName = node.Name;
@@ -123,9 +129,7 @@ namespace MegaMan_Level_Editor
             screen.Resize(prop.ScreenWidth, prop.ScreenHeight);
 
             // Update the project tree
-            var stageNode = projectView.Nodes.Find(screen.Map.Name, true).First();
-            var screens = MainForm.GetStage(screen.Map.Name).Screens.Values;
-            this.LoadScreenSubtree(stageNode, screens);
+            UpdateScreenTree(screen.Map.Name, screen.Map.Screens.Values);
         }
     }
 }
