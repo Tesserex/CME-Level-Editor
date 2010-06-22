@@ -133,17 +133,24 @@ namespace MegaMan_Level_Editor
             int oldscroll = this.VerticalScroll.Value;
             this.VerticalScroll.Value = 0;
 
+            int minX = 0, minY = 0, maxX = 0, maxY = 0;
+
             foreach (var pair in surfaces)
             {
                 if (stage.StartScreen == pair.Key)
+                {
+                    minX = pair.Value.Location.X;
+                    minY = pair.Value.Location.Y;
                     pair.Value.Placed = true;
+                }
                 else
+                {
                     pair.Value.Placed = false;
+                }
             }
 
             List<ScreenDrawingSurface> placedScreens = new List<ScreenDrawingSurface>();
             List<SurfaceCollision> collideScreens = new List<SurfaceCollision>();
-            int minX = 0, minY = 0, maxX = 0, maxY = 0;
 
             // account for screens that aren't placed - need to find them
             var placeable = new HashSet<string>(); // enforces uniqueness
@@ -219,7 +226,7 @@ namespace MegaMan_Level_Editor
                 maxY = Math.Max(maxY, surface.Bottom);
             }
 
-            joinOverlay.Refresh(this.Width, this.Height, stage.Joins, surfaces);
+            joinOverlay.Refresh(maxX + 20, maxY + 20, stage.Joins, surfaces);
             joinOverlay.Visible = MainForm.Instance.DrawJoins;
 
             this.VerticalScroll.Value = oldscroll;
