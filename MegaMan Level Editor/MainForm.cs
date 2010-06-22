@@ -597,6 +597,8 @@ namespace MegaMan_Level_Editor
             AssembleTool();
             foreach (ToolStripButton item in toolBar.Items) { item.Checked = false; }
             brushToolButton.Checked = true;
+            this.DrawJoins = false;
+            this.DrawTiles = true;
         }
 
         private void bucketToolButton_Click(object sender, EventArgs e)
@@ -605,6 +607,8 @@ namespace MegaMan_Level_Editor
             AssembleTool();
             foreach (ToolStripButton item in toolBar.Items) { item.Checked = false; }
             bucketToolButton.Checked = true;
+            this.DrawJoins = false;
+            this.DrawTiles = true;
         }
 
         private void joinToolButton_Click(object sender, EventArgs e)
@@ -613,6 +617,7 @@ namespace MegaMan_Level_Editor
             AssembleTool();
             foreach (ToolStripButton item in toolBar.Items) { item.Checked = false; }
             joinToolButton.Checked = true;
+            this.DrawJoins = true;
         }
 
         private void SaveFormSettings(params Form[] forms)
