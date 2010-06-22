@@ -113,12 +113,14 @@ namespace MegaMan_Level_Editor
 
         protected override void OnMouseDown(MouseEventArgs e)
         {
+            if (MainForm.Instance.CurrentTool == null) return;
             MainForm.Instance.CurrentTool.Click(this, e.Location);
             base.OnMouseDown(e);
         }
 
         protected override void OnMouseUp(MouseEventArgs e)
         {
+            if (MainForm.Instance.CurrentTool == null) return;
             MainForm.Instance.CurrentTool.Release(this, e.Location);
             base.OnMouseUp(e);
         }
