@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Drawing;
+using System.Windows.Forms;
 
 namespace MegaMan_Level_Editor
 {
@@ -154,6 +155,106 @@ namespace MegaMan_Level_Editor
 
         public void Click(ScreenDrawingSurface surface, Point location)
         {
+            ContextMenu menu = new ContextMenu();
+            // find a join to modify
+            for (int i = 0; i < surface.Screen.Map.Joins.Count; i++)
+            {
+                MegaMan.Join join = surface.Screen.Map.Joins[i];
+                int joinIndex = i; // must be done for lambda closure
+                if (join.screenOne == surface.Screen.Name)
+                {
+                    if (join.type == MegaMan.JoinType.Vertical)
+                    {
+                        if (location.X > surface.Width - surface.Screen.Tileset.TileSize &&
+                            location.Y >= (join.offsetOne * surface.Screen.Tileset.TileSize) &&
+                            location.Y <= ((join.offsetOne + join.Size) * surface.Screen.Tileset.TileSize))
+                        {
+                            menu.MenuItems.Add(new MenuItem("Modify Left-Right Join " + join.screenOne + " to " + join.screenTwo,
+                                (s, e) =>
+                                {
+                                    EditJoin(surface.Screen.Map, join, joinIndex);
+                                }));
+                        }
+                    }
+                    else
+                    {
+                        if (location.Y > surface.Height - surface.Screen.Tileset.TileSize &&
+                            location.X >= (join.offsetOne * surface.Screen.Tileset.TileSize) &&
+                            location.X <= ((join.offsetOne + join.Size) * surface.Screen.Tileset.TileSize))
+                        {
+                            menu.MenuItems.Add(new MenuItem("Modify Up-Down Join " + join.screenOne + " to " + join.screenTwo,
+                                (s, e) =>
+                                {
+                                    EditJoin(surface.Screen.Map, join, joinIndex);
+                                }));
+                        }
+                    }
+                }
+                else if (join.screenTwo == surface.Screen.Name)
+                {
+                    if (join.type == MegaMan.JoinType.Vertical)
+                    {
+                        if (location.X < surface.Screen.Tileset.TileSize &&
+                            location.Y >= (join.offsetTwo * surface.Screen.Tileset.TileSize) &&
+                            location.Y <= ((join.offsetTwo + join.Size) * surface.Screen.Tileset.TileSize))
+                        {
+                            menu.MenuItems.Add(new MenuItem("Modify Left-Right Join " + join.screenOne + " to " + join.screenTwo,
+                                (s, e) =>
+                                {
+                                    EditJoin(surface.Screen.Map, join, joinIndex);
+                                }));
+                        }
+                    }
+                    else
+                    {
+                        if (location.Y < surface.Screen.Tileset.TileSize &&
+                            location.X >= (join.offsetTwo * surface.Screen.Tileset.TileSize) &&
+                            location.X <= ((join.offsetTwo + join.Size) * surface.Screen.Tileset.TileSize))
+                        {
+                            menu.MenuItems.Add(new MenuItem("Modify Up-Down Join " + join.screenOne + " to " + join.screenTwo,
+                                (s, e) =>
+                                {
+                                    EditJoin(surface.Screen.Map, join, joinIndex);
+                                }));
+                        }
+                    }
+                }
+            }
+
+            if (location.X > surface.Width - surface.Screen.Tileset.TileSize)
+            {
+                menu.MenuItems.Add(new MenuItem("New Rightward Join from " + surface.Screen.Name,
+                    (s, e) =>
+                    {
+                        NewJoin(surface.Screen.Map, surface.Screen.Name, "", MegaMan.JoinType.Vertical, location.Y / surface.Screen.Tileset.TileSize);
+                    }));
+            }
+            if (location.X < surface.Screen.Tileset.TileSize)
+            {
+                menu.MenuItems.Add(new MenuItem("New Leftward Join from " + surface.Screen.Name,
+                    (s, e) =>
+                    {
+                        NewJoin(surface.Screen.Map, "", surface.Screen.Name, MegaMan.JoinType.Vertical, location.Y / surface.Screen.Tileset.TileSize);
+                    }));
+            }
+            if (location.Y > surface.Height - surface.Screen.Tileset.TileSize)
+            {
+                menu.MenuItems.Add(new MenuItem("New Downward Join from " + surface.Screen.Name,
+                    (s, e) =>
+                    {
+                        NewJoin(surface.Screen.Map, surface.Screen.Name, "", MegaMan.JoinType.Horizontal, location.X / surface.Screen.Tileset.TileSize);
+                    }));
+            }
+            if (location.Y < surface.Screen.Tileset.TileSize)
+            {
+                menu.MenuItems.Add(new MenuItem("New Upward Join from " + surface.Screen.Name,
+                    (s, e) =>
+                    {
+                        NewJoin(surface.Screen.Map, "", surface.Screen.Name, MegaMan.JoinType.Horizontal, location.X / surface.Screen.Tileset.TileSize);
+                    }));
+            }
+
+            menu.Show(surface, location);
         }
 
         public void Move(ScreenDrawingSurface surface, Point location)
@@ -162,6 +263,57 @@ namespace MegaMan_Level_Editor
 
         public void Release(ScreenDrawingSurface surface, Point location)
         {
+        }
+
+        private void NewJoin(MegaMan.Map map, string s1, string s2, MegaMan.JoinType type, int offset)
+        {
+            MegaMan.Join newjoin = new MegaMan.Join();
+            newjoin.screenTwo = s2;
+            newjoin.screenOne = s1;
+            newjoin.type = type;
+            newjoin.Size = 1;
+            newjoin.offsetOne = newjoin.offsetTwo = offset;
+            JoinForm form = CreateJoinForm(map.Screens.Values, newjoin);
+            form.OK += () =>
+                {
+                    map.Joins.Add(FormJoin(form));
+                };
+        }
+
+        private void EditJoin(MegaMan.Map map, MegaMan.Join join, int index)
+        {
+            JoinForm form = CreateJoinForm(map.Screens.Values, join);
+            form.OK += () =>
+            {
+                map.Joins[index] = FormJoin(form);
+            };
+            form.Show();
+        }
+
+        private JoinForm CreateJoinForm(IEnumerable<MegaMan.Screen> screens, MegaMan.Join join)
+        {
+            JoinForm form = new JoinForm();
+            form.Init(screens);
+            form.Type = join.type;
+            form.ScreenOne = join.screenOne;
+            form.ScreenTwo = join.screenTwo;
+            form.OffsetOne = join.offsetOne;
+            form.OffsetTwo = join.offsetTwo;
+            form.JoinWidth = join.Size;
+            return form;
+        }
+
+        private MegaMan.Join FormJoin(JoinForm form)
+        {
+            MegaMan.Join join = new MegaMan.Join();
+            join.screenOne = form.ScreenOne;
+            join.screenTwo = form.ScreenTwo;
+            join.offsetOne = form.OffsetOne;
+            join.offsetTwo = form.OffsetTwo;
+            join.Size = form.JoinWidth;
+            join.type = form.Type;
+            join.direction = form.Direction;
+            return join;
         }
     }
 
