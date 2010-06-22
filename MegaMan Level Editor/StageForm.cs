@@ -130,6 +130,9 @@ namespace MegaMan_Level_Editor
 
         private void AlignScreenSurfaces()
         {
+            int oldscroll = this.VerticalScroll.Value;
+            this.VerticalScroll.Value = 0;
+
             foreach (var pair in surfaces)
             {
                 if (stage.StartScreen == pair.Key)
@@ -218,6 +221,8 @@ namespace MegaMan_Level_Editor
 
             joinOverlay.Refresh(this.Width, this.Height, stage.Joins, surfaces);
             joinOverlay.Visible = MainForm.Instance.DrawJoins;
+
+            this.VerticalScroll.Value = oldscroll;
         }
 
         private ScreenDrawingSurface AlignScreenSurfaceUsingJoin(ScreenDrawingSurface surface, ScreenDrawingSurface secondSurface, Join join)
