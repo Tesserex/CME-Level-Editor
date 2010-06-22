@@ -175,9 +175,8 @@ namespace MegaMan_Level_Editor
             using (Graphics g = Graphics.FromImage(joinLayer))
             {
                 int offset = one ? join.offsetOne : join.offsetTwo;
-                int start = (join.type == JoinType.Horizontal) ? this.Left : this.Top;
-                start += offset * 16;
-                int end = start + (join.Size * 16);
+                int start = offset * Screen.Tileset.TileSize;
+                int end = start + (join.Size * Screen.Tileset.TileSize);
                 int edge;
                 Pen pen;
                 if (one ? join.direction == JoinDirection.BackwardOnly : join.direction == JoinDirection.ForwardOnly) pen = blockPen;
