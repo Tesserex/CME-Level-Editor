@@ -74,6 +74,7 @@ namespace MegaMan_Level_Editor
 
         public void RaiseJoinChange()
         {
+            Screen.Dirty = true;
             if (JoinChanged != null) JoinChanged();
         }
 
