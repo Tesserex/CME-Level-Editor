@@ -50,6 +50,7 @@ namespace MegaMan_Level_Editor
         public MegaMan.Screen Screen { get; private set; }
 
         public event EventHandler<ScreenDrawEventArgs> DrawnOn;
+        public event Action JoinChanged;
 
         public ScreenDrawingSurface(MegaMan.Screen screen)
         {
@@ -64,10 +65,16 @@ namespace MegaMan_Level_Editor
 
             Program.FrameTick += new Action(Program_FrameTick);
 
+            RedrawJoins();
             ReDrawAll();
             DrawGray();
 
             MainForm.Instance.DrawOptionToggled += ReDrawMaster;
+        }
+
+        public void RaiseJoinChange()
+        {
+            if (JoinChanged != null) JoinChanged();
         }
 
         public void RaiseDrawnOn(HistoryAction action)
@@ -146,7 +153,23 @@ namespace MegaMan_Level_Editor
             base.OnMouseMove(e);
         }
 
-        public void DrawJoinEnd(Join join, bool one)
+        public void RedrawJoins()
+        {
+            if (joinLayer == null) return;
+            using (Graphics g = Graphics.FromImage(joinLayer))
+            {
+                g.Clear(Color.Transparent);
+            }
+
+            foreach (Join join in Screen.Map.Joins)
+            {
+                if (join.screenOne == this.Screen.Name) DrawJoinEnd(join, true);
+                else if (join.screenTwo == this.Screen.Name) DrawJoinEnd(join, false);
+            }
+            ReDrawMaster();
+        }
+
+        private void DrawJoinEnd(Join join, bool one)
         {
             if (joinLayer == null) return;
             using (Graphics g = Graphics.FromImage(joinLayer))
@@ -161,7 +184,7 @@ namespace MegaMan_Level_Editor
                 else pen = passPen;
                 if (join.type == JoinType.Horizontal)
                 {
-                    edge = one ? this.Bottom - 2 : this.Top + 2;
+                    edge = one ? Screen.PixelHeight - 2 : 2;
                     int curl = one ? edge - 6 : edge + 6;
                     g.DrawLine(pen, start, edge, end, edge);
                     g.DrawLine(pen, start + 1, edge, start + 1, curl);
@@ -169,7 +192,7 @@ namespace MegaMan_Level_Editor
                 }
                 else
                 {
-                    edge = one ? this.Right - 2 : this.Left + 2;
+                    edge = one ? Screen.PixelWidth - 2 : 2;
                     int curl = one ? edge - 6 : edge + 6;
                     g.DrawLine(pen, edge, start, edge, end);
                     g.DrawLine(pen, edge, start, curl, start);

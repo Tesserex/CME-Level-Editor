@@ -172,7 +172,7 @@ namespace MegaMan_Level_Editor
                             menu.MenuItems.Add(new MenuItem("Modify Left-Right Join " + join.screenOne + " to " + join.screenTwo,
                                 (s, e) =>
                                 {
-                                    EditJoin(surface.Screen.Map, join, joinIndex);
+                                    EditJoin(surface, join, joinIndex);
                                 }));
                         }
                     }
@@ -185,7 +185,7 @@ namespace MegaMan_Level_Editor
                             menu.MenuItems.Add(new MenuItem("Modify Up-Down Join " + join.screenOne + " to " + join.screenTwo,
                                 (s, e) =>
                                 {
-                                    EditJoin(surface.Screen.Map, join, joinIndex);
+                                    EditJoin(surface, join, joinIndex);
                                 }));
                         }
                     }
@@ -201,7 +201,7 @@ namespace MegaMan_Level_Editor
                             menu.MenuItems.Add(new MenuItem("Modify Left-Right Join " + join.screenOne + " to " + join.screenTwo,
                                 (s, e) =>
                                 {
-                                    EditJoin(surface.Screen.Map, join, joinIndex);
+                                    EditJoin(surface, join, joinIndex);
                                 }));
                         }
                     }
@@ -214,7 +214,7 @@ namespace MegaMan_Level_Editor
                             menu.MenuItems.Add(new MenuItem("Modify Up-Down Join " + join.screenOne + " to " + join.screenTwo,
                                 (s, e) =>
                                 {
-                                    EditJoin(surface.Screen.Map, join, joinIndex);
+                                    EditJoin(surface, join, joinIndex);
                                 }));
                         }
                     }
@@ -226,7 +226,7 @@ namespace MegaMan_Level_Editor
                 menu.MenuItems.Add(new MenuItem("New Rightward Join from " + surface.Screen.Name,
                     (s, e) =>
                     {
-                        NewJoin(surface.Screen.Map, surface.Screen.Name, "", MegaMan.JoinType.Vertical, location.Y / surface.Screen.Tileset.TileSize);
+                        NewJoin(surface, surface.Screen.Name, "", MegaMan.JoinType.Vertical, location.Y / surface.Screen.Tileset.TileSize);
                     }));
             }
             if (location.X < surface.Screen.Tileset.TileSize)
@@ -234,7 +234,7 @@ namespace MegaMan_Level_Editor
                 menu.MenuItems.Add(new MenuItem("New Leftward Join from " + surface.Screen.Name,
                     (s, e) =>
                     {
-                        NewJoin(surface.Screen.Map, "", surface.Screen.Name, MegaMan.JoinType.Vertical, location.Y / surface.Screen.Tileset.TileSize);
+                        NewJoin(surface, "", surface.Screen.Name, MegaMan.JoinType.Vertical, location.Y / surface.Screen.Tileset.TileSize);
                     }));
             }
             if (location.Y > surface.Height - surface.Screen.Tileset.TileSize)
@@ -242,7 +242,7 @@ namespace MegaMan_Level_Editor
                 menu.MenuItems.Add(new MenuItem("New Downward Join from " + surface.Screen.Name,
                     (s, e) =>
                     {
-                        NewJoin(surface.Screen.Map, surface.Screen.Name, "", MegaMan.JoinType.Horizontal, location.X / surface.Screen.Tileset.TileSize);
+                        NewJoin(surface, surface.Screen.Name, "", MegaMan.JoinType.Horizontal, location.X / surface.Screen.Tileset.TileSize);
                     }));
             }
             if (location.Y < surface.Screen.Tileset.TileSize)
@@ -250,7 +250,7 @@ namespace MegaMan_Level_Editor
                 menu.MenuItems.Add(new MenuItem("New Upward Join from " + surface.Screen.Name,
                     (s, e) =>
                     {
-                        NewJoin(surface.Screen.Map, "", surface.Screen.Name, MegaMan.JoinType.Horizontal, location.X / surface.Screen.Tileset.TileSize);
+                        NewJoin(surface, "", surface.Screen.Name, MegaMan.JoinType.Horizontal, location.X / surface.Screen.Tileset.TileSize);
                     }));
             }
 
@@ -265,7 +265,7 @@ namespace MegaMan_Level_Editor
         {
         }
 
-        private void NewJoin(MegaMan.Map map, string s1, string s2, MegaMan.JoinType type, int offset)
+        private void NewJoin(ScreenDrawingSurface surface, string s1, string s2, MegaMan.JoinType type, int offset)
         {
             MegaMan.Join newjoin = new MegaMan.Join();
             newjoin.screenTwo = s2;
@@ -273,19 +273,21 @@ namespace MegaMan_Level_Editor
             newjoin.type = type;
             newjoin.Size = 1;
             newjoin.offsetOne = newjoin.offsetTwo = offset;
-            JoinForm form = CreateJoinForm(map.Screens.Values, newjoin);
+            JoinForm form = CreateJoinForm(surface.Screen.Map.Screens.Values, newjoin);
             form.OK += () =>
                 {
-                    map.Joins.Add(FormJoin(form));
+                    surface.Screen.Map.Joins.Add(FormJoin(form));
+                    surface.RaiseJoinChange();
                 };
         }
 
-        private void EditJoin(MegaMan.Map map, MegaMan.Join join, int index)
+        private void EditJoin(ScreenDrawingSurface surface, MegaMan.Join join, int index)
         {
-            JoinForm form = CreateJoinForm(map.Screens.Values, join);
+            JoinForm form = CreateJoinForm(surface.Screen.Map.Screens.Values, join);
             form.OK += () =>
             {
-                map.Joins[index] = FormJoin(form);
+                surface.Screen.Map.Joins[index] = FormJoin(form);
+                surface.RaiseJoinChange();
             };
             form.Show();
         }

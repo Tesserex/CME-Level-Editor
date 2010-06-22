@@ -114,13 +114,6 @@ namespace MegaMan_Level_Editor
                 surface.Location = new Point(0, 0);
             }
 
-            // give them joins
-            foreach (var join in stage.Joins)
-            {
-                surfaces[join.screenOne].DrawJoinEnd(join, true);
-                surfaces[join.screenTwo].DrawJoinEnd(join, false);
-            }
-
             AlignScreenSurfaces();
         }
 
@@ -314,6 +307,11 @@ namespace MegaMan_Level_Editor
             screen.Renamed += this.RenameSurface;
             screen.Resized += (w, h) => this.AlignScreenSurfaces();
             surface.DrawnOn += new EventHandler<ScreenDrawEventArgs>(surface_DrawnOn);
+            surface.JoinChanged += () =>
+            {
+                AlignScreenSurfaces();
+                foreach (var s in surfaces.Values) s.RedrawJoins();
+            };
             this.Controls.Add(surface);
             joinOverlay.Add(surface);
             return surface;
