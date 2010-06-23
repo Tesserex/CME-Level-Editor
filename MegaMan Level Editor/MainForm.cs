@@ -521,6 +521,7 @@ namespace MegaMan_Level_Editor
             this.activeMap.Map.Screens.Add(prop.ScreenName, screen);
             screen.Save(ScreenPathFor(MainForm.Instance.ActiveMap.Map.Name, prop.ScreenName));
 
+            activeMap.RedrawStages();
             // Update the project tree
             projectForm.UpdateScreenTree(this.activeMap.Map.Name, this.activeMap.Map.Screens.Values);
         }

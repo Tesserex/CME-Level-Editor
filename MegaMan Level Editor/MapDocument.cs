@@ -60,6 +60,13 @@ namespace MegaMan_Level_Editor
             stageForm.Focus();
         }
 
+        // get rid of this ASAP, it's a hack
+        // but a good redesign will take a while
+        public void RedrawStages()
+        {
+            if (stageForm != null) stageForm.AlignScreenSurfaces();
+        }
+
         public void Close()
         {
             if (!ConfirmSave()) return;

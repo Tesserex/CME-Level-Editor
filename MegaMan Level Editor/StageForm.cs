@@ -128,7 +128,7 @@ namespace MegaMan_Level_Editor
             }
         }
 
-        private void AlignScreenSurfaces()
+        public void AlignScreenSurfaces()
         {
             int oldscroll = this.VerticalScroll.Value;
             this.VerticalScroll.Value = 0;
@@ -159,6 +159,13 @@ namespace MegaMan_Level_Editor
                 placeable.Add(join.screenOne);
                 placeable.Add(join.screenTwo);
             }
+
+            var orphans = new List<string>();
+            foreach (var screen in surfaces.Keys)
+            {
+                if (!placeable.Contains(screen)) orphans.Add(screen);
+            }
+
             placeable.Remove(stage.StartScreen); // this one is already placed
             placedScreens.Add(surfaces[stage.StartScreen]);
 
@@ -209,6 +216,24 @@ namespace MegaMan_Level_Editor
                 placedScreens.Add(surface.Surface);
                 minX = Math.Min(minX, surface.Surface.Location.X);
                 minY = Math.Min(minY, surface.Surface.Location.Y);
+            }
+
+            // now place the orphaned screens wherever
+            foreach (var screen in orphans)
+            {
+                surfaces[screen].Location = new Point(0, 0);
+                Rectangle coll = SurfaceCollides(placedScreens, surfaces[screen]);
+                SurfaceCollision collision = new SurfaceCollision(surfaces[screen], coll);
+
+                while (coll != Rectangle.Empty)
+                {
+                    TryToFixCollision(placedScreens, collision);
+                    coll = SurfaceCollides(placedScreens, collision.Surface);
+                }
+
+                placedScreens.Add(collision.Surface);
+                minX = Math.Min(minX, collision.Surface.Location.X);
+                minY = Math.Min(minY, collision.Surface.Location.Y);
             }
 
             if (minX < 0 || minY < 0)
