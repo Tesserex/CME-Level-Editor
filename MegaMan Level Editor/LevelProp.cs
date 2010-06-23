@@ -6,27 +6,24 @@ using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
-using MegaMan;
 
 namespace MegaMan_Level_Editor
 {
     public partial class StageProp : Form
     {
-        private Map map;
-
-        public event Action OkPressed;
-        public event Action Saved;
+        private MapDocument map;
 
         public StageProp()
         {
             InitializeComponent();
         }
 
-        public void LoadMap(Map map)
+        public void LoadMap(MapDocument map)
         {
             this.map = map;
+            this.Text = map.Name + " Properties";
             nameField.Text = map.Name;
-            tilesetField.Text = map.TilePath;
+            tilesetField.Text = map.Tileset.FilePath;
         }
 
         private void tilesetChange_Click(object sender, EventArgs e)
@@ -45,7 +42,6 @@ namespace MegaMan_Level_Editor
             bool success = Save();
             if (success)
             {
-                if (OkPressed != null) OkPressed();
                 this.Close();
             }
         }
@@ -56,7 +52,6 @@ namespace MegaMan_Level_Editor
             {
                 map.Name = nameField.Text;
                 map.ChangeTileset(tilesetField.Text);
-                if (Saved != null) Saved();
                 return true;
             }
             catch

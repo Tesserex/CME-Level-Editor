@@ -24,6 +24,12 @@ namespace MegaMan_Level_Editor
 
         public event Action<MapDocument> Closed;
 
+        public MapDocument(MainForm parent)
+        {
+            this.parent = parent;
+            this.Map = new Map();
+        }
+
         public MapDocument(Map map, MainForm parent)
         {
             this.parent = parent;
@@ -35,6 +41,11 @@ namespace MegaMan_Level_Editor
         public string Name
         {
             get { return Map.Name; }
+            set
+            {
+                Map.Name = value;
+                RefreshInfo();
+            }
         }
 
         public string Path
@@ -45,6 +56,11 @@ namespace MegaMan_Level_Editor
         public Tileset Tileset
         {
             get { return Map.Tileset; }
+        }
+
+        public void ChangeTileset(string path)
+        {
+            Map.ChangeTileset(path);
         }
 
         public void Save()
@@ -66,7 +82,7 @@ namespace MegaMan_Level_Editor
             this.Map = new Map(MainForm.Instance.rootPath, path);
         }
 
-        public void RefreshInfo()
+        private void RefreshInfo()
         {
             stageForm.SetText();
         }

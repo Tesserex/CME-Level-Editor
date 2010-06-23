@@ -465,22 +465,7 @@ namespace MegaMan_Level_Editor
 
         private void newToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            Map map = new Map();
-            untitledCount++;
-            map.Name = "Untitled" + untitledCount.ToString();
-
-            StageProp propForm = new StageProp();
-            propForm.LoadMap(map);
-            propForm.Text = "New Stage Properties";
-            propForm.Show();
-
-            propForm.OkPressed += () =>
-            {
-                MapDocument document = new MapDocument(map, this);
-                // document.NewScreen();
-                document.NewStage();
-                stages.Add(map.Name, document);
-            };
+            // should create a new project
         }
 
         private void saveAsToolStripMenuItem_Click(object sender, EventArgs e)
@@ -494,11 +479,7 @@ namespace MegaMan_Level_Editor
 
             MapDocument propDoc = ActiveMap;
             StageProp propForm = new StageProp();
-            propForm.LoadMap(propDoc.Map);
-            propForm.Text = ActiveMap.Name + " Properties";
-
-            propForm.Saved += () => propDoc.RefreshInfo();
-
+            propForm.LoadMap(propDoc);
             propForm.Show();
         }
 
@@ -519,11 +500,11 @@ namespace MegaMan_Level_Editor
             var screen = new MegaMan.Screen(prop.ScreenWidth, prop.ScreenHeight, this.activeMap.Map);
             screen.Name = prop.ScreenName;
             this.activeMap.Map.Screens.Add(prop.ScreenName, screen);
-            screen.Save(ScreenPathFor(MainForm.Instance.ActiveMap.Map.Name, prop.ScreenName));
+            screen.Save(ScreenPathFor(MainForm.Instance.ActiveMap.Name, prop.ScreenName));
 
             activeMap.RedrawStages();
             // Update the project tree
-            projectForm.UpdateScreenTree(this.activeMap.Map.Name, this.activeMap.Map.Screens.Values);
+            projectForm.UpdateScreenTree(this.activeMap.Name, this.activeMap.Map.Screens.Values);
         }
 
         private void brushesToolStripMenuItem_Click(object sender, EventArgs e)
