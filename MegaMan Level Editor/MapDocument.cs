@@ -17,7 +17,7 @@ namespace MegaMan_Level_Editor
 
     public class MapDocument
     {
-        public MainForm parent;
+        private MainForm parent;
 
         private Map map;
 
