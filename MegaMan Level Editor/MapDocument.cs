@@ -30,10 +30,11 @@ namespace MegaMan_Level_Editor
             this.Map = new Map();
         }
 
-        public MapDocument(Map map, MainForm parent)
+        // TODO : Rename Map to Stages.. More consistent naming
+        public MapDocument(string path, MainForm parent)
         {
             this.parent = parent;
-            this.Map = map;
+            this.Map = new Map(MainForm.Instance.rootPath, path);
         }
 
         #region Exposed Map Items
@@ -74,13 +75,6 @@ namespace MegaMan_Level_Editor
         }
 
         #endregion
-
-        // TODO : Rename Map to Stages.. More consistent naming
-        public MapDocument(string path, MainForm parent)
-        {
-            this.parent = parent;
-            this.Map = new Map(MainForm.Instance.rootPath, path);
-        }
 
         private void RefreshInfo()
         {
