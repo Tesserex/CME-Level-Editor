@@ -18,7 +18,8 @@ namespace MegaMan_Level_Editor
     public class MapDocument
     {
         public MainForm parent;
-        public Map Map { get; private set; }
+
+        private Map map;
 
         private StageForm stageForm;
 
@@ -27,54 +28,77 @@ namespace MegaMan_Level_Editor
         public MapDocument(MainForm parent)
         {
             this.parent = parent;
-            this.Map = new Map();
+            this.map = new Map();
         }
 
         // TODO : Rename Map to Stages.. More consistent naming
         public MapDocument(string path, MainForm parent)
         {
             this.parent = parent;
-            this.Map = new Map(MainForm.Instance.rootPath, path);
+            this.map = new Map(MainForm.Instance.rootPath, path);
+        }
+
+        public IEnumerable<MegaMan.Screen> Screens
+        {
+            get { foreach (var screen in map.Screens.Values) yield return screen; }
+        }
+
+        // this is going to get encapsulated further, so that even Screens are inaccessible
+        public MegaMan.Screen GetScreen(string name)
+        {
+            if (map.Screens.ContainsKey(name)) return map.Screens[name];
+            return null;
         }
 
         #region Exposed Map Items
 
         public string Name
         {
-            get { return Map.Name; }
+            get { return map.Name; }
             set
             {
-                Map.Name = value;
+                map.Name = value;
                 RefreshInfo();
             }
         }
 
         public string Path
         {
-            get { return Map.FileDir; }
+            get { return map.FileDir; }
         }
 
         public Tileset Tileset
         {
-            get { return Map.Tileset; }
+            get { return map.Tileset; }
         }
 
         public void ChangeTileset(string path)
         {
-            Map.ChangeTileset(path);
+            map.ChangeTileset(path);
         }
 
         public void Save()
         {
-            if (Map.Loaded && Map.FileDir != null) Map.Save();
+            if (map.Loaded && map.FileDir != null) map.Save();
         }
 
         public void Save(string directory)
         {
-            if (Map.Loaded) Map.Save(directory);
+            if (map.Loaded) map.Save(directory);
         }
 
         #endregion
+
+        public void AddScreen(string name, int tile_width, int tile_height)
+        {
+            var screen = new MegaMan.Screen(tile_width, tile_height, this.map);
+            screen.Name = name;
+            this.map.Screens.Add(name, screen);
+            
+            screen.Save(System.IO.Path.Combine(this.Path, name + ".scn"));
+
+            // now I can do things like fire an event... how useful!
+        }
 
         private void RefreshInfo()
         {
@@ -96,7 +120,7 @@ namespace MegaMan_Level_Editor
         {
             if (this.stageForm == null)
             {
-                this.stageForm = new StageForm(this.Map);
+                this.stageForm = new StageForm(this.map);
                 stageForm.MdiParent = parent;
                 stageForm.GotFocus += new EventHandler(StageForm_GotFocus);
                 stageForm.FormClosing += new FormClosingEventHandler(StageForm_FormClosing);
@@ -124,10 +148,10 @@ namespace MegaMan_Level_Editor
 
         public bool ConfirmSave()
         {
-            if (Map.Dirty)
+            if (map.Dirty)
             {
-                DialogResult result = MessageBox.Show("Do you want to save changes to " + Map.Name + " before closing?", "Save Changes", MessageBoxButtons.YesNoCancel);
-                if (result == DialogResult.Yes) Map.Save();
+                DialogResult result = MessageBox.Show("Do you want to save changes to " + map.Name + " before closing?", "Save Changes", MessageBoxButtons.YesNoCancel);
+                if (result == DialogResult.Yes) map.Save();
                 else if (result == DialogResult.Cancel) return false;
             }
             return true;

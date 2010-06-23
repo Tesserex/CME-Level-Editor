@@ -285,12 +285,6 @@ namespace MegaMan_Level_Editor
             return Path.Combine(stagePath, "map.xml");
         }
 
-        public static string ScreenPathFor(string stageName, string screenName)
-        {
-            var stagePath = Path.Combine(Path.Combine(MainForm.Instance.rootPath, "stages"), stageName);
-            return Path.Combine(stagePath, screenName + ".scn");
-        }
-
         /* *
          * LoadMapFromPath - Load the stage based on the path (underlying implementation of OpenMap)
          * path = relative path to the root project directory
@@ -497,14 +491,11 @@ namespace MegaMan_Level_Editor
         private void screenPropForm_OK(ScreenProp prop)
         {
             if (prop.Screen != null) return; // shouldn't happen
-            var screen = new MegaMan.Screen(prop.ScreenWidth, prop.ScreenHeight, this.activeMap.Map);
-            screen.Name = prop.ScreenName;
-            this.activeMap.Map.Screens.Add(prop.ScreenName, screen);
-            screen.Save(ScreenPathFor(MainForm.Instance.ActiveMap.Name, prop.ScreenName));
+            
 
             activeMap.RedrawStages();
             // Update the project tree
-            projectForm.UpdateScreenTree(this.activeMap.Name, this.activeMap.Map.Screens.Values);
+            projectForm.UpdateScreenTree(this.activeMap.Name, this.activeMap.Screens);
         }
 
         private void brushesToolStripMenuItem_Click(object sender, EventArgs e)
@@ -550,25 +541,9 @@ namespace MegaMan_Level_Editor
         /* *
          * Utility methods... smells like they belong in common library
          * */
-        public static MegaMan.Map GetStage(string stageName)
-        {
-            return MainForm.Instance.stages[stageName].Map;
-        }
-
         public static MegaMan.Screen GetScreen(string stageName, string screenName)
         {
-            return GetStage(stageName).Screens[screenName];
-        }
-
-        public static void UpdateScreenName(string stageName, string oldScreenName, string newScreenName)
-        {
-            if (oldScreenName != newScreenName)
-            {
-                var screen = GetScreen(stageName, oldScreenName);
-                screen.Name = newScreenName;
-                MainForm.Instance.stages[stageName].Map.Screens.Add(newScreenName, screen);
-                MainForm.Instance.stages[stageName].Map.Screens.Remove(oldScreenName);
-            }
+            return MainForm.Instance.stages[stageName].GetScreen(screenName);
         }
 
         private void menuStrip1_ItemClicked(object sender, ToolStripItemClickedEventArgs e)
