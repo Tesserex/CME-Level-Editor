@@ -491,7 +491,7 @@ namespace MegaMan_Level_Editor
         private void screenPropForm_OK(ScreenProp prop)
         {
             if (prop.Screen != null) return; // shouldn't happen
-            
+            activeMap.AddScreen(prop.ScreenName, prop.ScreenWidth, prop.ScreenHeight);
 
             activeMap.RedrawStages();
             // Update the project tree
