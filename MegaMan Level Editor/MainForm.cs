@@ -180,12 +180,12 @@ namespace MegaMan_Level_Editor
         public void FocusScreen(MapDocument map)
         {
             activeMap = map;
-            ChangeTileset(map.Map.Tileset);
+            ChangeTileset(map.Tileset);
         }
 
         private void ChangeTileset(Tileset tileset)
         {
-            if (brushForm != null) brushForm.ChangeTileset(activeMap.Map.Tileset);
+            if (brushForm != null) brushForm.ChangeTileset(activeMap.Tileset);
 
             tilestrip.ChangeTileset(tileset);
         }
@@ -299,14 +299,14 @@ namespace MegaMan_Level_Editor
         {
             foreach (var mapdoc in stages.Values)
             {
-                if (mapdoc.Map.FileDir == Path.Combine(this.rootPath, path))
+                if (mapdoc.Path == Path.Combine(this.rootPath, path))
                 {
                     return mapdoc;
                 }
             }
 
             var stage = new MapDocument(path, this);
-            stages[stage.Map.Name] = stage;
+            stages[stage.Name] = stage;
 
             stage.Closed += new Action<MapDocument>(map_Closed);
 
@@ -364,7 +364,7 @@ namespace MegaMan_Level_Editor
             if (result == DialogResult.OK)
             {
                 string path = folderDialog.SelectedPath;
-                ActiveMap.Map.Save(path);
+                ActiveMap.Save(path);
             }
         }
 
@@ -433,10 +433,10 @@ namespace MegaMan_Level_Editor
 
         private void saveToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            if (ActiveMap != null && ActiveMap.Map.Loaded)
+            if (ActiveMap != null)
             {
-                if (ActiveMap.Map.FileDir != null)
-                    ActiveMap.Map.Save();
+                if (ActiveMap.Path != null)
+                    ActiveMap.Save();
                 else
                     SaveAs();
             }
@@ -495,7 +495,7 @@ namespace MegaMan_Level_Editor
             MapDocument propDoc = ActiveMap;
             StageProp propForm = new StageProp();
             propForm.LoadMap(propDoc.Map);
-            propForm.Text = ActiveMap.Map.Name + " Properties";
+            propForm.Text = ActiveMap.Name + " Properties";
 
             propForm.Saved += () => propDoc.RefreshInfo();
 

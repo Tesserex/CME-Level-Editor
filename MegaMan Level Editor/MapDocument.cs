@@ -8,6 +8,13 @@ using System.IO;
 
 namespace MegaMan_Level_Editor
 {
+    // ========= What this IS, and IS NOT ===============
+    // This class controls a single map / stage, whatever
+    // you want to call it. NOT the whole damn project!
+    // There should be no way to touch the stage, except through
+    // one of these objects! All form updates should be event
+    // driven, coming from this class!
+
     public class MapDocument
     {
         public MainForm parent;
@@ -22,6 +29,35 @@ namespace MegaMan_Level_Editor
             this.parent = parent;
             this.Map = map;
         }
+
+        #region Exposed Map Items
+
+        public string Name
+        {
+            get { return Map.Name; }
+        }
+
+        public string Path
+        {
+            get { return Map.FileDir; }
+        }
+
+        public Tileset Tileset
+        {
+            get { return Map.Tileset; }
+        }
+
+        public void Save()
+        {
+            if (Map.Loaded && Map.FileDir != null) Map.Save();
+        }
+
+        public void Save(string directory)
+        {
+            if (Map.Loaded) Map.Save(directory);
+        }
+
+        #endregion
 
         // TODO : Rename Map to Stages.. More consistent naming
         public MapDocument(string path, MainForm parent)
