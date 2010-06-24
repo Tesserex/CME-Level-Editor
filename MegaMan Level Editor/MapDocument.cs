@@ -24,6 +24,7 @@ namespace MegaMan_Level_Editor
         private StageForm stageForm;
 
         public event Action<MapDocument> Closed;
+        public event Action<MegaMan.Screen> ScreenAdded;
 
         public MapDocument(MainForm parent)
         {
@@ -98,6 +99,9 @@ namespace MegaMan_Level_Editor
             screen.Save(System.IO.Path.Combine(this.Path, name + ".scn"));
 
             // now I can do things like fire an event... how useful!
+            if (ScreenAdded != null) ScreenAdded(screen);
+
+            RedrawStages();
         }
 
         private void RefreshInfo()
@@ -132,7 +136,7 @@ namespace MegaMan_Level_Editor
 
         // get rid of this ASAP, it's a hack
         // but a good redesign will take a while
-        public void RedrawStages()
+        private void RedrawStages()
         {
             if (stageForm != null) stageForm.AlignScreenSurfaces();
         }
