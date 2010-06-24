@@ -483,18 +483,8 @@ namespace MegaMan_Level_Editor
 
         private void newScreenStripMenuItem_Click(object sender, EventArgs e)
         {
-            var screenPropForm = new ScreenProp();
-            screenPropForm.OK += new Action<ScreenProp>(screenPropForm_OK);
+            var screenPropForm = new ScreenProp(this.ActiveMap);
             screenPropForm.Show();
-        }
-
-        private void screenPropForm_OK(ScreenProp prop)
-        {
-            if (prop.Screen != null) return; // shouldn't happen
-            activeMap.AddScreen(prop.ScreenName, prop.ScreenWidth, prop.ScreenHeight);
-
-            // Update the project tree
-            projectForm.UpdateScreenTree(this.activeMap.Name, this.activeMap.Screens);
         }
 
         private void brushesToolStripMenuItem_Click(object sender, EventArgs e)
@@ -540,7 +530,7 @@ namespace MegaMan_Level_Editor
         /* *
          * Utility methods... smells like they belong in common library
          * */
-        public static MegaMan.Screen GetScreen(string stageName, string screenName)
+        public static ScreenDocument GetScreen(string stageName, string screenName)
         {
             return MainForm.Instance.stages[stageName].GetScreen(screenName);
         }

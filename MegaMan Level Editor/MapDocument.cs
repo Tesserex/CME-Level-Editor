@@ -23,8 +23,11 @@ namespace MegaMan_Level_Editor
 
         private StageForm stageForm;
 
+        private Dictionary<string, ScreenDocument> screens = new Dictionary<string,ScreenDocument>();
+
         public event Action<MapDocument> Closed;
-        public event Action<MegaMan.Screen> ScreenAdded;
+        public event Action<ScreenDocument> ScreenAdded;
+        public event Action<Join> JoinChanged;
         public event Action<bool> DirtyChanged;
 
         public MapDocument(MainForm parent)
@@ -38,12 +41,19 @@ namespace MegaMan_Level_Editor
         {
             this.parent = parent;
             this.map = new Map(MainForm.Instance.rootPath, path);
+
+            // wrap all map screens in screendocuments
+            // this should be the only time MegaMan.Screen's are touched directly
+            foreach (var pair in this.map.Screens)
+            {
+                this.screens.Add(pair.Key, new ScreenDocument(pair.Value, this));
+            }
         }
 
         // this is going to get encapsulated further, so that even Screens are inaccessible
-        public MegaMan.Screen GetScreen(string name)
+        public ScreenDocument GetScreen(string name)
         {
-            if (map.Screens.ContainsKey(name)) return map.Screens[name];
+            if (screens.ContainsKey(name)) return screens[name];
             return null;
         }
 
@@ -86,10 +96,14 @@ namespace MegaMan_Level_Editor
 
         public string StartScreen { get { return map.StartScreen; } }
 
-        public IEnumerable<MegaMan.Screen> Screens
+        public int ScreenCount { get { return map.Screens.Count; } }
+
+        public IEnumerable<ScreenDocument> Screens
         {
-            get { foreach (var screen in map.Screens.Values) yield return screen; }
+            get { foreach (var screen in screens.Values) yield return screen; }
         }
+
+        public int JoinCount { get { return map.Joins.Count; } }
 
         public IEnumerable<MegaMan.Join> Joins
         {
@@ -112,12 +126,22 @@ namespace MegaMan_Level_Editor
         {
             var screen = new MegaMan.Screen(tile_width, tile_height, this.map);
             screen.Name = name;
+
             this.map.Screens.Add(name, screen);
+
+            ScreenDocument doc = WrapScreen(screen);
             
             screen.Save(System.IO.Path.Combine(this.Path, name + ".scn"));
 
             // now I can do things like fire an event... how useful!
-            if (ScreenAdded != null) ScreenAdded(screen);
+            if (ScreenAdded != null) ScreenAdded(doc);
+        }
+
+        public void AddJoin(Join join)
+        {
+            map.Joins.Add(join);
+            map.Dirty = true;
+            if (JoinChanged != null) JoinChanged(join);
         }
 
         private void RefreshInfo()
@@ -192,6 +216,22 @@ namespace MegaMan_Level_Editor
         private void StageForm_GotFocus(object sender, EventArgs e)
         {
             parent.FocusScreen(this);
+        }
+
+        private ScreenDocument WrapScreen(MegaMan.Screen screen)
+        {
+            ScreenDocument doc = new ScreenDocument(screen, this);
+            this.screens.Add(screen.Name, doc);
+            doc.Renamed += ScreenRenamed;
+            return doc;
+        }
+
+        private void ScreenRenamed(string oldName, string newName)
+        {
+            if (!this.screens.ContainsKey(oldName)) return;
+            ScreenDocument doc = this.screens[oldName];
+            this.screens.Remove(oldName);
+            this.screens.Add(newName, doc);
         }
     }
 }

@@ -47,12 +47,11 @@ namespace MegaMan_Level_Editor
         private bool active = false;
         public bool Placed { get; set; }
 
-        public MegaMan.Screen Screen { get; private set; }
+        public ScreenDocument Screen { get; private set; }
 
         public event EventHandler<ScreenDrawEventArgs> DrawnOn;
-        public event Action JoinChanged;
 
-        public ScreenDrawingSurface(MegaMan.Screen screen)
+        public ScreenDrawingSurface(ScreenDocument screen)
         {
             this.Screen = screen;
 
@@ -70,12 +69,6 @@ namespace MegaMan_Level_Editor
             DrawGray();
 
             MainForm.Instance.DrawOptionToggled += ReDrawMaster;
-        }
-
-        public void RaiseJoinChange()
-        {
-            Screen.Dirty = true;
-            if (JoinChanged != null) JoinChanged();
         }
 
         public void RaiseDrawnOn(HistoryAction action)
@@ -213,7 +206,7 @@ namespace MegaMan_Level_Editor
         {
             using (Graphics g = Graphics.FromImage(tileLayer))
             {
-                Screen.Draw(g, 0, 0, Screen.PixelWidth, Screen.PixelHeight);
+                Screen.DrawOn(g);
             }
             grayDirty = true;
         }

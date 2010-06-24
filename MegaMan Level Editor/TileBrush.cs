@@ -10,7 +10,7 @@ namespace MegaMan_Level_Editor
 {
     public interface ITileBrush
     {
-        ITileBrush DrawOn(MegaMan.Screen screen, int tile_x, int tile_y);
+        ITileBrush DrawOn(ScreenDocument screen, int tile_x, int tile_y);
         void DrawOn(Graphics g, int x, int y);
         IEnumerable<TileBrushCell> Cells();
         int Height { get; }
@@ -51,7 +51,8 @@ namespace MegaMan_Level_Editor
             tile.Draw(g, x, y);
         }
 
-        public virtual ITileBrush DrawOn(MegaMan.Screen screen, int tile_x, int tile_y) {
+        public virtual ITileBrush DrawOn(ScreenDocument screen, int tile_x, int tile_y)
+        {
             var old = screen.TileAt(tile_x, tile_y);
             
             if (old == null)
@@ -111,7 +112,8 @@ namespace MegaMan_Level_Editor
         /// Returns an "undo brush" - a brush of all tiles that were overwritten.
         /// Returns null if no tiles were changed.
         /// </summary>
-        public ITileBrush DrawOn(MegaMan.Screen screen, int tile_x, int tile_y) {
+        public ITileBrush DrawOn(ScreenDocument screen, int tile_x, int tile_y)
+        {
             TileBrush undo = new TileBrush(Width, Height);
             bool changed = false;
             foreach (TileBrushCell[] col in cells) {

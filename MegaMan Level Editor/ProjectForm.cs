@@ -69,20 +69,27 @@ namespace MegaMan_Level_Editor
             }
         }
 
-        public void OpenStage(TreeNode node)
+        private void OpenStage(TreeNode node)
         {
             MapDocument stage = MainForm.Instance.OpenStage(node.Name, LocalStagePathFor(node.Name));
             LoadScreenSubtree(node, stage.Screens);
+
+            stage.ScreenAdded += (screen) =>
+                {
+                    var stageNode = projectView.Nodes.Find(screen.Map.Name, true).First();
+                    node.Nodes.Add(screen.Name, screen.Name);
+                };
+
             stage.ReFocus();
         }
 
-        public void UpdateScreenTree(string mapName, IEnumerable<MegaMan.Screen> screens)
+        public void UpdateScreenTree(string mapName, IEnumerable<ScreenDocument> screens)
         {
             var stageNode = projectView.Nodes.Find(mapName, true).First();
             this.LoadScreenSubtree(stageNode, screens);
         }
 
-        private void LoadScreenSubtree(TreeNode node, IEnumerable<MegaMan.Screen> screens)
+        private void LoadScreenSubtree(TreeNode node, IEnumerable<ScreenDocument> screens)
         {
             node.Nodes.Clear();
             foreach (var screen in screens)
@@ -97,7 +104,6 @@ namespace MegaMan_Level_Editor
             var screenName = node.Name;
             var screen = MainForm.GetScreen(stageName, screenName);
             var screenProps = new ScreenProp(screen);
-            screenProps.OK += new Action<ScreenProp>(screenPropForm_OK);
             screenProps.Show();
         }
 
@@ -114,22 +120,6 @@ namespace MegaMan_Level_Editor
         private void projectView_AfterSelect(object sender, TreeViewEventArgs e)
         {
 
-        }
-
-        private void screenPropForm_OK(ScreenProp prop)
-        {
-            if (prop.Screen == null) return; // but this shouldn't happen
-
-            // Rename the screen
-            var screen = prop.Screen;
-            string oldName = screen.Name;
-
-            screen.Map.RenameScreen(screen, prop.ScreenName);
-
-            screen.Resize(prop.ScreenWidth, prop.ScreenHeight);
-
-            // Update the project tree
-            UpdateScreenTree(screen.Map.Name, screen.Map.Screens.Values);
         }
     }
 }

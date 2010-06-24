@@ -154,10 +154,10 @@ namespace MegaMan_Level_Editor
         public Image Icon { get { return null; } }
 
         public void Click(ScreenDrawingSurface surface, Point location)
-        {
+        {/*
             ContextMenu menu = new ContextMenu();
             // find a join to modify
-            for (int i = 0; i < surface.Screen.Map.Joins.Count; i++)
+            for (int i = 0; i < surface.Screen.Map.JoinCount; i++)
             {
                 MegaMan.Join join = surface.Screen.Map.Joins[i];
                 int joinIndex = i; // must be done for lambda closure
@@ -255,7 +255,7 @@ namespace MegaMan_Level_Editor
             }
 
             menu.Show(surface, location);
-        }
+        */}
 
         public void Move(ScreenDrawingSurface surface, Point location)
         {
@@ -273,27 +273,25 @@ namespace MegaMan_Level_Editor
             newjoin.type = type;
             newjoin.Size = 1;
             newjoin.offsetOne = newjoin.offsetTwo = offset;
-            JoinForm form = CreateJoinForm(surface.Screen.Map.Screens.Values, newjoin);
+            JoinForm form = CreateJoinForm(surface.Screen.Map.Screens, newjoin);
             form.OK += () =>
                 {
-                    surface.Screen.Map.Joins.Add(FormJoin(form));
-                    surface.RaiseJoinChange();
+                    surface.Screen.Map.AddJoin(FormJoin(form));
                 };
             form.Show();
         }
 
         private void EditJoin(ScreenDrawingSurface surface, MegaMan.Join join, int index)
         {
-            JoinForm form = CreateJoinForm(surface.Screen.Map.Screens.Values, join);
+            JoinForm form = CreateJoinForm(surface.Screen.Map.Screens, join);
             form.OK += () =>
             {
-                surface.Screen.Map.Joins[index] = FormJoin(form);
-                surface.RaiseJoinChange();
+                //surface.Screen.Map.Joins[index] = FormJoin(form);
             };
             form.Show();
         }
 
-        private JoinForm CreateJoinForm(IEnumerable<MegaMan.Screen> screens, MegaMan.Join join)
+        private JoinForm CreateJoinForm(IEnumerable<ScreenDocument> screens, MegaMan.Join join)
         {
             JoinForm form = new JoinForm();
             form.Init(screens);

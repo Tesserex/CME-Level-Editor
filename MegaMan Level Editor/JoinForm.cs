@@ -79,9 +79,9 @@ namespace MegaMan_Level_Editor
             joinType.SelectedIndex = 0;
         }
 
-        public void Init(IEnumerable<MegaMan.Screen> screens)
+        public void Init(IEnumerable<ScreenDocument> screens)
         {
-            foreach (MegaMan.Screen s in screens)
+            foreach (ScreenDocument s in screens)
             {
                 screenOne.Items.Add(s.Name);
                 screenTwo.Items.Add(s.Name);

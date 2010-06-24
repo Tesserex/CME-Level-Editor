@@ -108,6 +108,12 @@ namespace MegaMan_Level_Editor
             SetText();
             this.stage.DirtyChanged += (b) => SetText();
 
+            stage.JoinChanged += (join) =>
+            {
+                AlignScreenSurfaces();
+                foreach (var s in surfaces.Values) s.RedrawJoins();
+            };
+
             foreach (var screen in stage.Screens)
             {
                 var surface = CreateScreenSurface(screen);
@@ -338,18 +344,14 @@ namespace MegaMan_Level_Editor
             }
         }
 
-        private ScreenDrawingSurface CreateScreenSurface(MegaMan.Screen screen)
+        private ScreenDrawingSurface CreateScreenSurface(ScreenDocument screen)
         {
             var surface = new ScreenDrawingSurface(screen);
             surfaces.Add(screen.Name, surface);
             screen.Renamed += this.RenameSurface;
             screen.Resized += (w, h) => this.AlignScreenSurfaces();
             surface.DrawnOn += new EventHandler<ScreenDrawEventArgs>(surface_DrawnOn);
-            surface.JoinChanged += () =>
-            {
-                AlignScreenSurfaces();
-                foreach (var s in surfaces.Values) s.RedrawJoins();
-            };
+            
             this.Controls.Add(surface);
             joinOverlay.Add(surface);
             return surface;
