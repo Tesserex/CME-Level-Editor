@@ -83,12 +83,6 @@ namespace MegaMan_Level_Editor
             stage.ReFocus();
         }
 
-        public void UpdateScreenTree(string mapName, IEnumerable<ScreenDocument> screens)
-        {
-            var stageNode = projectView.Nodes.Find(mapName, true).First();
-            this.LoadScreenSubtree(stageNode, screens);
-        }
-
         private void LoadScreenSubtree(TreeNode node, IEnumerable<ScreenDocument> screens)
         {
             node.Nodes.Clear();
@@ -110,16 +104,6 @@ namespace MegaMan_Level_Editor
         public void HandleRightClick(TreeNode node)
         {
             
-        }
-
-        private void StageForm_Load(object sender, EventArgs e)
-        {
-
-        }
-
-        private void projectView_AfterSelect(object sender, TreeViewEventArgs e)
-        {
-
         }
     }
 }

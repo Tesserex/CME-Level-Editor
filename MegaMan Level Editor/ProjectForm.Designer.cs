@@ -33,7 +33,6 @@
             this.projectView.Name = "projectView";
             this.projectView.Size = new System.Drawing.Size(266, 232);
             this.projectView.TabIndex = 1;
-            this.projectView.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.projectView_AfterSelect);
             // 
             // ProjectForm
             // 
@@ -44,7 +43,6 @@
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.SizableToolWindow;
             this.Name = "ProjectForm";
             this.Text = "Project";
-            this.Load += new System.EventHandler(this.StageForm_Load);
             this.ResumeLayout(false);
 
         }

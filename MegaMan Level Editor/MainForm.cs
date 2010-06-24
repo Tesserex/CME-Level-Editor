@@ -522,22 +522,12 @@ namespace MegaMan_Level_Editor
             historyToolStripMenuItem.Checked = historyForm.Visible;
         }
 
-        private void windowsToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-
-        }
-
         /* *
          * Utility methods... smells like they belong in common library
          * */
         public static ScreenDocument GetScreen(string stageName, string screenName)
         {
             return MainForm.Instance.stages[stageName].GetScreen(screenName);
-        }
-
-        private void menuStrip1_ItemClicked(object sender, ToolStripItemClickedEventArgs e)
-        {
-
         }
 
         private void brushToolButton_Click(object sender, EventArgs e)
