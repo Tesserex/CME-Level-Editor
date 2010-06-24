@@ -13,7 +13,7 @@ namespace MegaMan_Level_Editor
 {
     public partial class StageForm : Form
     {
-        private MegaMan.Map stage;
+        private MapDocument stage;
 
         private History history;
         
@@ -41,7 +41,7 @@ namespace MegaMan_Level_Editor
             }
         }
 
-        public StageForm(MegaMan.Map stage)
+        public StageForm(MapDocument stage)
         {
             InitializeComponent();
             joinOverlay = new JoinOverlay();
@@ -101,20 +101,21 @@ namespace MegaMan_Level_Editor
         /* *
          * SetStage - Decide the stage object that will be edited
          * */
-        private void SetStage(MegaMan.Map stage)
+        private void SetStage(MapDocument stage)
         {
             this.stage = stage;
 
             SetText();
             this.stage.DirtyChanged += (b) => SetText();
 
-            foreach (var pair in stage.Screens)
+            foreach (var screen in stage.Screens)
             {
-                var surface = CreateScreenSurface(pair.Value);
+                var surface = CreateScreenSurface(screen);
                 surface.Location = new Point(0, 0);
             }
 
             AlignScreenSurfaces();
+            stage.ScreenAdded += (s) => AlignScreenSurfaces();
         }
 
         private class SurfaceCollision
@@ -128,7 +129,7 @@ namespace MegaMan_Level_Editor
             }
         }
 
-        public void AlignScreenSurfaces()
+        private void AlignScreenSurfaces()
         {
             int oldscroll = this.VerticalScroll.Value;
             this.VerticalScroll.Value = 0;

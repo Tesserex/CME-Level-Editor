@@ -25,6 +25,7 @@ namespace MegaMan_Level_Editor
 
         public event Action<MapDocument> Closed;
         public event Action<MegaMan.Screen> ScreenAdded;
+        public event Action<bool> DirtyChanged;
 
         public MapDocument(MainForm parent)
         {
@@ -39,11 +40,6 @@ namespace MegaMan_Level_Editor
             this.map = new Map(MainForm.Instance.rootPath, path);
         }
 
-        public IEnumerable<MegaMan.Screen> Screens
-        {
-            get { foreach (var screen in map.Screens.Values) yield return screen; }
-        }
-
         // this is going to get encapsulated further, so that even Screens are inaccessible
         public MegaMan.Screen GetScreen(string name)
         {
@@ -52,6 +48,16 @@ namespace MegaMan_Level_Editor
         }
 
         #region Exposed Map Items
+
+        // this should be removed from the common lib, and implemented directly by me
+        public bool Dirty
+        {
+            get { return map.Dirty; }
+            set {
+                map.Dirty = value;
+                if (DirtyChanged != null) DirtyChanged(value);
+            }
+        }
 
         public string Name
         {
@@ -78,6 +84,18 @@ namespace MegaMan_Level_Editor
             map.ChangeTileset(path);
         }
 
+        public string StartScreen { get { return map.StartScreen; } }
+
+        public IEnumerable<MegaMan.Screen> Screens
+        {
+            get { foreach (var screen in map.Screens.Values) yield return screen; }
+        }
+
+        public IEnumerable<MegaMan.Join> Joins
+        {
+            get { foreach (var join in map.Joins) yield return join; }
+        }
+
         public void Save()
         {
             if (map.Loaded && map.FileDir != null) map.Save();
@@ -100,8 +118,6 @@ namespace MegaMan_Level_Editor
 
             // now I can do things like fire an event... how useful!
             if (ScreenAdded != null) ScreenAdded(screen);
-
-            RedrawStages();
         }
 
         private void RefreshInfo()
@@ -124,7 +140,7 @@ namespace MegaMan_Level_Editor
         {
             if (this.stageForm == null)
             {
-                this.stageForm = new StageForm(this.map);
+                this.stageForm = new StageForm(this);
                 stageForm.MdiParent = parent;
                 stageForm.GotFocus += new EventHandler(StageForm_GotFocus);
                 stageForm.FormClosing += new FormClosingEventHandler(StageForm_FormClosing);
@@ -132,13 +148,6 @@ namespace MegaMan_Level_Editor
 
             stageForm.Show();
             stageForm.Focus();
-        }
-
-        // get rid of this ASAP, it's a hack
-        // but a good redesign will take a while
-        private void RedrawStages()
-        {
-            if (stageForm != null) stageForm.AlignScreenSurfaces();
         }
 
         public void Close()
