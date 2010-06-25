@@ -81,7 +81,7 @@ namespace MegaMan_Level_Editor
 
         public string Path
         {
-            get { return map.FileDir; }
+            get { return map.PathAbsolute; }
         }
 
         public Tileset Tileset
@@ -112,7 +112,7 @@ namespace MegaMan_Level_Editor
 
         public void Save()
         {
-            if (map.Loaded && map.FileDir != null) map.Save();
+            if (map.Loaded && map.PathAbsolute != null) map.Save();
         }
 
         public void Save(string directory)
