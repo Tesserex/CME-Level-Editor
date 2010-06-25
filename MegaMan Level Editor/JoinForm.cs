@@ -12,9 +12,10 @@ namespace MegaMan_Level_Editor
 {
     public partial class JoinForm : Form
     {
+        private Join join;
         private JoinType type;
 
-        public JoinType Type
+        private JoinType Type
         {
             get { return type; }
             set
@@ -25,37 +26,37 @@ namespace MegaMan_Level_Editor
             }
         }
 
-        public int JoinWidth
+        private int JoinWidth
         {
             get { return (int)width.Value; }
             set { width.Value = value; }
         }
 
-        public string ScreenOne
+        private string ScreenOne
         {
             get { return screenOne.SelectedItem.ToString(); }
             set { screenOne.SelectedItem = value; }
         }
 
-        public string ScreenTwo
+        private string ScreenTwo
         {
             get { return screenTwo.SelectedItem.ToString(); }
             set { screenTwo.SelectedItem = value; }
         }
 
-        public int OffsetOne
+        private int OffsetOne
         {
             get { return (int)offsetOne.Value; }
             set { offsetOne.Value = value; }
         }
 
-        public int OffsetTwo
+        private int OffsetTwo
         {
             get { return (int)offsetTwo.Value; }
             set { offsetTwo.Value = value; }
         }
 
-        public JoinDirection Direction
+        private JoinDirection Direction
         {
             get
             {
@@ -73,19 +74,25 @@ namespace MegaMan_Level_Editor
 
         public event Action OK;
 
-        public JoinForm()
+        public JoinForm(Join join, IEnumerable<ScreenDocument> screens)
         {
             InitializeComponent();
+            this.join = join;
             joinType.SelectedIndex = 0;
-        }
 
-        public void Init(IEnumerable<ScreenDocument> screens)
-        {
             foreach (ScreenDocument s in screens)
             {
                 screenOne.Items.Add(s.Name);
                 screenTwo.Items.Add(s.Name);
             }
+
+            this.Direction = join.direction;
+            this.JoinWidth = join.Size;
+            this.ScreenOne = join.screenOne;
+            this.ScreenTwo = join.screenTwo;
+            this.OffsetOne = join.offsetOne;
+            this.OffsetTwo = join.offsetTwo;
+            this.Type = join.type;
         }
 
         private void AdjustLabels()
@@ -113,6 +120,13 @@ namespace MegaMan_Level_Editor
 
         private void okButton_Click(object sender, EventArgs e)
         {
+            join.type = this.Type;
+            join.direction = this.Direction;
+            join.offsetOne = this.OffsetOne;
+            join.offsetTwo = this.OffsetTwo;
+            join.screenOne = this.ScreenOne;
+            join.screenTwo = this.ScreenTwo;
+            join.Size = this.JoinWidth;
             if (OK != null) OK();
             this.Close();
         }

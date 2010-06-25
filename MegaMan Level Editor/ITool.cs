@@ -154,13 +154,12 @@ namespace MegaMan_Level_Editor
         public Image Icon { get { return null; } }
 
         public void Click(ScreenDrawingSurface surface, Point location)
-        {/*
+        {
             ContextMenu menu = new ContextMenu();
             // find a join to modify
-            for (int i = 0; i < surface.Screen.Map.JoinCount; i++)
+            foreach (var j in surface.Screen.Map.Joins)
             {
-                MegaMan.Join join = surface.Screen.Map.Joins[i];
-                int joinIndex = i; // must be done for lambda closure
+                MegaMan.Join join = j; // for lambda closure
                 if (join.screenOne == surface.Screen.Name)
                 {
                     if (join.type == MegaMan.JoinType.Vertical)
@@ -172,7 +171,7 @@ namespace MegaMan_Level_Editor
                             menu.MenuItems.Add(new MenuItem("Modify Left-Right Join " + join.screenOne + " to " + join.screenTwo,
                                 (s, e) =>
                                 {
-                                    EditJoin(surface, join, joinIndex);
+                                    EditJoin(surface, join);
                                 }));
                         }
                     }
@@ -185,7 +184,7 @@ namespace MegaMan_Level_Editor
                             menu.MenuItems.Add(new MenuItem("Modify Up-Down Join " + join.screenOne + " to " + join.screenTwo,
                                 (s, e) =>
                                 {
-                                    EditJoin(surface, join, joinIndex);
+                                    EditJoin(surface, join);
                                 }));
                         }
                     }
@@ -201,7 +200,7 @@ namespace MegaMan_Level_Editor
                             menu.MenuItems.Add(new MenuItem("Modify Left-Right Join " + join.screenOne + " to " + join.screenTwo,
                                 (s, e) =>
                                 {
-                                    EditJoin(surface, join, joinIndex);
+                                    EditJoin(surface, join);
                                 }));
                         }
                     }
@@ -214,7 +213,7 @@ namespace MegaMan_Level_Editor
                             menu.MenuItems.Add(new MenuItem("Modify Up-Down Join " + join.screenOne + " to " + join.screenTwo,
                                 (s, e) =>
                                 {
-                                    EditJoin(surface, join, joinIndex);
+                                    EditJoin(surface, join);
                                 }));
                         }
                     }
@@ -255,7 +254,7 @@ namespace MegaMan_Level_Editor
             }
 
             menu.Show(surface, location);
-        */}
+        }
 
         public void Move(ScreenDrawingSurface surface, Point location)
         {
@@ -273,49 +272,15 @@ namespace MegaMan_Level_Editor
             newjoin.type = type;
             newjoin.Size = 1;
             newjoin.offsetOne = newjoin.offsetTwo = offset;
-            JoinForm form = CreateJoinForm(surface.Screen.Map.Screens, newjoin);
-            form.OK += () =>
-                {
-                    surface.Screen.Map.AddJoin(FormJoin(form));
-                };
+            JoinForm form = new JoinForm(newjoin, surface.Screen.Map.Screens);
+            form.OK += () => { surface.Screen.Map.AddJoin(newjoin); };
             form.Show();
         }
 
-        private void EditJoin(ScreenDrawingSurface surface, MegaMan.Join join, int index)
+        private void EditJoin(ScreenDrawingSurface surface, MegaMan.Join join)
         {
-            JoinForm form = CreateJoinForm(surface.Screen.Map.Screens, join);
-            form.OK += () =>
-            {
-                //surface.Screen.Map.Joins[index] = FormJoin(form);
-            };
+            JoinForm form = new JoinForm(join, surface.Screen.Map.Screens);
             form.Show();
-        }
-
-        private JoinForm CreateJoinForm(IEnumerable<ScreenDocument> screens, MegaMan.Join join)
-        {
-            JoinForm form = new JoinForm();
-            form.Init(screens);
-            form.Type = join.type;
-            form.ScreenOne = join.screenOne;
-            form.ScreenTwo = join.screenTwo;
-            form.OffsetOne = join.offsetOne;
-            form.OffsetTwo = join.offsetTwo;
-            form.JoinWidth = join.Size;
-            form.Direction = join.direction;
-            return form;
-        }
-
-        private MegaMan.Join FormJoin(JoinForm form)
-        {
-            MegaMan.Join join = new MegaMan.Join();
-            join.screenOne = form.ScreenOne;
-            join.screenTwo = form.ScreenTwo;
-            join.offsetOne = form.OffsetOne;
-            join.offsetTwo = form.OffsetTwo;
-            join.Size = form.JoinWidth;
-            join.type = form.Type;
-            join.direction = form.Direction;
-            return join;
         }
     }
 
