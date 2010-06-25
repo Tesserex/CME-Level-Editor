@@ -280,6 +280,7 @@ namespace MegaMan_Level_Editor
         private void EditJoin(ScreenDrawingSurface surface, MegaMan.Join join)
         {
             JoinForm form = new JoinForm(join, surface.Screen.Map.Screens);
+            form.OK += () => surface.Screen.Map.RaiseJoinChange(join);
             form.Show();
         }
     }

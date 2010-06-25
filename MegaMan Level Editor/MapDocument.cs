@@ -144,6 +144,12 @@ namespace MegaMan_Level_Editor
             if (JoinChanged != null) JoinChanged(join);
         }
 
+        // this should probably be replaced by a join wrapper that has events
+        public void RaiseJoinChange(Join join)
+        {
+            if (JoinChanged != null) JoinChanged(join);
+        }
+
         private void RefreshInfo()
         {
             stageForm.SetText();

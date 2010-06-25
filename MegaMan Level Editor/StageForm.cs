@@ -111,7 +111,8 @@ namespace MegaMan_Level_Editor
             stage.JoinChanged += (join) =>
             {
                 AlignScreenSurfaces();
-                foreach (var s in surfaces.Values) s.RedrawJoins();
+                if (surfaces.ContainsKey(join.screenOne)) surfaces[join.screenOne].RedrawJoins();
+                if (surfaces.ContainsKey(join.screenTwo)) surfaces[join.screenTwo].RedrawJoins();
             };
 
             foreach (var screen in stage.Screens)
