@@ -34,9 +34,8 @@ namespace MegaMan_Level_Editor
         private bool drawBlock;
         private bool drawJoins;
 
-        private string recentPath = Application.StartupPath + "\\recent.ini";
+        private string recentPath = Path.Combine(Application.StartupPath, "recent.ini");
         private List<string> recentFiles = new List<string>(10);
-        private int untitledCount = 0;
 
         private ITileBrush currentBrush;
         private ToolType currentToolType;
