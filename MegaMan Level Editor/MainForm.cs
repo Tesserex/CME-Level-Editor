@@ -321,19 +321,11 @@ namespace MegaMan_Level_Editor
         /* *
          * OpenProject - Set root path for maps and show list of maps to user
          * */
-        void OpenProject(String rootPath)
+        private void OpenProject(string gamefile)
         {
-            //TODO: Make sure path contains "game.xml"
-            if (File.Exists(System.IO.Path.Combine(rootPath, "game.xml")))
-            {
-                this.rootPath = rootPath;
-                AddRecentFile(rootPath);
-                projectForm.OpenProject(rootPath);
-            }
-            else
-            {
-                MessageBox.Show("Sorry, but this is not a CME project!");
-            }
+            AddRecentFile(gamefile);
+            var project = ProjectEditor.FromFile(gamefile);
+            projectForm.AddProject(project);
         }
 
         void ShowStages()
@@ -388,11 +380,14 @@ namespace MegaMan_Level_Editor
 
         private void openToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            var result = folderDialog.ShowDialog();
+            var dialog = new OpenFileDialog();
+            dialog.Title = "Select a CME Game Project File";
+            dialog.Filter = "Game Project (XML)|*.xml";
+            var result = dialog.ShowDialog();
             if (result == DialogResult.OK)
             {
-                string path = folderDialog.SelectedPath;
-                OpenProject(path);
+                string file = dialog.FileName;
+                OpenProject(file);
             }
         }
 

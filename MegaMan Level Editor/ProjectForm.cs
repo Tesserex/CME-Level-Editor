@@ -30,14 +30,6 @@ namespace MegaMan_Level_Editor
             HandleDoubleClick(e.Node);
         }
 
-        public void OpenProject(String rootPath)
-        {
-            var subdirectories = Directory.GetDirectories(StagePath()).ToList<String>();
-            subdirectories = subdirectories.Select(dir => { return dir.Replace(StagePath(), "").Replace("\\", ""); }).ToList<String>();
-            this.AddStages(subdirectories);
-            this.Show();
-        }
-
         public String StagePath()
         {
             return Path.Combine(MainForm.Instance.rootPath, "stages");
@@ -48,12 +40,13 @@ namespace MegaMan_Level_Editor
             return Path.Combine("stages", stageName);
         }
 
-        public void AddStages(List<string> stages)
+        public void AddProject(ProjectEditor project)
         {
-            var stageNode = this.projectView.Nodes.Add("stages", "stages");
-            foreach (var stage in stages)
+            var projectNode = this.projectView.Nodes.Add(project.Name, project.Name);
+            projectNode.Tag = project;
+            foreach (var stage in project.StageNames)
             {
-                stageNode.Nodes.Add(stage, stage);
+                projectNode.Nodes.Add(stage, stage);
             }
         }
 

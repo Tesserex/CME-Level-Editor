@@ -51,7 +51,17 @@ namespace MegaMan_Level_Editor
         #endregion
 
         #region GUI Editor Stuff
+
         private Dictionary<string, MapDocument> openStages = new Dictionary<string,MapDocument>();
+
+        public IEnumerable<string> StageNames
+        {
+            get
+            {
+                foreach (var info in stages) yield return info.Name;
+            }
+        }
+
         #endregion
 
         public event Action<bool> DirtyChanged;
