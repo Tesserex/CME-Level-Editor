@@ -148,7 +148,8 @@ namespace MegaMan_Level_Editor
                 XElement bossFrame = stageNode.Element("BossFrame");
                 if (bossFrame != null)
                 {
-                    this.bossFrameSprite = Sprite.FromXml(bossFrame, this.BaseDir);
+                    XElement bossSprite = bossFrame.Element("Sprite");
+                    if (bossSprite != null) this.bossFrameSprite = Sprite.FromXml(bossSprite, this.BaseDir);
                 }
 
                 string spaceX = GetNodeAttr(stageNode, "Spacing", "x");
