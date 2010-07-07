@@ -288,6 +288,7 @@ namespace MegaMan_Level_Editor
          * LoadMapFromPath - Load the stage based on the path (underlying implementation of OpenMap)
          * path = relative path to the root project directory
          * */
+        // THIS MUST DIE
         public MapDocument LoadStageFromPath(String stageName, String path)
         {
             foreach (var mapdoc in stages.Values)
@@ -298,7 +299,7 @@ namespace MegaMan_Level_Editor
                 }
             }
 
-            var stage = new MapDocument(path, this);
+            var stage = new MapDocument(this.rootPath, path);
             stages[stage.Name] = stage;
 
             stage.Closed += new Action<MapDocument>(map_Closed);

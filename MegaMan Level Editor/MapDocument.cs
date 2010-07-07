@@ -17,8 +17,6 @@ namespace MegaMan_Level_Editor
 
     public class MapDocument
     {
-        private MainForm parent;
-
         private Map map;
 
         private StageForm stageForm;
@@ -30,17 +28,15 @@ namespace MegaMan_Level_Editor
         public event Action<Join> JoinChanged;
         public event Action<bool> DirtyChanged;
 
-        public MapDocument(MainForm parent)
+        public MapDocument()
         {
-            this.parent = parent;
             this.map = new Map();
         }
 
         // TODO : Rename Map to Stages.. More consistent naming
-        public MapDocument(string path, MainForm parent)
+        public MapDocument(string basepath, string filepath)
         {
-            this.parent = parent;
-            this.map = new Map(MainForm.Instance.rootPath, path);
+            this.map = new Map(basepath, filepath);
 
             // wrap all map screens in screendocuments
             // this should be the only time MegaMan.Screen's are touched directly
@@ -166,12 +162,13 @@ namespace MegaMan_Level_Editor
             MessageBox.Show("I don't do anything yet! Fix this!");
         }
 
+        // This must DIE
         public void ShowStage()
         {
             if (this.stageForm == null)
             {
                 this.stageForm = new StageForm(this);
-                stageForm.MdiParent = parent;
+                stageForm.MdiParent = MainForm.Instance;
                 stageForm.GotFocus += new EventHandler(StageForm_GotFocus);
                 stageForm.FormClosing += new FormClosingEventHandler(StageForm_FormClosing);
             }
@@ -221,7 +218,7 @@ namespace MegaMan_Level_Editor
 
         private void StageForm_GotFocus(object sender, EventArgs e)
         {
-            parent.FocusScreen(this);
+            MainForm.Instance.FocusScreen(this);
         }
 
         private ScreenDocument WrapScreen(MegaMan.Screen screen)

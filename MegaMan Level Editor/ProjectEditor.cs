@@ -31,10 +31,11 @@ namespace MegaMan_Level_Editor
             }
         }
 
+        #region Game XML File Stuff
+
         private List<StageInfo> stages = new List<StageInfo>(8);
         private List<string> entityFiles = new List<string>();
         private Sprite bossFrameSprite;
-
         public string Name { get; private set; }
         public string Author { get; private set; }
         public string GameFile { get; private set; }
@@ -46,6 +47,12 @@ namespace MegaMan_Level_Editor
         public FilePath StageSelectChangeSound { get; private set; }
         public int BossSpacingHorizontal { get; set; }
         public int BossSpacingVertical { get; set; }
+
+        #endregion
+
+        #region GUI Editor Stuff
+        private Dictionary<string, MapDocument> openStages = new Dictionary<string,MapDocument>();
+        #endregion
 
         public event Action<bool> DirtyChanged;
 
@@ -59,6 +66,21 @@ namespace MegaMan_Level_Editor
             var p = new ProjectEditor();
             p.Load(path);
             return p;
+        }
+
+        public MapDocument StageByName(string name)
+        {
+            if (openStages.ContainsKey(name)) return openStages[name];
+            foreach (var info in stages)
+            {
+                if (info.Name == name)
+                {
+                    MapDocument stage = new MapDocument(this.BaseDir, info.StagePath.Absolute);
+                    openStages.Add(name, stage);
+                    return stage;
+                }
+            }
+            return null;
         }
 
         private ProjectEditor()
