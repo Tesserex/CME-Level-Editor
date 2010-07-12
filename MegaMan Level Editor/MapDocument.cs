@@ -42,7 +42,7 @@ namespace MegaMan_Level_Editor
             // this should be the only time MegaMan.Screen's are touched directly
             foreach (var pair in this.map.Screens)
             {
-                this.screens.Add(pair.Key, new ScreenDocument(pair.Value, this));
+                WrapScreen(pair.Value);
             }
         }
 
@@ -235,6 +235,12 @@ namespace MegaMan_Level_Editor
             ScreenDocument doc = this.screens[oldName];
             this.screens.Remove(oldName);
             this.screens.Add(newName, doc);
+            if (this.map.StartScreen == oldName) this.map.StartScreen = newName;
+            foreach (var join in this.Joins)
+            {
+                if (join.screenOne == oldName) join.screenOne = newName;
+                if (join.screenTwo == oldName) join.screenTwo = newName;
+            }
         }
     }
 }
