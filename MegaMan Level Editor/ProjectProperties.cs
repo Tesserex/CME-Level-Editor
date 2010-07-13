@@ -73,7 +73,7 @@ namespace MegaMan_Level_Editor
                 editor = ProjectEditor.CreateNew();
             }
 
-            editor.Name = this.textName.Text;
+            editor.Name = (this.textName.Text == "")? "Untitled" : this.textName.Text;
             editor.Author = this.textAuthor.Text;
             editor.ScreenWidth = lastWidth;
             editor.ScreenHeight = lastHeight;
