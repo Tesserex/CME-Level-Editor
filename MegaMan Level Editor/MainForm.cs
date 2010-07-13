@@ -454,7 +454,10 @@ namespace MegaMan_Level_Editor
 
         private void newToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            // should create a new project
+            var projectForm = new ProjectProperties();
+            projectForm.Owner = this;
+            projectForm.Location = new Point((this.Width - projectForm.Width) / 2, (this.Height - projectForm.Height) / 2);
+            projectForm.Show();
         }
 
         private void saveAsToolStripMenuItem_Click(object sender, EventArgs e)

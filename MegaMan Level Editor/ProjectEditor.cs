@@ -36,12 +36,55 @@ namespace MegaMan_Level_Editor
         private List<StageInfo> stages = new List<StageInfo>(8);
         private List<string> entityFiles = new List<string>();
         private Sprite bossFrameSprite;
-        public string Name { get; private set; }
-        public string Author { get; private set; }
+
+        private string name;
+        public string Name
+        {
+            get { return name; }
+            set
+            {
+                if (name == value) return;
+                name = value;
+                Dirty = true;
+            }
+        }
+
+        private string author;
+        public string Author
+        {
+            get { return author; }
+            set
+            {
+                if (author == value) return;
+                author = value;
+                Dirty = true;
+            }
+        }
         public string GameFile { get; private set; }
         public string BaseDir { get; private set; }
-        public int ScreenWidth { get; private set; }
-        public int ScreenHeight { get; private set; }
+
+        private int screen_width, screen_height;
+        public int ScreenWidth
+        {
+            get { return screen_width; }
+            set
+            {
+                if (screen_width == value) return;
+                screen_width = value;
+                Dirty = true;
+            }
+        }
+        public int ScreenHeight
+        {
+            get { return screen_height; }
+            set
+            {
+                if (screen_height == value) return;
+                screen_height = value;
+                Dirty = true;
+            }
+        }
+
         public FilePath StageSelectMusic { get; private set; }
         public FilePath StageSelectBackground { get; private set; }
         public FilePath StageSelectChangeSound { get; private set; }
