@@ -10,7 +10,7 @@ using MegaMan;
 
 namespace MegaMan_Level_Editor
 {
-    public partial class BrushForm : Form
+    public partial class BrushForm : WeifenLuo.WinFormsUI.Docking.DockContent
     {
         private List<ITileBrush> brushes = new List<ITileBrush>();
         private Tileset Tileset;

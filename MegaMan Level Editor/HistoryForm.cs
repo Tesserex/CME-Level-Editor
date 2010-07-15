@@ -5,7 +5,7 @@ using System.Text;
 using System.Windows.Forms;
 
 namespace MegaMan_Level_Editor {
-    public class HistoryForm : Form {
+    public class HistoryForm : WeifenLuo.WinFormsUI.Docking.DockContent {
         private ListBox historyView;
     
         public HistoryForm() {

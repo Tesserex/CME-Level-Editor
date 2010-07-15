@@ -10,7 +10,7 @@ using System.IO;
 
 namespace MegaMan_Level_Editor
 {
-    public partial class ProjectForm : Form
+    public partial class ProjectForm : WeifenLuo.WinFormsUI.Docking.DockContent
     {
         public ProjectForm()
         {

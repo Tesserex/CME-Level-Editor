@@ -9,6 +9,7 @@ using System.Windows.Forms;
 using System.IO;
 using ScreenDict = System.Collections.Generic.Dictionary<string, System.Collections.Generic.Dictionary<string, MegaMan_Level_Editor.StageForm>>;
 using MegaMan;
+using WeifenLuo.WinFormsUI.Docking;
 
 namespace MegaMan_Level_Editor
 {
@@ -36,6 +37,8 @@ namespace MegaMan_Level_Editor
 
         private string recentPath = Path.Combine(Application.StartupPath, "recent.ini");
         private List<string> recentFiles = new List<string>(10);
+
+        private string configFile = Path.Combine(Path.GetDirectoryName(Application.ExecutablePath), "DockPanel.config");
 
         private ITileBrush currentBrush;
         private ToolType currentToolType;
@@ -111,9 +114,11 @@ namespace MegaMan_Level_Editor
         public MainForm()
         {
             InitializeComponent();
+            
             tilestrip = new TilesetStrip();
             this.Controls.Add(tilestrip);
             tilestrip.BringToFront();
+            dockPanel1.BringToFront();
             tilestrip.TileChanged += TileChanged;
 
             Instance = this;
@@ -122,18 +127,26 @@ namespace MegaMan_Level_Editor
             CreateProjectForm();
             CreateHistoryForm();
 
+            if (File.Exists(configFile))
+            {
+                dockPanel1.LoadFromXml(configFile, new DeserializeDockContent(GetContentFromPersistString));
+            }
+
+            if (!projectForm.Visible) projectForm.Show(this.dockPanel1, DockState.DockRight);
+            if (!historyForm.Visible) historyForm.Show(this.dockPanel1, DockState.DockRight);
+            if (!brushForm.Visible) brushForm.Show(this.dockPanel1, DockState.DockLeft);
+
             DrawGrid = false;
             DrawTiles = true;
             DrawBlock = false;
 
             LoadRecentFiles();
-            LoadFormSettings(this, this.projectForm, this.historyForm, this.brushForm);
+
         }
 
         void CreateBrushForm()
         {
             brushForm = new BrushForm();
-            brushForm.Show();
             brushForm.BrushChanged += new BrushChangedHandler(brushForm_BrushChanged);
             brushForm.Shown += (s, e) => brushesToolStripMenuItem.Checked = true;
             brushForm.FormClosing += (s, e) =>
@@ -142,29 +155,23 @@ namespace MegaMan_Level_Editor
                 brushForm.Hide();
                 brushesToolStripMenuItem.Checked = false;
             };
-            brushForm.Anchor = AnchorStyles.Left;
-            brushForm.Owner = this;
         }
 
         void CreateProjectForm()
         {
             projectForm = new ProjectForm();
-            projectForm.Show();
             projectForm.Shown += (s, e) => projectToolStripMenuItem.Checked = true;
             projectForm.FormClosing += (s, e) =>
             {
                 e.Cancel = true;
                 projectForm.Hide();
                 projectToolStripMenuItem.Checked = false;
-            };
-            projectForm.Anchor = AnchorStyles.Left;
-            projectForm.Owner = this;
+            };   
         }
 
         void CreateHistoryForm()
         {
             historyForm = new HistoryForm();
-            historyForm.Show();
             historyForm.Shown += (s, e) => historyToolStripMenuItem.Checked = true;
             historyForm.FormClosing += (s, e) =>
             {
@@ -172,8 +179,6 @@ namespace MegaMan_Level_Editor
                 historyForm.Hide();
                 historyToolStripMenuItem.Checked = false;
             };
-            historyForm.Anchor = AnchorStyles.Left;
-            historyForm.Owner = this;
         }
 
         public void FocusScreen(MapDocument map)
@@ -210,10 +215,21 @@ namespace MegaMan_Level_Editor
             }
             File.WriteAllLines(recentPath, recentFiles.ToArray());
 
-            SaveFormSettings(this, this.historyForm, this.brushForm, this.projectForm);
+            dockPanel1.SaveAsXml(configFile);
 
             e.Cancel = false;
             base.OnClosing(e);
+        }
+
+        private IDockContent GetContentFromPersistString(string persistString)
+        {
+            if (persistString == typeof(ProjectForm).ToString())
+                return projectForm;
+            else if (persistString == typeof(HistoryForm).ToString())
+                return historyForm;
+            else if (persistString == typeof(BrushForm).ToString())
+                return brushForm;
+            else return null;
         }
 
         #region Private Methods
@@ -555,45 +571,6 @@ namespace MegaMan_Level_Editor
             foreach (ToolStripButton item in toolBar.Items) { item.Checked = false; }
             joinToolButton.Checked = true;
             this.DrawJoins = true;
-        }
-
-        private void SaveFormSettings(params Form[] forms)
-        {
-            StringBuilder sb = new StringBuilder();
-            foreach (Form form in forms)
-            {
-                sb.Append(form.Name)
-                    .Append("|").Append(form.Location.X)
-                    .Append("|").Append(form.Location.Y)
-                    .Append("|").Append(form.Width)
-                    .Append("|").Append(form.Height)
-                    .Append("||");
-            }
-
-            Properties.Settings.Default.Windows = sb.ToString();
-            Properties.Settings.Default.Save();
-        }
-
-        private void LoadFormSettings(params Form[] forms)
-        {
-            string settings = Properties.Settings.Default.Windows;
-            if (string.IsNullOrEmpty(settings)) return;
-
-            Dictionary<string, Form> formDict = new Dictionary<string, Form>();
-            foreach (Form f in forms) formDict.Add(f.Name, f);
-
-            string[] formSettingsList = settings.Split(new string[] { "||" }, StringSplitOptions.RemoveEmptyEntries);
-
-            foreach (string formSettings in formSettingsList)
-            {
-                string[] properties = formSettings.Split(new char[] { '|' });
-                if (!formDict.ContainsKey(properties[0])) continue;
-                Form tgtForm = formDict[properties[0]];
-
-                tgtForm.Location = new Point(int.Parse(properties[1]), int.Parse(properties[2]));
-                tgtForm.Width = int.Parse(properties[3]);
-                tgtForm.Height = int.Parse(properties[4]);
-            }
         }
 
         private void joinsToolStripMenuItem_Click(object sender, EventArgs e)
