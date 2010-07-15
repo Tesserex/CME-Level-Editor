@@ -133,6 +133,7 @@
     <Compile Include="ProjectProperties.Designer.cs">
       <DependentUpon>ProjectProperties.cs</DependentUpon>
     </Compile>
+    <Compile Include="ProjectTreeHandler.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <EmbeddedResource Include="BrushForm.resx">
       <DependentUpon>BrushForm.cs</DependentUpon>
