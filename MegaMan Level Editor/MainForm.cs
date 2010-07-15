@@ -16,15 +16,9 @@ namespace MegaMan_Level_Editor
     public partial class MainForm : Form
     {
         #region Public Members
-        /* *
-         * rootPath - The path of the current project
-         * */
-        public String rootPath;
 
         private TilesetStrip tilestrip;
         private MapDocument activeMap;
-
-        private Dictionary<string, MapDocument> stages = new Dictionary<string, MapDocument>();
 
         public BrushForm brushForm;
         public ProjectForm projectForm;
@@ -42,6 +36,7 @@ namespace MegaMan_Level_Editor
 
         private ITileBrush currentBrush;
         private ToolType currentToolType;
+
         #endregion Private Members
 
         #region Properties
@@ -208,11 +203,6 @@ namespace MegaMan_Level_Editor
 
         protected override void OnClosing(CancelEventArgs e)
         {
-            if (!CheckSaveOnClose())
-            {
-                e.Cancel = true;
-                return;
-            }
             File.WriteAllLines(recentPath, recentFiles.ToArray());
 
             dockPanel1.SaveAsXml(configFile);
@@ -272,57 +262,6 @@ namespace MegaMan_Level_Editor
             }
         }
 
-        /* *
-         * OpenStage - Open up a stage from the /stages/ directory
-         * path = relative path to the root project directory
-         * */
-        public MapDocument OpenStage(string stageName, string path)
-        {
-            // TODO: Start adding a Util class to MegaMan common so we can
-            // refactor out stuff like "StagePathFor(path)", instead of
-            // what we have here..
-
-            var stagePath = StagePathFor(stageName);
-            if (File.Exists(stagePath))
-            {
-                return LoadStageFromPath(stageName, path);
-            }
-            else
-            {
-                MessageBox.Show("Sorry, but this is not a stage directory! Stage path was : " + stagePath);
-                return null;
-            }
-        }
-
-        public static string StagePathFor(string stageName)
-        {
-            var stagePath = Path.Combine(Path.Combine(MainForm.Instance.rootPath, "stages"), stageName);
-            return Path.Combine(stagePath, "map.xml");
-        }
-
-        /* *
-         * LoadMapFromPath - Load the stage based on the path (underlying implementation of OpenMap)
-         * path = relative path to the root project directory
-         * */
-        // THIS MUST DIE
-        public MapDocument LoadStageFromPath(String stageName, String path)
-        {
-            foreach (var mapdoc in stages.Values)
-            {
-                if (mapdoc.Path == Path.Combine(this.rootPath, path))
-                {
-                    return mapdoc;
-                }
-            }
-
-            var stage = new MapDocument(this.rootPath, path);
-            stages[stage.Name] = stage;
-
-            stage.Closed += new Action<MapDocument>(map_Closed);
-
-            return stage;
-        }
-
         private void map_Closed(MapDocument mapdoc)
         {
             // if the tile form is showing this map's tileset, remove it from the form
@@ -333,31 +272,12 @@ namespace MegaMan_Level_Editor
         }
         #endregion Private Methods
 
-
-        /* *
-         * OpenProject - Set root path for maps and show list of maps to user
-         * */
         private void OpenProject(string gamefile)
         {
             AddRecentFile(gamefile);
             var project = ProjectEditor.FromFile(gamefile);
             projectForm.AddProject(project);
         }
-
-        void ShowStages()
-        {
-            projectForm.Show();
-        }
-
-        private bool CheckSaveOnClose()
-        {
-            foreach (MapDocument map in stages.Values)
-            {
-                if (!map.ConfirmSave()) return false;
-            }
-            return true;
-        }
-
 
         private void SaveAs()
         {
@@ -534,14 +454,6 @@ namespace MegaMan_Level_Editor
                 historyForm.Show();
 
             historyToolStripMenuItem.Checked = historyForm.Visible;
-        }
-
-        /* *
-         * Utility methods... smells like they belong in common library
-         * */
-        public static ScreenDocument GetScreen(string stageName, string screenName)
-        {
-            return MainForm.Instance.stages[stageName].GetScreen(screenName);
         }
 
         private void brushToolButton_Click(object sender, EventArgs e)
