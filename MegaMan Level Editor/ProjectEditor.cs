@@ -109,9 +109,12 @@ namespace MegaMan_Level_Editor
 
         public event Action<bool> DirtyChanged;
 
-        public static ProjectEditor CreateNew()
+        public static ProjectEditor CreateNew(string baseDirectory)
         {
-            return new ProjectEditor();
+            var p = new ProjectEditor();
+            p.BaseDir = baseDirectory;
+            p.GameFile = Path.Combine(baseDirectory, "Game.xml");
+            return p;
         }
 
         public static ProjectEditor FromFile(string path)
@@ -150,7 +153,7 @@ namespace MegaMan_Level_Editor
             if (!File.Exists(path)) throw new FileNotFoundException("The project file does not exist: " + path);
 
             GameFile = path;
-            BaseDir = System.IO.Path.GetDirectoryName(path);
+            BaseDir = Path.GetDirectoryName(path);
             XElement reader = XElement.Load(path);
 
             XAttribute nameAttr = reader.Attribute("name");
@@ -251,27 +254,16 @@ namespace MegaMan_Level_Editor
 
         public void Save()
         {
-            if (string.IsNullOrEmpty(this.GameFile)) SaveAs();
-        }
+            if (string.IsNullOrEmpty(this.GameFile)) return;
 
-        public void SaveAs()
-        {
-
-        }
-
-        private void SaveTo(string file)
-        {
-            this.GameFile = file;
-            this.BaseDir = Path.GetDirectoryName(file);
-
-            XmlTextWriter writer = new XmlTextWriter(file, Encoding.Default);
+            XmlTextWriter writer = new XmlTextWriter(this.GameFile, Encoding.Default);
             writer.Formatting = Formatting.Indented;
             writer.Indentation = 1;
             writer.IndentChar = '\t';
 
             writer.WriteStartElement("Game");
-            writer.WriteAttributeString("name", this.Name);
-            writer.WriteAttributeString("author", this.Author);
+            if (!string.IsNullOrEmpty(this.Name)) writer.WriteAttributeString("name", this.Name);
+            if (!string.IsNullOrEmpty(this.Author)) writer.WriteAttributeString("author", this.Author);
 
             writer.WriteStartElement("Size");
             writer.WriteAttributeString("x", this.ScreenWidth.ToString());
@@ -280,11 +272,14 @@ namespace MegaMan_Level_Editor
 
             writer.WriteStartElement("StageSelect");
 
-            writer.WriteElementString("Music", this.StageSelectMusic.Relative);
-            writer.WriteStartElement("ChangeSound");
-            writer.WriteAttributeString("path", this.StageSelectChangeSound.Relative);
-            writer.WriteEndElement(); // ChangeSound
-            writer.WriteElementString("Background", this.StageSelectBackground.Relative);
+            if (this.StageSelectMusic != null) writer.WriteElementString("Music", this.StageSelectMusic.Relative);
+            if (this.StageSelectChangeSound != null)
+            {
+                writer.WriteStartElement("ChangeSound");
+                writer.WriteAttributeString("path", this.StageSelectChangeSound.Relative);
+                writer.WriteEndElement(); // ChangeSound
+            }
+            if (this.StageSelectBackground != null) writer.WriteElementString("Background", this.StageSelectBackground.Relative);
 
             if (this.bossFrameSprite != null)
             {
@@ -311,6 +306,8 @@ namespace MegaMan_Level_Editor
             }
 
             writer.WriteEndElement(); // Game
+            
+            writer.Close();
         }
     }
 }

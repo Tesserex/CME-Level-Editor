@@ -17,6 +17,8 @@ namespace MegaMan_Level_Editor
         public ProjectProperties()
         {
             InitializeComponent();
+
+            this.textDir.Text = Environment.CurrentDirectory;
         }
 
         public ProjectProperties(ProjectEditor project)
@@ -29,6 +31,9 @@ namespace MegaMan_Level_Editor
             this.textAuthor.Text = project.Author;
             this.textWidth.Text = project.ScreenWidth.ToString();
             this.textHeight.Text = project.ScreenHeight.ToString();
+
+            this.panelLocation.Visible = false;
+            this.Height -= this.panelLocation.Height;
         }
 
         private void text_KeyPress(object sender, KeyPressEventArgs e)
@@ -65,12 +70,37 @@ namespace MegaMan_Level_Editor
         private void buttonOK_Click(object sender, EventArgs e)
         {
             int width, height;
-            if (!int.TryParse(this.textWidth.Text, out width) || !int.TryParse(this.textHeight.Text, out height)) return;
+            if (!int.TryParse(this.textWidth.Text, out width) || !int.TryParse(this.textHeight.Text, out height))
+            {
+                MessageBox.Show("Positive integers are required for screen size.", "CME Project Editor", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
 
             bool gameNew = (editor == null);
             if (gameNew)
             {
-                editor = ProjectEditor.CreateNew();
+                string baseDir = System.IO.Path.Combine(this.textDir.Text, this.textName.Text);
+                if (System.IO.Directory.Exists(baseDir))
+                {
+                    MessageBox.Show(
+                        String.Format("Could not create the project because a directory named {0} already exists at the specified location.", this.textName.Text),
+                        "CME Project Editor", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return;
+                }
+
+                try
+                {
+                    System.IO.Directory.CreateDirectory(baseDir);
+                }
+                catch
+                {
+                    MessageBox.Show(
+                        "Could not create the project because the system was unable to create a directory at the specified location.",
+                        "CME Project Editor", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return;
+                }
+
+                editor = ProjectEditor.CreateNew(baseDir);
             }
 
             editor.Name = (this.textName.Text == "")? "Untitled" : this.textName.Text;
@@ -78,8 +108,28 @@ namespace MegaMan_Level_Editor
             editor.ScreenWidth = lastWidth;
             editor.ScreenHeight = lastHeight;
 
-            if (gameNew) MainForm.Instance.projectForm.AddProject(editor);
+            if (gameNew)
+            {
+                editor.Save();
+                MainForm.Instance.projectForm.AddProject(editor);
+            }
             Close();
+        }
+
+        private void textDir_TextChanged(object sender, EventArgs e)
+        {
+            this.buttonOK.Enabled = System.IO.Path.IsPathRooted(this.textDir.Text);
+        }
+
+        private void buttonBrowse_Click(object sender, EventArgs e)
+        {
+            var dialog = new FolderBrowserDialog();
+            dialog.SelectedPath = this.textDir.Text;
+            dialog.ShowNewFolderButton = true;
+            if (dialog.ShowDialog() == DialogResult.OK)
+            {
+                this.textDir.Text = dialog.SelectedPath;
+            }
         }
     }
 }

@@ -41,13 +41,18 @@
             this.label2 = new System.Windows.Forms.Label();
             this.buttonOK = new System.Windows.Forms.Button();
             this.buttonCancel = new System.Windows.Forms.Button();
+            this.label7 = new System.Windows.Forms.Label();
+            this.textDir = new System.Windows.Forms.TextBox();
+            this.buttonBrowse = new System.Windows.Forms.Button();
+            this.panelLocation = new System.Windows.Forms.Panel();
             this.groupBox1.SuspendLayout();
+            this.panelLocation.SuspendLayout();
             this.SuspendLayout();
             // 
             // nameLabel
             // 
             this.nameLabel.AutoSize = true;
-            this.nameLabel.Location = new System.Drawing.Point(12, 18);
+            this.nameLabel.Location = new System.Drawing.Point(51, 18);
             this.nameLabel.Name = "nameLabel";
             this.nameLabel.Size = new System.Drawing.Size(74, 13);
             this.nameLabel.TabIndex = 0;
@@ -55,15 +60,15 @@
             // 
             // textName
             // 
-            this.textName.Location = new System.Drawing.Point(92, 15);
+            this.textName.Location = new System.Drawing.Point(131, 15);
             this.textName.Name = "textName";
-            this.textName.Size = new System.Drawing.Size(144, 20);
+            this.textName.Size = new System.Drawing.Size(156, 20);
             this.textName.TabIndex = 1;
             // 
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(45, 52);
+            this.label1.Location = new System.Drawing.Point(84, 52);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(41, 13);
             this.label1.TabIndex = 2;
@@ -71,9 +76,9 @@
             // 
             // textAuthor
             // 
-            this.textAuthor.Location = new System.Drawing.Point(92, 49);
+            this.textAuthor.Location = new System.Drawing.Point(131, 49);
             this.textAuthor.Name = "textAuthor";
-            this.textAuthor.Size = new System.Drawing.Size(144, 20);
+            this.textAuthor.Size = new System.Drawing.Size(156, 20);
             this.textAuthor.TabIndex = 3;
             // 
             // groupBox1
@@ -84,7 +89,7 @@
             this.groupBox1.Controls.Add(this.label4);
             this.groupBox1.Controls.Add(this.label3);
             this.groupBox1.Controls.Add(this.label2);
-            this.groupBox1.Location = new System.Drawing.Point(30, 88);
+            this.groupBox1.Location = new System.Drawing.Point(68, 85);
             this.groupBox1.Name = "groupBox1";
             this.groupBox1.Size = new System.Drawing.Size(206, 100);
             this.groupBox1.TabIndex = 4;
@@ -149,7 +154,8 @@
             // 
             // buttonOK
             // 
-            this.buttonOK.Location = new System.Drawing.Point(82, 205);
+            this.buttonOK.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.buttonOK.Location = new System.Drawing.Point(174, 231);
             this.buttonOK.Name = "buttonOK";
             this.buttonOK.Size = new System.Drawing.Size(75, 23);
             this.buttonOK.TabIndex = 5;
@@ -159,8 +165,9 @@
             // 
             // buttonCancel
             // 
+            this.buttonCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.buttonCancel.Location = new System.Drawing.Point(173, 205);
+            this.buttonCancel.Location = new System.Drawing.Point(265, 231);
             this.buttonCancel.Name = "buttonCancel";
             this.buttonCancel.Size = new System.Drawing.Size(75, 23);
             this.buttonCancel.TabIndex = 6;
@@ -168,13 +175,52 @@
             this.buttonCancel.UseVisualStyleBackColor = true;
             this.buttonCancel.Click += new System.EventHandler(this.buttonCancel_Click);
             // 
+            // label7
+            // 
+            this.label7.AutoSize = true;
+            this.label7.Location = new System.Drawing.Point(3, 10);
+            this.label7.Name = "label7";
+            this.label7.Size = new System.Drawing.Size(51, 13);
+            this.label7.TabIndex = 8;
+            this.label7.Text = "Location:";
+            // 
+            // textDir
+            // 
+            this.textDir.Location = new System.Drawing.Point(58, 7);
+            this.textDir.Name = "textDir";
+            this.textDir.Size = new System.Drawing.Size(197, 20);
+            this.textDir.TabIndex = 9;
+            this.textDir.TextChanged += new System.EventHandler(this.textDir_TextChanged);
+            // 
+            // buttonBrowse
+            // 
+            this.buttonBrowse.Location = new System.Drawing.Point(261, 7);
+            this.buttonBrowse.Name = "buttonBrowse";
+            this.buttonBrowse.Size = new System.Drawing.Size(67, 20);
+            this.buttonBrowse.TabIndex = 10;
+            this.buttonBrowse.Text = "Browse...";
+            this.buttonBrowse.UseVisualStyleBackColor = true;
+            this.buttonBrowse.Click += new System.EventHandler(this.buttonBrowse_Click);
+            // 
+            // panelLocation
+            // 
+            this.panelLocation.Controls.Add(this.label7);
+            this.panelLocation.Controls.Add(this.buttonBrowse);
+            this.panelLocation.Controls.Add(this.textDir);
+            this.panelLocation.Location = new System.Drawing.Point(12, 191);
+            this.panelLocation.Name = "panelLocation";
+            this.panelLocation.Size = new System.Drawing.Size(338, 35);
+            this.panelLocation.TabIndex = 11;
+            // 
             // ProjectProperties
             // 
             this.AcceptButton = this.buttonOK;
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.AutoSize = true;
             this.CancelButton = this.buttonCancel;
-            this.ClientSize = new System.Drawing.Size(264, 240);
+            this.ClientSize = new System.Drawing.Size(356, 266);
+            this.Controls.Add(this.panelLocation);
             this.Controls.Add(this.buttonCancel);
             this.Controls.Add(this.buttonOK);
             this.Controls.Add(this.groupBox1);
@@ -189,6 +235,8 @@
             this.Text = "New Game Project";
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
+            this.panelLocation.ResumeLayout(false);
+            this.panelLocation.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -209,5 +257,9 @@
         private System.Windows.Forms.TextBox textHeight;
         private System.Windows.Forms.Button buttonOK;
         private System.Windows.Forms.Button buttonCancel;
+        private System.Windows.Forms.Label label7;
+        private System.Windows.Forms.TextBox textDir;
+        private System.Windows.Forms.Button buttonBrowse;
+        private System.Windows.Forms.Panel panelLocation;
     }
 }
