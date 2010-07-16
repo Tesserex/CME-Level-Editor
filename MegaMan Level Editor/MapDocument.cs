@@ -156,24 +156,16 @@ namespace MegaMan_Level_Editor
             ShowStage();
         }
 
-        //TODO Write NewStage
-        public void NewStage()
-        {
-            MessageBox.Show("I don't do anything yet! Fix this!");
-        }
-
-        // This must DIE
         public void ShowStage()
         {
             if (this.stageForm == null)
             {
                 this.stageForm = new StageForm(this);
-                stageForm.MdiParent = MainForm.Instance;
                 stageForm.GotFocus += new EventHandler(StageForm_GotFocus);
                 stageForm.FormClosing += new FormClosingEventHandler(StageForm_FormClosing);
             }
 
-            stageForm.Show();
+            MainForm.Instance.ShowStageForm(this.stageForm);
             stageForm.Focus();
         }
 

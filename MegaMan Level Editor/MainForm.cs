@@ -176,6 +176,12 @@ namespace MegaMan_Level_Editor
             };
         }
 
+        public void ShowStageForm(StageForm form)
+        {
+            form.DockAreas = DockAreas.Document;
+            form.Show(this.dockPanel1);
+        }
+
         public void FocusScreen(MapDocument map)
         {
             activeMap = map;

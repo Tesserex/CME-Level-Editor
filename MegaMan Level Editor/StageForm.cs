@@ -11,7 +11,7 @@ using MegaMan;
 
 namespace MegaMan_Level_Editor
 {
-    public partial class StageForm : Form
+    public partial class StageForm : WeifenLuo.WinFormsUI.Docking.DockContent
     {
         private MapDocument stage;
 
