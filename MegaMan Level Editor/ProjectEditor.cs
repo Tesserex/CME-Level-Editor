@@ -131,7 +131,7 @@ namespace MegaMan_Level_Editor
             {
                 if (info.Name == name)
                 {
-                    MapDocument stage = new MapDocument(this.BaseDir, info.StagePath.Absolute);
+                    MapDocument stage = new MapDocument(this, this.BaseDir, info.StagePath.Absolute);
                     openStages.Add(name, stage);
                     return stage;
                 }

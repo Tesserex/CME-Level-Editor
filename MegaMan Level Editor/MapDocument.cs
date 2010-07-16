@@ -23,19 +23,23 @@ namespace MegaMan_Level_Editor
 
         private Dictionary<string, ScreenDocument> screens = new Dictionary<string,ScreenDocument>();
 
+        public ProjectEditor Project { get; private set; }
+
         public event Action<MapDocument> Closed;
         public event Action<ScreenDocument> ScreenAdded;
         public event Action<Join> JoinChanged;
         public event Action<bool> DirtyChanged;
 
-        public MapDocument()
+        public MapDocument(ProjectEditor project)
         {
+            this.Project = project;
             this.map = new Map();
         }
 
         // TODO : Rename Map to Stages.. More consistent naming
-        public MapDocument(string basepath, string filepath)
+        public MapDocument(ProjectEditor project, string basepath, string filepath)
         {
+            this.Project = project;
             this.map = new Map(basepath, filepath);
 
             // wrap all map screens in screendocuments

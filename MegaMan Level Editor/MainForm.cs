@@ -46,7 +46,7 @@ namespace MegaMan_Level_Editor
             set
             {
                 activeMap = value;
-                saveToolStripMenuItem.Enabled = saveAsToolStripMenuItem.Enabled =
+                saveToolStripMenuItem.Enabled =
                     closeToolStripMenuItem.Enabled = propertiesToolStripMenuItem.Enabled =
                     newScreenMenuItem.Enabled =
                     manageEnemiesToolStripMenuItem.Enabled = mergeScreenToolStripMenuItem.Enabled =
@@ -285,17 +285,6 @@ namespace MegaMan_Level_Editor
             projectForm.AddProject(project);
         }
 
-        private void SaveAs()
-        {
-            if (ActiveMap == null) return;
-            DialogResult result = folderDialog.ShowDialog();
-            if (result == DialogResult.OK)
-            {
-                string path = folderDialog.SelectedPath;
-                ActiveMap.Save(path);
-            }
-        }
-
         private void AssembleTool()
         {
             switch (currentToolType)
@@ -348,7 +337,6 @@ namespace MegaMan_Level_Editor
         private void RecentMenu_Click(object sender, EventArgs e)
         {
             ToolStripMenuItem t = sender as ToolStripMenuItem;
-            //OpenMap(t.Text);
             OpenProject(t.Text);
         }
 
@@ -366,10 +354,7 @@ namespace MegaMan_Level_Editor
         {
             if (ActiveMap != null)
             {
-                if (ActiveMap.Path != null)
-                    ActiveMap.Save();
-                else
-                    SaveAs();
+                ActiveMap.Project.Save();
             }
         }
 
@@ -400,11 +385,6 @@ namespace MegaMan_Level_Editor
             projectForm.Owner = this;
             projectForm.Location = new Point((this.Width - projectForm.Width) / 2, (this.Height - projectForm.Height) / 2);
             projectForm.Show();
-        }
-
-        private void saveAsToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            SaveAs();
         }
 
         private void propertiesToolStripMenuItem_Click(object sender, EventArgs e)
