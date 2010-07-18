@@ -135,12 +135,13 @@ namespace MegaMan_Level_Editor
 
             // now I can do things like fire an event... how useful!
             if (ScreenAdded != null) ScreenAdded(doc);
+            this.Dirty = true;
         }
 
         public void AddJoin(Join join)
         {
             map.Joins.Add(join);
-            map.Dirty = true;
+            this.Dirty = true;
             if (JoinChanged != null) JoinChanged(join);
         }
 
@@ -184,7 +185,7 @@ namespace MegaMan_Level_Editor
 
         public bool ConfirmSave()
         {
-            if (map.Dirty)
+            if (Dirty)
             {
                 DialogResult result = MessageBox.Show("Do you want to save changes to " + map.Name + " before closing?", "Save Changes", MessageBoxButtons.YesNoCancel);
                 if (result == DialogResult.Yes) map.Save();
@@ -222,6 +223,7 @@ namespace MegaMan_Level_Editor
             ScreenDocument doc = new ScreenDocument(screen, this);
             this.screens.Add(screen.Name, doc);
             doc.Renamed += ScreenRenamed;
+            doc.TileChanged += () => this.Dirty = true;
             return doc;
         }
 

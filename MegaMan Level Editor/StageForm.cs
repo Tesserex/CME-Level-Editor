@@ -95,7 +95,7 @@ namespace MegaMan_Level_Editor
         public void SetText()
         {
             this.Text = this.stage.Name;
-            if (this.stage.Dirty) this.Text += " *";
+            if (this.stage.Dirty) this.Text += "*";
         }
 
         /* *
