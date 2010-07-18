@@ -354,7 +354,7 @@ namespace MegaMan_Level_Editor
         {
             if (ActiveMap != null)
             {
-                ActiveMap.Project.Save();
+                ActiveMap.Save();
             }
         }
 
