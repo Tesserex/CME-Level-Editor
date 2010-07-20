@@ -6,6 +6,7 @@ using MegaMan;
 using System.IO;
 using System.Xml.Linq;
 using System.Xml;
+using System.Drawing;
 
 namespace MegaMan_Level_Editor
 {
@@ -90,6 +91,10 @@ namespace MegaMan_Level_Editor
         public FilePath StageSelectChangeSound { get; private set; }
         public int BossSpacingHorizontal { get; set; }
         public int BossSpacingVertical { get; set; }
+        public FilePath PauseScreenBackground { get; private set; }
+        public FilePath PauseChangeSound { get; private set; }
+        public FilePath PauseSound { get; private set; }
+        public Point PauseLivesPosition { get; private set; }
 
         #endregion
 
