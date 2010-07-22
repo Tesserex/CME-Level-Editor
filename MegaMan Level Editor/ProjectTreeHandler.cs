@@ -67,6 +67,7 @@ namespace MegaMan_Level_Editor
                 foreach (var screen in stage.Screens)
                 {
                     var node = new TreeNode(screen.Name);
+                    node.ImageIndex = node.SelectedImageIndex = 3;
                     node.Tag = new ScreenNodeHandler(node, screen);
                     parentNode.Nodes.Add(node);
                 }

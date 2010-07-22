@@ -16,20 +16,45 @@ namespace MegaMan_Level_Editor
         {
             InitializeComponent();
             projectView.NodeMouseDoubleClick += new TreeNodeMouseClickEventHandler(projectView_NodeMouseDoubleClick);
+            var imagelist = new ImageList();
+            imagelist.ColorDepth = ColorDepth.Depth32Bit;
+            imagelist.Images.Add(Properties.Resources.Folder_16x16);
+            imagelist.Images.Add(Properties.Resources.FolderOpen_16x16_72);
+            imagelist.Images.Add(Properties.Resources.stage);
+            imagelist.Images.Add(Properties.Resources.screen);
+            projectView.ImageList = imagelist;
+            projectView.BeforeCollapse += new TreeViewCancelEventHandler(projectView_BeforeCollapse);
+            projectView.BeforeExpand += new TreeViewCancelEventHandler(projectView_BeforeExpand);
+        }
+
+        void projectView_BeforeExpand(object sender, TreeViewCancelEventArgs e)
+        {
+            if (e.Node.ImageIndex == 0) e.Node.ImageIndex = 1;
+        }
+
+        void projectView_BeforeCollapse(object sender, TreeViewCancelEventArgs e)
+        {
+            if (e.Node.ImageIndex == 1) e.Node.ImageIndex = 0;
         }
 
         void projectView_NodeMouseDoubleClick(object sender, TreeNodeMouseClickEventArgs e)
         {
-            (e.Node.Tag as ProjectTreeHandler).DoubleClick();
+            var tag = (e.Node.Tag as ProjectTreeHandler);
+            if (tag != null) tag.DoubleClick();
         }
 
         public void AddProject(ProjectEditor project)
         {
-            var projectNode = this.projectView.Nodes.Add(project.Name, project.Name);
+            var projectNode = this.projectView.Nodes.Add(project.Name);
+            projectNode.NodeFont = new Font(FontFamily.GenericSansSerif, 8, FontStyle.Bold);
             projectNode.Tag = new ProjectNodeHandler(projectNode, project);
+
+            var stagesNode = projectNode.Nodes.Add("Stages");
+            stagesNode.ImageIndex = 0;
             foreach (var stage in project.StageNames)
             {
-                var stagenode = projectNode.Nodes.Add(stage, stage);
+                var stagenode = stagesNode.Nodes.Add(stage);
+                stagenode.ImageIndex = stagenode.SelectedImageIndex = 2;
                 stagenode.Tag = new StageNodeHandler(stagenode, project, stage);
             }
         }

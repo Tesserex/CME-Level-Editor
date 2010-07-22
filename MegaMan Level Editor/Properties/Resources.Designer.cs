@@ -95,6 +95,20 @@ namespace MegaMan_Level_Editor.Properties {
             }
         }
         
+        internal static System.Drawing.Bitmap Folder_16x16 {
+            get {
+                object obj = ResourceManager.GetObject("Folder_16x16", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        internal static System.Drawing.Bitmap FolderOpen_16x16_72 {
+            get {
+                object obj = ResourceManager.GetObject("FolderOpen_16x16_72", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
         internal static System.Drawing.Bitmap joins {
             get {
                 object obj = ResourceManager.GetObject("joins", resourceCulture);
@@ -105,6 +119,20 @@ namespace MegaMan_Level_Editor.Properties {
         internal static System.Drawing.Bitmap NewDocumentHS {
             get {
                 object obj = ResourceManager.GetObject("NewDocumentHS", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        internal static System.Drawing.Bitmap newscreen {
+            get {
+                object obj = ResourceManager.GetObject("newscreen", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        internal static System.Drawing.Bitmap newstage {
+            get {
+                object obj = ResourceManager.GetObject("newstage", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -144,9 +172,37 @@ namespace MegaMan_Level_Editor.Properties {
             }
         }
         
+        internal static System.Drawing.Bitmap Remove {
+            get {
+                object obj = ResourceManager.GetObject("Remove", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
         internal static System.Drawing.Bitmap saveHS {
             get {
                 object obj = ResourceManager.GetObject("saveHS", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        internal static System.Drawing.Bitmap screen {
+            get {
+                object obj = ResourceManager.GetObject("screen", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        internal static System.Drawing.Bitmap Settings {
+            get {
+                object obj = ResourceManager.GetObject("Settings", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        internal static System.Drawing.Bitmap stage {
+            get {
+                object obj = ResourceManager.GetObject("stage", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
