@@ -138,6 +138,8 @@ namespace MegaMan_Level_Editor
 
         private void AlignScreenSurfaces()
         {
+            if (surfaces.Count == 0) return;
+
             int oldscroll = this.VerticalScroll.Value;
             this.VerticalScroll.Value = 0;
 
@@ -175,7 +177,7 @@ namespace MegaMan_Level_Editor
             }
 
             placeable.Remove(stage.StartScreen); // this one is already placed
-            placedScreens.Add(surfaces[stage.StartScreen]);
+            if (surfaces.ContainsKey(stage.StartScreen)) placedScreens.Add(surfaces[stage.StartScreen]);
 
             while (placeable.Count > 0)
             {
