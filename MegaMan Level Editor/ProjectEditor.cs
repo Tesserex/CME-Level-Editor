@@ -277,7 +277,7 @@ namespace MegaMan_Level_Editor
             stage.ChangeTileset(tilesetPath);
 
             stage.Save();
-
+            
             openStages.Add(name, stage);
 
             var info = new StageInfo();
@@ -286,7 +286,8 @@ namespace MegaMan_Level_Editor
             info.StagePath = FilePath.FromAbsolute(stagePath, this.BaseDir);
             this.stages.Add(info);
 
-            Dirty = true;
+            this.Save(); // need to save the reference to the new stage
+
             if (StageAdded != null) StageAdded(stage);
         }
 
