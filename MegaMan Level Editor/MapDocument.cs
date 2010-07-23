@@ -113,12 +113,12 @@ namespace MegaMan_Level_Editor
 
         public void Save()
         {
-            if (map.Loaded && map.StagePath != null) map.Save();
+            map.Save();
         }
 
         public void Save(string directory)
         {
-            if (map.Loaded) map.Save(directory);
+            map.Save(directory);
         }
 
         #endregion
