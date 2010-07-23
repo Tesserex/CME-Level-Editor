@@ -391,10 +391,7 @@ namespace MegaMan_Level_Editor
         {
             if (ActiveMap == null) return;
 
-            MapDocument propDoc = ActiveMap;
-            StageProp propForm = new StageProp();
-            propForm.LoadMap(propDoc);
-            propForm.Show();
+            StageProp.EditStage(ActiveMap);
         }
 
         //***************

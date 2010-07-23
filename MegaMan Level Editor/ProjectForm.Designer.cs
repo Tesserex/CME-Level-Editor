@@ -69,6 +69,7 @@
             this.buttonNewStage.Name = "buttonNewStage";
             this.buttonNewStage.Size = new System.Drawing.Size(23, 22);
             this.buttonNewStage.Text = "New Stage";
+            this.buttonNewStage.Click += new System.EventHandler(this.buttonNewStage_Click);
             // 
             // buttonNewScreen
             // 

@@ -40,7 +40,7 @@ namespace MegaMan_Level_Editor
         public MapDocument(ProjectEditor project, string basepath, string filepath)
         {
             this.Project = project;
-            this.map = new Map(basepath, filepath);
+            this.map = new Map(FilePath.FromAbsolute(filepath, basepath));
 
             // wrap all map screens in screendocuments
             // this should be the only time MegaMan.Screen's are touched directly
@@ -79,9 +79,10 @@ namespace MegaMan_Level_Editor
             }
         }
 
-        public string Path
+        public FilePath Path
         {
-            get { return map.PathAbsolute; }
+            get { return map.StagePath; }
+            set { map.StagePath = value; }
         }
 
         public Tileset Tileset
@@ -112,7 +113,7 @@ namespace MegaMan_Level_Editor
 
         public void Save()
         {
-            if (map.Loaded && map.PathAbsolute != null) map.Save();
+            if (map.Loaded && map.StagePath != null) map.Save();
         }
 
         public void Save(string directory)
@@ -131,7 +132,7 @@ namespace MegaMan_Level_Editor
 
             ScreenDocument doc = WrapScreen(screen);
             
-            screen.Save(System.IO.Path.Combine(this.Path, name + ".scn"));
+            screen.Save(System.IO.Path.Combine(this.Path.Absolute, name + ".scn"));
 
             // now I can do things like fire an event... how useful!
             if (ScreenAdded != null) ScreenAdded(doc);
@@ -153,7 +154,7 @@ namespace MegaMan_Level_Editor
 
         private void RefreshInfo()
         {
-            stageForm.SetText();
+            if (this.stageForm != null) stageForm.SetText();
         }
 
         public void ReFocus()

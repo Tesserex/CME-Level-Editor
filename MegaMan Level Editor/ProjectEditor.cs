@@ -113,6 +113,7 @@ namespace MegaMan_Level_Editor
         #endregion
 
         public event Action<bool> DirtyChanged;
+        public event Action<MapDocument> StageAdded;
 
         public static ProjectEditor CreateNew(string baseDirectory)
         {
@@ -255,6 +256,38 @@ namespace MegaMan_Level_Editor
             var attr = node.Attribute(attrname);
             if (attr == null) return "";
             return attr.Value;
+        }
+
+        public void AddStage(string name, string tilesetPath)
+        {
+            string stageDir = Path.Combine(this.BaseDir, "stages");
+            if (!Directory.Exists(stageDir))
+            {
+                Directory.CreateDirectory(stageDir);
+            }
+            string stagePath = Path.Combine(stageDir, name);
+            if (!Directory.Exists(stagePath))
+            {
+                Directory.CreateDirectory(stagePath);
+            }
+
+            var stage = new MapDocument(this);
+            stage.Path = FilePath.FromAbsolute(stagePath, this.BaseDir); // must be set before tileset
+            stage.Name = name;
+            stage.ChangeTileset(tilesetPath);
+
+            stage.Save();
+
+            openStages.Add(name, stage);
+
+            var info = new StageInfo();
+            info.Name = name;
+            info.Slot = -1;
+            info.StagePath = FilePath.FromAbsolute(stagePath, this.BaseDir);
+            this.stages.Add(info);
+
+            Dirty = true;
+            if (StageAdded != null) StageAdded(stage);
         }
 
         public void Save()

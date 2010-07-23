@@ -10,6 +10,13 @@ namespace MegaMan_Level_Editor
     public abstract class ProjectTreeHandler
     {
         protected TreeNode parentNode;
+        public ProjectEditor Project { get; private set; }
+
+        public ProjectTreeHandler(ProjectEditor project, TreeNode node)
+        {
+            this.Project = project;
+            this.parentNode = node;
+        }
 
         public abstract void DoubleClick();
         public abstract void Properties();
@@ -18,17 +25,11 @@ namespace MegaMan_Level_Editor
 
     public class ProjectNodeHandler : ProjectTreeHandler
     {
-        private ProjectEditor project;
-
-        public ProjectNodeHandler(TreeNode node, ProjectEditor project)
-        {
-            this.parentNode = node;
-            this.project = project;
-        }
+        public ProjectNodeHandler(ProjectEditor project, TreeNode node) : base(project, node) { }
 
         public override void Properties()
         {
-            new ProjectProperties(this.project).Show();
+            new ProjectProperties(this.Project).Show();
         }
 
         public override void Delete() { }
@@ -38,22 +39,17 @@ namespace MegaMan_Level_Editor
 
     public class StageNodeHandler : ProjectTreeHandler
     {
-        private ProjectEditor project;
         private MapDocument stage;
         private string stageName;
 
-        public StageNodeHandler(TreeNode node, ProjectEditor project, string stageName)
+        public StageNodeHandler(ProjectEditor project, TreeNode node, string stageName) : base(project, node)
         {
-            this.parentNode = node;
-            this.project = project;
             this.stage = null;
             this.stageName = stageName;
         }
 
-        public StageNodeHandler(TreeNode node, ProjectEditor project, MapDocument stage)
+        public StageNodeHandler(ProjectEditor project, TreeNode node, MapDocument stage) : base(project, node)
         {
-            this.parentNode = node;
-            this.project = project;
             this.stage = stage;
             this.stageName = stage.Name;
         }
@@ -62,20 +58,20 @@ namespace MegaMan_Level_Editor
         {
             if (this.stage == null)
             {
-                this.stage = this.project.StageByName(stageName);
+                this.stage = this.Project.StageByName(stageName);
                 parentNode.Nodes.Clear();
                 foreach (var screen in stage.Screens)
                 {
                     var node = new TreeNode(screen.Name);
                     node.ImageIndex = node.SelectedImageIndex = 3;
-                    node.Tag = new ScreenNodeHandler(node, screen);
+                    node.Tag = new ScreenNodeHandler(this.Project, node, screen);
                     parentNode.Nodes.Add(node);
                 }
 
                 stage.ScreenAdded += (screen) =>
                 {
                     var node = new TreeNode(screen.Name);
-                    node.Tag = new ScreenNodeHandler(node, screen);
+                    node.Tag = new ScreenNodeHandler(this.Project, node, screen);
                     parentNode.Nodes.Add(node);
                 };
             }
@@ -87,9 +83,7 @@ namespace MegaMan_Level_Editor
 
         public override void Properties()
         {
-            var stageprop = new StageProp();
-            stageprop.LoadMap(this.stage);
-            stageprop.Show();
+            StageProp.EditStage(this.stage);
         }
     }
 
@@ -97,9 +91,8 @@ namespace MegaMan_Level_Editor
     {
         private ScreenDocument screen;
 
-        public ScreenNodeHandler(TreeNode node, ScreenDocument screen)
+        public ScreenNodeHandler(ProjectEditor project, TreeNode node, ScreenDocument screen) : base(project, node)
         {
-            this.parentNode = node;
             this.screen = screen;
         }
 

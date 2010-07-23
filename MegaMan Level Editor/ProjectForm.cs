@@ -47,7 +47,7 @@ namespace MegaMan_Level_Editor
         {
             var projectNode = this.projectView.Nodes.Add(project.Name);
             projectNode.NodeFont = new Font(FontFamily.GenericSansSerif, 8, FontStyle.Bold);
-            projectNode.Tag = new ProjectNodeHandler(projectNode, project);
+            projectNode.Tag = new ProjectNodeHandler(project, projectNode);
 
             var stagesNode = projectNode.Nodes.Add("Stages");
             stagesNode.ImageIndex = 0;
@@ -55,7 +55,33 @@ namespace MegaMan_Level_Editor
             {
                 var stagenode = stagesNode.Nodes.Add(stage);
                 stagenode.ImageIndex = stagenode.SelectedImageIndex = 2;
-                stagenode.Tag = new StageNodeHandler(stagenode, project, stage);
+                stagenode.Tag = new StageNodeHandler(project, stagenode, stage);
+            }
+
+            project.StageAdded += (stage) =>
+            {
+                var stagenode = stagesNode.Nodes.Add(stage.Name);
+                stagenode.ImageIndex = stagenode.SelectedImageIndex = 2;
+                stagenode.Tag = new StageNodeHandler(project, stagenode, stage);
+            };
+        }
+
+        private void buttonNewStage_Click(object sender, EventArgs e)
+        {
+            if (projectView.SelectedNode != null)
+            {
+                var node = projectView.SelectedNode;
+                var tag = node.Tag as ProjectTreeHandler;
+                while (tag == null && node.Parent != null)
+                {
+                    node = node.Parent;
+                    tag = node.Tag as ProjectTreeHandler;
+                }
+
+                if (tag != null)
+                {
+                    StageProp.CreateStage(tag.Project);
+                }
             }
         }
     }
