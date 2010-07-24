@@ -93,6 +93,7 @@ namespace MegaMan_Level_Editor
         public void ChangeTileset(string path)
         {
             map.ChangeTileset(path);
+            Dirty = true;
         }
 
         public string StartScreen { get { return map.StartScreen; } }
@@ -114,11 +115,13 @@ namespace MegaMan_Level_Editor
         public void Save()
         {
             map.Save();
+            Dirty = false;
         }
 
         public void Save(string directory)
         {
             map.Save(directory);
+            Dirty = false;
         }
 
         #endregion
@@ -241,6 +244,7 @@ namespace MegaMan_Level_Editor
                 if (join.screenOne == oldName) join.screenOne = newName;
                 if (join.screenTwo == oldName) join.screenTwo = newName;
             }
+            this.Dirty = true;
         }
     }
 }
