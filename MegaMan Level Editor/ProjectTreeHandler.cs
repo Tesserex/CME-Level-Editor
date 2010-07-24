@@ -84,7 +84,7 @@ namespace MegaMan_Level_Editor
 
         public override void Properties()
         {
-            StageProp.EditStage(this.Stage);
+            if (this.Stage != null) StageProp.EditStage(this.Stage);
         }
     }
 
