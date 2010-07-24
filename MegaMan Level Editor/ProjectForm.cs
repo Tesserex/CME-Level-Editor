@@ -97,7 +97,7 @@ namespace MegaMan_Level_Editor
                     tag = node.Tag as StageNodeHandler;
                 }
 
-                if (tag != null)
+                if (tag != null && tag.Stage != null)
                 {
                     ScreenProp.CreateScreen(tag.Stage);
                 }
