@@ -60,13 +60,13 @@ namespace MegaMan_Level_Editor
             }
             if (is_new)
             {
-                map.AddScreen(this.textName.Text, (int)this.heightField.Value, (int)this.widthField.Value);
+                map.AddScreen(this.textName.Text, (int)this.widthField.Value, (int)this.heightField.Value);
             }
             else
             {
                 // Rename the screen
                 screen.Name = this.textName.Text;
-                screen.Resize((int)this.heightField.Value, (int)this.widthField.Value);
+                screen.Resize((int)this.widthField.Value, (int)this.heightField.Value);
             }
 
             if (OK != null) OK(this);
