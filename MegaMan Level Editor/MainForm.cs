@@ -400,8 +400,7 @@ namespace MegaMan_Level_Editor
 
         private void newScreenStripMenuItem_Click(object sender, EventArgs e)
         {
-            var screenPropForm = new ScreenProp(this.ActiveMap);
-            screenPropForm.Show();
+            ScreenProp.CreateScreen(this.ActiveMap);
         }
 
         private void brushesToolStripMenuItem_Click(object sender, EventArgs e)

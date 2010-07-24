@@ -19,8 +19,18 @@ namespace MegaMan_Level_Editor
 
         public event Action<ScreenProp> OK;
 
+        public static void CreateScreen(MapDocument map)
+        {
+            new ScreenProp(map).Show();
+        }
+
+        public static void EditScreen(ScreenDocument screen)
+        {
+            new ScreenProp(screen).Show();
+        }
+
         // this constructor implies a new screen
-        public ScreenProp(MapDocument map)
+        private ScreenProp(MapDocument map)
         {
             InitializeComponent();
             is_new = true;
@@ -29,7 +39,7 @@ namespace MegaMan_Level_Editor
         }
 
         // this implies editing a screen
-        public ScreenProp(ScreenDocument screen)
+        private ScreenProp(ScreenDocument screen)
         {
             InitializeComponent();
 

@@ -102,7 +102,7 @@ namespace MegaMan_Level_Editor
 
         public override void Properties()
         {
-            new ScreenProp(this.screen).Show();
+            ScreenProp.EditScreen(this.screen);
         }
     }
 }
