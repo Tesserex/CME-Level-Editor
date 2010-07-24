@@ -170,8 +170,8 @@ namespace MegaMan_Level_Editor
             var placeable = new HashSet<string>(); // enforces uniqueness
             foreach (var join in stage.Joins)
             {
-                placeable.Add(join.screenOne);
-                placeable.Add(join.screenTwo);
+                if (surfaces.ContainsKey(join.screenOne)) placeable.Add(join.screenOne);
+                if (surfaces.ContainsKey(join.screenTwo)) placeable.Add(join.screenTwo);
             }
 
             var orphans = new List<string>();
@@ -180,8 +180,19 @@ namespace MegaMan_Level_Editor
                 if (!placeable.Contains(screen)) orphans.Add(screen);
             }
 
-            placeable.Remove(stage.StartScreen); // this one is already placed
-            if (surfaces.ContainsKey(stage.StartScreen)) placedScreens.Add(surfaces[stage.StartScreen]);
+            if (surfaces.ContainsKey(stage.StartScreen))
+            {
+                placeable.Remove(stage.StartScreen);
+                placedScreens.Add(surfaces[stage.StartScreen]);
+                surfaces[stage.StartScreen].Placed = true;
+            }
+            else if (placeable.Count > 0)
+            {
+                string screen = placeable.First();
+                placedScreens.Add(surfaces[screen]);
+                placeable.Remove(screen);
+                surfaces[screen].Placed = true;
+            }
 
             while (placeable.Count > 0)
             {
