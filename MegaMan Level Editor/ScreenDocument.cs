@@ -10,7 +10,7 @@ namespace MegaMan_Level_Editor
     {
         private Screen screen;
 
-        public MapDocument Map { get; private set; }
+        public StageDocument Stage { get; private set; }
 
         public event Action<int, int> Resized;
         public event Action TileChanged;
@@ -42,9 +42,9 @@ namespace MegaMan_Level_Editor
 
         public event Action<string, string> Renamed;
 
-        public ScreenDocument(MegaMan.Screen screen, MapDocument map)
+        public ScreenDocument(MegaMan.Screen screen, StageDocument stage)
         {
-            this.Map = map;
+            this.Stage = stage;
             this.screen = screen;
         }
 

@@ -157,7 +157,7 @@ namespace MegaMan_Level_Editor
         {
             ContextMenu menu = new ContextMenu();
             // find a join to modify
-            foreach (var j in surface.Screen.Map.Joins)
+            foreach (var j in surface.Screen.Stage.Joins)
             {
                 MegaMan.Join join = j; // for lambda closure
                 if (join.screenOne == surface.Screen.Name)
@@ -272,15 +272,15 @@ namespace MegaMan_Level_Editor
             newjoin.type = type;
             newjoin.Size = 1;
             newjoin.offsetOne = newjoin.offsetTwo = offset;
-            JoinForm form = new JoinForm(newjoin, surface.Screen.Map.Screens);
-            form.OK += () => { surface.Screen.Map.AddJoin(newjoin); };
+            JoinForm form = new JoinForm(newjoin, surface.Screen.Stage.Screens);
+            form.OK += () => { surface.Screen.Stage.AddJoin(newjoin); };
             form.Show();
         }
 
         private void EditJoin(ScreenDrawingSurface surface, MegaMan.Join join)
         {
-            JoinForm form = new JoinForm(join, surface.Screen.Map.Screens);
-            form.OK += () => surface.Screen.Map.RaiseJoinChange(join);
+            JoinForm form = new JoinForm(join, surface.Screen.Stage.Screens);
+            form.OK += () => surface.Screen.Stage.RaiseJoinChange(join);
             form.Show();
         }
     }

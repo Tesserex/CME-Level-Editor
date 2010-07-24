@@ -13,7 +13,7 @@ namespace MegaMan_Level_Editor
 {
     public partial class StageForm : WeifenLuo.WinFormsUI.Docking.DockContent
     {
-        private MapDocument stage;
+        private StageDocument stage;
 
         private History history;
         
@@ -41,7 +41,7 @@ namespace MegaMan_Level_Editor
             }
         }
 
-        public StageForm(MapDocument stage)
+        public StageForm(StageDocument stage)
         {
             InitializeComponent();
             joinOverlay = new JoinOverlay();
@@ -101,7 +101,7 @@ namespace MegaMan_Level_Editor
         /* *
          * SetStage - Decide the stage object that will be edited
          * */
-        private void SetStage(MapDocument stage)
+        private void SetStage(StageDocument stage)
         {
             this.stage = stage;
 

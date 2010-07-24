@@ -13,15 +13,15 @@ namespace MegaMan_Level_Editor
     public partial class ScreenProp : Form
     {
         private ScreenDocument screen;
-        private MapDocument map;
+        private StageDocument stage;
 
         private bool is_new = false;
 
         public event Action<ScreenProp> OK;
 
-        public static void CreateScreen(MapDocument map)
+        public static void CreateScreen(StageDocument stage)
         {
-            new ScreenProp(map).Show();
+            new ScreenProp(stage).Show();
         }
 
         public static void EditScreen(ScreenDocument screen)
@@ -30,12 +30,12 @@ namespace MegaMan_Level_Editor
         }
 
         // this constructor implies a new screen
-        private ScreenProp(MapDocument map)
+        private ScreenProp(StageDocument stage)
         {
             InitializeComponent();
             is_new = true;
             this.textName.Text = "";
-            this.map = map;
+            this.stage = stage;
         }
 
         // this implies editing a screen
@@ -44,7 +44,7 @@ namespace MegaMan_Level_Editor
             InitializeComponent();
 
             this.screen = screen;
-            this.map = screen.Map;
+            this.stage = screen.Stage;
 
             this.textName.Text = screen.Name;
             this.widthField.Value = screen.Width;
@@ -60,7 +60,7 @@ namespace MegaMan_Level_Editor
             }
             if (is_new)
             {
-                map.AddScreen(this.textName.Text, (int)this.widthField.Value, (int)this.heightField.Value);
+                stage.AddScreen(this.textName.Text, (int)this.widthField.Value, (int)this.heightField.Value);
             }
             else
             {

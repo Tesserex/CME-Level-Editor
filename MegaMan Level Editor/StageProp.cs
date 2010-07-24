@@ -12,7 +12,7 @@ namespace MegaMan_Level_Editor
     public partial class StageProp : Form
     {
         private ProjectEditor project;
-        private MapDocument map;
+        private StageDocument stage;
 
         public static void CreateStage(ProjectEditor project)
         {
@@ -22,11 +22,11 @@ namespace MegaMan_Level_Editor
             form.Show();
         }
 
-        public static void EditStage(MapDocument map)
+        public static void EditStage(StageDocument stage)
         {
             var form = new StageProp();
-            form.project = map.Project;
-            form.LoadMap(map);
+            form.project = stage.Project;
+            form.LoadStage(stage);
             form.Show();
         }
 
@@ -35,12 +35,12 @@ namespace MegaMan_Level_Editor
             InitializeComponent();
         }
 
-        private void LoadMap(MapDocument map)
+        private void LoadStage(StageDocument stage)
         {
-            this.map = map;
-            this.Text = map.Name + " Properties";
-            nameField.Text = map.Name;
-            tilesetField.Text = map.Tileset.FilePath;
+            this.stage = stage;
+            this.Text = stage.Name + " Properties";
+            nameField.Text = stage.Name;
+            tilesetField.Text = stage.Tileset.FilePath;
         }
 
         private void tilesetChange_Click(object sender, EventArgs e)
@@ -67,15 +67,15 @@ namespace MegaMan_Level_Editor
         {
             //try
             //{
-                if (map == null) // new
+                if (stage == null) // new
                 {
                     project.AddStage(nameField.Text, tilesetField.Text);
                     return true;
                 }
                 else
                 {
-                    map.Name = nameField.Text;
-                    map.ChangeTileset(tilesetField.Text);
+                    stage.Name = nameField.Text;
+                    stage.ChangeTileset(tilesetField.Text);
                     return true;
                 }
             //}

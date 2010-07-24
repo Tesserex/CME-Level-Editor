@@ -9,13 +9,12 @@ using System.IO;
 namespace MegaMan_Level_Editor
 {
     // ========= What this IS, and IS NOT ===============
-    // This class controls a single map / stage, whatever
-    // you want to call it. NOT the whole damn project!
+    // This class controls a single stage. NOT the whole damn project!
     // There should be no way to touch the stage, except through
     // one of these objects! All form updates should be event
     // driven, coming from this class!
 
-    public class MapDocument
+    public class StageDocument
     {
         private Map map;
 
@@ -25,19 +24,18 @@ namespace MegaMan_Level_Editor
 
         public ProjectEditor Project { get; private set; }
 
-        public event Action<MapDocument> Closed;
+        public event Action<StageDocument> Closed;
         public event Action<ScreenDocument> ScreenAdded;
         public event Action<Join> JoinChanged;
         public event Action<bool> DirtyChanged;
 
-        public MapDocument(ProjectEditor project)
+        public StageDocument(ProjectEditor project)
         {
             this.Project = project;
             this.map = new Map();
         }
 
-        // TODO : Rename Map to Stages.. More consistent naming
-        public MapDocument(ProjectEditor project, string basepath, string filepath)
+        public StageDocument(ProjectEditor project, string basepath, string filepath)
         {
             this.Project = project;
             this.map = new Map(FilePath.FromAbsolute(filepath, basepath));

@@ -39,7 +39,7 @@ namespace MegaMan_Level_Editor
 
     public class StageNodeHandler : ProjectTreeHandler
     {
-        public MapDocument Stage { get; private set; }
+        public StageDocument Stage { get; private set; }
         private string stageName;
 
         public StageNodeHandler(ProjectEditor project, TreeNode node, string stageName) : base(project, node)
@@ -48,7 +48,7 @@ namespace MegaMan_Level_Editor
             this.stageName = stageName;
         }
 
-        public StageNodeHandler(ProjectEditor project, TreeNode node, MapDocument stage) : base(project, node)
+        public StageNodeHandler(ProjectEditor project, TreeNode node, StageDocument stage) : base(project, node)
         {
             this.Stage = stage;
             this.stageName = stage.Name;

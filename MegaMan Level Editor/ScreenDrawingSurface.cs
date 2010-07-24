@@ -155,7 +155,7 @@ namespace MegaMan_Level_Editor
                 g.Clear(Color.Transparent);
             }
 
-            foreach (Join join in Screen.Map.Joins)
+            foreach (Join join in Screen.Stage.Joins)
             {
                 if (join.screenOne == this.Screen.Name) DrawJoinEnd(join, true);
                 else if (join.screenTwo == this.Screen.Name) DrawJoinEnd(join, false);

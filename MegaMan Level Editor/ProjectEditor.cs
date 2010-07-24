@@ -100,7 +100,7 @@ namespace MegaMan_Level_Editor
 
         #region GUI Editor Stuff
 
-        private Dictionary<string, MapDocument> openStages = new Dictionary<string,MapDocument>();
+        private Dictionary<string, StageDocument> openStages = new Dictionary<string,StageDocument>();
 
         public IEnumerable<string> StageNames
         {
@@ -113,7 +113,7 @@ namespace MegaMan_Level_Editor
         #endregion
 
         public event Action<bool> DirtyChanged;
-        public event Action<MapDocument> StageAdded;
+        public event Action<StageDocument> StageAdded;
 
         public static ProjectEditor CreateNew(string baseDirectory)
         {
@@ -130,14 +130,14 @@ namespace MegaMan_Level_Editor
             return p;
         }
 
-        public MapDocument StageByName(string name)
+        public StageDocument StageByName(string name)
         {
             if (openStages.ContainsKey(name)) return openStages[name];
             foreach (var info in stages)
             {
                 if (info.Name == name)
                 {
-                    MapDocument stage = new MapDocument(this, this.BaseDir, info.StagePath.Absolute);
+                    StageDocument stage = new StageDocument(this, this.BaseDir, info.StagePath.Absolute);
                     openStages.Add(name, stage);
                     return stage;
                 }
@@ -271,7 +271,7 @@ namespace MegaMan_Level_Editor
                 Directory.CreateDirectory(stagePath);
             }
 
-            var stage = new MapDocument(this);
+            var stage = new StageDocument(this);
             stage.Path = FilePath.FromAbsolute(stagePath, this.BaseDir); // must be set before tileset
             stage.Name = name;
             stage.ChangeTileset(tilesetPath);

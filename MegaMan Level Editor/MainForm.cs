@@ -17,7 +17,7 @@ namespace MegaMan_Level_Editor
         #region Public Members
 
         private TilesetStrip tilestrip;
-        private MapDocument activeMap;
+        private StageDocument activeStage;
 
         public BrushForm brushForm;
         public ProjectForm projectForm;
@@ -39,12 +39,12 @@ namespace MegaMan_Level_Editor
         #endregion Private Members
 
         #region Properties
-        public MapDocument ActiveMap
+        public StageDocument ActiveStage
         {
-            get { return activeMap; }
+            get { return activeStage; }
             set
             {
-                activeMap = value;
+                activeStage = value;
                 saveToolStripMenuItem.Enabled =
                     closeToolStripMenuItem.Enabled = propertiesToolStripMenuItem.Enabled =
                     newScreenMenuItem.Enabled =
@@ -181,15 +181,15 @@ namespace MegaMan_Level_Editor
             form.Show(this.dockPanel1);
         }
 
-        public void FocusScreen(MapDocument map)
+        public void FocusScreen(StageDocument stage)
         {
-            activeMap = map;
-            ChangeTileset(map.Tileset);
+            activeStage = stage;
+            ChangeTileset(stage.Tileset);
         }
 
         private void ChangeTileset(Tileset tileset)
         {
-            if (brushForm != null) brushForm.ChangeTileset(activeMap.Tileset);
+            if (brushForm != null) brushForm.ChangeTileset(activeStage.Tileset);
 
             tilestrip.ChangeTileset(tileset);
         }
@@ -267,10 +267,10 @@ namespace MegaMan_Level_Editor
             }
         }
 
-        private void map_Closed(MapDocument mapdoc)
+        private void stage_Closed(StageDocument stagedoc)
         {
             // if the tile form is showing this map's tileset, remove it from the form
-            if (ActiveMap == mapdoc)
+            if (ActiveStage == stagedoc)
             {
                 tilestrip.ChangeTileset(null);
             }
@@ -351,17 +351,17 @@ namespace MegaMan_Level_Editor
 
         private void saveToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            if (ActiveMap != null)
+            if (ActiveStage != null)
             {
-                ActiveMap.Save();
+                ActiveStage.Save();
             }
         }
 
         private void closeToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            if (ActiveMap == null)
+            if (ActiveStage == null)
                 return;
-            ActiveMap.Close();
+            ActiveStage.Close();
         }
 
         //*****************
@@ -370,12 +370,12 @@ namespace MegaMan_Level_Editor
 
         public void undoToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            this.activeMap.Undo();
+            this.activeStage.Undo();
         }
 
         private void redoToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            this.activeMap.Redo();
+            this.activeStage.Redo();
         }
 
         private void newToolStripMenuItem_Click(object sender, EventArgs e)
@@ -388,9 +388,9 @@ namespace MegaMan_Level_Editor
 
         private void propertiesToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            if (ActiveMap == null) return;
+            if (ActiveStage == null) return;
 
-            StageProp.EditStage(ActiveMap);
+            StageProp.EditStage(ActiveStage);
         }
 
         //***************
@@ -399,7 +399,7 @@ namespace MegaMan_Level_Editor
 
         private void newScreenStripMenuItem_Click(object sender, EventArgs e)
         {
-            if (this.ActiveMap != null) ScreenProp.CreateScreen(this.ActiveMap);
+            if (this.ActiveStage != null) ScreenProp.CreateScreen(this.ActiveStage);
         }
 
         private void brushesToolStripMenuItem_Click(object sender, EventArgs e)
