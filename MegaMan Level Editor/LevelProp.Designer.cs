@@ -34,7 +34,6 @@
             this.tilesetField = new System.Windows.Forms.TextBox();
             this.label2 = new System.Windows.Forms.Label();
             this.nameField = new System.Windows.Forms.TextBox();
-            this.buttonApply = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // label1
@@ -60,7 +59,7 @@
             // buttonOK
             // 
             this.buttonOK.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.buttonOK.Location = new System.Drawing.Point(228, 69);
+            this.buttonOK.Location = new System.Drawing.Point(208, 61);
             this.buttonOK.Name = "buttonOK";
             this.buttonOK.Size = new System.Drawing.Size(54, 23);
             this.buttonOK.TabIndex = 3;
@@ -71,7 +70,7 @@
             // buttonCancel
             // 
             this.buttonCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.buttonCancel.Location = new System.Drawing.Point(288, 69);
+            this.buttonCancel.Location = new System.Drawing.Point(268, 61);
             this.buttonCancel.Name = "buttonCancel";
             this.buttonCancel.Size = new System.Drawing.Size(58, 23);
             this.buttonCancel.TabIndex = 4;
@@ -103,23 +102,11 @@
             this.nameField.Size = new System.Drawing.Size(111, 20);
             this.nameField.TabIndex = 7;
             // 
-            // buttonApply
-            // 
-            this.buttonApply.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.buttonApply.Location = new System.Drawing.Point(352, 69);
-            this.buttonApply.Name = "buttonApply";
-            this.buttonApply.Size = new System.Drawing.Size(57, 23);
-            this.buttonApply.TabIndex = 8;
-            this.buttonApply.Text = "Apply";
-            this.buttonApply.UseVisualStyleBackColor = true;
-            this.buttonApply.Click += new System.EventHandler(this.buttonApply_Click);
-            // 
             // StageProp
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(421, 104);
-            this.Controls.Add(this.buttonApply);
+            this.ClientSize = new System.Drawing.Size(338, 96);
             this.Controls.Add(this.nameField);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.tilesetField);
@@ -146,6 +133,5 @@
         private System.Windows.Forms.TextBox tilesetField;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.TextBox nameField;
-        private System.Windows.Forms.Button buttonApply;
     }
 }

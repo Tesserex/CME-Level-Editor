@@ -95,10 +95,5 @@ namespace MegaMan_Level_Editor
         {
             Cancel();
         }
-
-        private void buttonApply_Click(object sender, EventArgs e)
-        {
-            this.Save();
-        }
     }
 }
