@@ -71,6 +71,7 @@ namespace MegaMan_Level_Editor
                 Stage.ScreenAdded += (screen) =>
                 {
                     var node = new TreeNode(screen.Name);
+                    node.ImageIndex = node.SelectedImageIndex = 3;
                     node.Tag = new ScreenNodeHandler(this.Project, node, screen);
                     parentNode.Nodes.Add(node);
                 };
