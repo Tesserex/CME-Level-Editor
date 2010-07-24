@@ -89,6 +89,7 @@
             this.buttonProperties.Name = "buttonProperties";
             this.buttonProperties.Size = new System.Drawing.Size(23, 22);
             this.buttonProperties.Text = "Properties";
+            this.buttonProperties.Click += new System.EventHandler(this.buttonProperties_Click);
             // 
             // buttonDelete
             // 

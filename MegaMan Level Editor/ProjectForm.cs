@@ -103,5 +103,14 @@ namespace MegaMan_Level_Editor
                 }
             }
         }
+
+        private void buttonProperties_Click(object sender, EventArgs e)
+        {
+            if (projectView.SelectedNode != null)
+            {
+                var tag = projectView.SelectedNode.Tag as ProjectTreeHandler;
+                if (tag != null) tag.Properties();
+            }
+        }
     }
 }
