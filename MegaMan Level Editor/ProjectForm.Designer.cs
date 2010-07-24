@@ -79,6 +79,7 @@
             this.buttonNewScreen.Name = "buttonNewScreen";
             this.buttonNewScreen.Size = new System.Drawing.Size(23, 22);
             this.buttonNewScreen.Text = "New Screen";
+            this.buttonNewScreen.Click += new System.EventHandler(this.buttonNewScreen_Click);
             // 
             // buttonProperties
             // 

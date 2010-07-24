@@ -39,28 +39,28 @@ namespace MegaMan_Level_Editor
 
     public class StageNodeHandler : ProjectTreeHandler
     {
-        private MapDocument stage;
+        public MapDocument Stage { get; private set; }
         private string stageName;
 
         public StageNodeHandler(ProjectEditor project, TreeNode node, string stageName) : base(project, node)
         {
-            this.stage = null;
+            this.Stage = null;
             this.stageName = stageName;
         }
 
         public StageNodeHandler(ProjectEditor project, TreeNode node, MapDocument stage) : base(project, node)
         {
-            this.stage = stage;
+            this.Stage = stage;
             this.stageName = stage.Name;
         }
 
         public override void DoubleClick()
         {
-            if (this.stage == null)
+            if (this.Stage == null)
             {
-                this.stage = this.Project.StageByName(stageName);
+                this.Stage = this.Project.StageByName(stageName);
                 parentNode.Nodes.Clear();
-                foreach (var screen in stage.Screens)
+                foreach (var screen in Stage.Screens)
                 {
                     var node = new TreeNode(screen.Name);
                     node.ImageIndex = node.SelectedImageIndex = 3;
@@ -68,7 +68,7 @@ namespace MegaMan_Level_Editor
                     parentNode.Nodes.Add(node);
                 }
 
-                stage.ScreenAdded += (screen) =>
+                Stage.ScreenAdded += (screen) =>
                 {
                     var node = new TreeNode(screen.Name);
                     node.Tag = new ScreenNodeHandler(this.Project, node, screen);
@@ -76,14 +76,14 @@ namespace MegaMan_Level_Editor
                 };
             }
 
-            stage.ReFocus();
+            Stage.ReFocus();
         }
 
         public override void Delete() { }
 
         public override void Properties()
         {
-            StageProp.EditStage(this.stage);
+            StageProp.EditStage(this.Stage);
         }
     }
 

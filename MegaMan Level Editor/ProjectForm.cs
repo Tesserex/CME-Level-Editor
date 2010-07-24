@@ -84,5 +84,24 @@ namespace MegaMan_Level_Editor
                 }
             }
         }
+
+        private void buttonNewScreen_Click(object sender, EventArgs e)
+        {
+            if (projectView.SelectedNode != null)
+            {
+                var node = projectView.SelectedNode;
+                var tag = node.Tag as StageNodeHandler;
+                while (tag == null && node.Parent != null)
+                {
+                    node = node.Parent;
+                    tag = node.Tag as StageNodeHandler;
+                }
+
+                if (tag != null)
+                {
+                    ScreenProp.CreateScreen(tag.Stage);
+                }
+            }
+        }
     }
 }

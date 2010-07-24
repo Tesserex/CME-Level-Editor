@@ -122,7 +122,11 @@ namespace MegaMan_Level_Editor
             }
 
             AlignScreenSurfaces();
-            stage.ScreenAdded += (s) => AlignScreenSurfaces();
+            stage.ScreenAdded += (s) =>
+            {
+                CreateScreenSurface(s);
+                AlignScreenSurfaces();
+            };
         }
 
         private class SurfaceCollision
