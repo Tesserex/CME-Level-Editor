@@ -25,6 +25,7 @@ namespace MegaMan_Level_Editor
             InitializeComponent();
             is_new = true;
             this.textName.Text = "";
+            this.map = map;
         }
 
         // this implies editing a screen
