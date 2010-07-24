@@ -136,7 +136,8 @@ namespace MegaMan_Level_Editor
 
             // now I can do things like fire an event... how useful!
             if (ScreenAdded != null) ScreenAdded(doc);
-            this.Dirty = true;
+
+            this.Save();
         }
 
         public void AddJoin(Join join)
