@@ -65,8 +65,6 @@ namespace MegaMan_Level_Editor
 
         private bool Save()
         {
-            //try
-            //{
                 if (stage == null) // new
                 {
                     project.AddStage(nameField.Text, tilesetField.Text);
@@ -75,15 +73,17 @@ namespace MegaMan_Level_Editor
                 else
                 {
                     stage.Name = nameField.Text;
-                    stage.ChangeTileset(tilesetField.Text);
+                    try
+                    {
+                        stage.ChangeTileset(tilesetField.Text);
+                    }
+                    catch
+                    {
+                        MessageBox.Show("The tileset specified could not be loaded. Sorry.", "CME Project Editor", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        return false;
+                    }
                     return true;
                 }
-            //}
-            //catch
-            //{
-            //    MessageBox.Show("The tileset specified could not be loaded. Sorry.", "C# Mega Man Level Editor", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            //}
-            return false;
         }
 
         private void Cancel()

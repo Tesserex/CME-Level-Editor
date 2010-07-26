@@ -279,9 +279,17 @@ namespace MegaMan_Level_Editor
 
         private void OpenProject(string gamefile)
         {
-            AddRecentFile(gamefile);
-            var project = ProjectEditor.FromFile(gamefile);
-            projectForm.AddProject(project);
+            try
+            {
+                var project = ProjectEditor.FromFile(gamefile);
+                projectForm.AddProject(project);
+                AddRecentFile(gamefile);
+            }
+            catch
+            {
+                MessageBox.Show("The selected file could not be loaded. Perhaps it was created with a different version of this editor.",
+                    "CME Project Editor", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
 
         private void AssembleTool()

@@ -158,87 +158,103 @@ namespace MegaMan_Level_Editor
         {
             if (!File.Exists(path)) throw new FileNotFoundException("The project file does not exist: " + path);
 
-            GameFile = path;
-            BaseDir = Path.GetDirectoryName(path);
-            XElement reader = XElement.Load(path);
-
-            XAttribute nameAttr = reader.Attribute("name");
-            if (nameAttr != null) this.Name = nameAttr.Value;
-
-            XAttribute authAttr = reader.Attribute("author");
-            if (authAttr != null) this.Author = authAttr.Value;
-
-            XElement sizeNode = reader.Element("Size");
-            if (sizeNode != null)
+            try
             {
-                int across, down;
-                if (int.TryParse(sizeNode.Attribute("x").Value, out across))
-                {
-                    ScreenWidth = across;
-                }
-                else ScreenWidth = 0;
+                GameFile = path;
+                BaseDir = Path.GetDirectoryName(path);
+                XElement reader = XElement.Load(path);
 
-                if (int.TryParse(sizeNode.Attribute("y").Value, out down))
+                XAttribute nameAttr = reader.Attribute("name");
+                if (nameAttr != null) this.Name = nameAttr.Value;
+
+                XAttribute authAttr = reader.Attribute("author");
+                if (authAttr != null) this.Author = authAttr.Value;
+
+                XElement sizeNode = reader.Element("Size");
+                if (sizeNode != null)
                 {
-                    ScreenHeight = down;
+                    int across, down;
+                    if (int.TryParse(sizeNode.Attribute("x").Value, out across))
+                    {
+                        ScreenWidth = across;
+                    }
+                    else ScreenWidth = 0;
+
+                    if (int.TryParse(sizeNode.Attribute("y").Value, out down))
+                    {
+                        ScreenHeight = down;
+                    }
+                    else ScreenHeight = 0;
                 }
-                else ScreenHeight = 0;
+
+                XElement stageNode = reader.Element("StageSelect");
+                if (stageNode != null)
+                {
+                    XElement musicNode = stageNode.Element("Music");
+                    if (musicNode != null) this.StageSelectMusic = FilePath.FromRelative(musicNode.Value, this.BaseDir);
+
+                    string changepath = GetNodeAttr(stageNode, "ChangeSound", "path");
+                    if (changepath != "") this.StageSelectChangeSound = FilePath.FromRelative(changepath, this.BaseDir);
+
+                    string bgpath = GetNodeVal(stageNode, "Background");
+                    if (bgpath != "") this.StageSelectBackground = FilePath.FromRelative(bgpath, this.BaseDir);
+
+                    XElement bossFrame = stageNode.Element("BossFrame");
+                    if (bossFrame != null)
+                    {
+                        XElement bossSprite = bossFrame.Element("Sprite");
+                        if (bossSprite != null) this.bossFrameSprite = Sprite.FromXml(bossSprite, this.BaseDir);
+                    }
+
+                    string spaceX = GetNodeAttr(stageNode, "Spacing", "x");
+                    if (spaceX != "")
+                    {
+                        int x = BossSpacingHorizontal;
+                        if (int.TryParse(spaceX, out x)) BossSpacingHorizontal = x;
+                    }
+
+                    string spaceY = GetNodeAttr(stageNode, "Spacing", "y");
+                    if (spaceY != "")
+                    {
+                        int y = BossSpacingVertical;
+                        if (int.TryParse(spaceY, out y)) BossSpacingVertical = y;
+                    }
+
+                    foreach (XElement bossNode in stageNode.Elements("Boss"))
+                    {
+                        XAttribute slotAttr = bossNode.Attribute("slot");
+                        int slot = -1;
+                        if (slotAttr != null) int.TryParse(slotAttr.Value, out slot);
+
+                        StageInfo info = new StageInfo();
+                        info.Slot = slot;
+                        info.Name = GetNodeVal(bossNode, "Name");
+                        info.PortraitPath = FilePath.FromRelative(GetNodeVal(bossNode, "Portrait"), this.BaseDir);
+                        info.StagePath = FilePath.FromRelative(GetNodeVal(bossNode, "Stage"), this.BaseDir);
+
+                        this.stages.Add(info);
+                    }
+                }
+
+                XElement pauseNode = reader.Element("PauseScreen");
+
+                foreach (XElement entityNode in reader.Elements("Entities"))
+                {
+                    if (!string.IsNullOrEmpty(entityNode.Value.Trim())) entityFiles.Add(entityNode.Value);
+                }
             }
-
-            XElement stageNode = reader.Element("StageSelect");
-            if (stageNode != null)
+            catch
             {
-                XElement musicNode = stageNode.Element("Music");
-                if (musicNode != null) this.StageSelectMusic = FilePath.FromRelative(musicNode.Value, this.BaseDir);
+                Name = Author = GameFile = BaseDir = null;
+                StageSelectBackground = StageSelectChangeSound = StageSelectMusic =
+                     PauseChangeSound = PauseScreenBackground = null;
+                PauseLivesPosition = Point.Empty;
+                PauseSound = null;
+                stages.Clear();
+                bossFrameSprite = null;
+                entityFiles.Clear();
 
-                string changepath = GetNodeAttr(stageNode, "ChangeSound", "path");
-                if (changepath != "") this.StageSelectChangeSound = FilePath.FromRelative(changepath, this.BaseDir);
-
-                string bgpath = GetNodeVal(stageNode, "Background");
-                if (bgpath != "") this.StageSelectBackground = FilePath.FromRelative(bgpath, this.BaseDir);
-
-                XElement bossFrame = stageNode.Element("BossFrame");
-                if (bossFrame != null)
-                {
-                    XElement bossSprite = bossFrame.Element("Sprite");
-                    if (bossSprite != null) this.bossFrameSprite = Sprite.FromXml(bossSprite, this.BaseDir);
-                }
-
-                string spaceX = GetNodeAttr(stageNode, "Spacing", "x");
-                if (spaceX != "")
-                {
-                    int x = BossSpacingHorizontal;
-                    if (int.TryParse(spaceX, out x)) BossSpacingHorizontal = x;
-                }
-
-                string spaceY = GetNodeAttr(stageNode, "Spacing", "y");
-                if (spaceY != "")
-                {
-                    int y = BossSpacingVertical;
-                    if (int.TryParse(spaceY, out y)) BossSpacingVertical = y;
-                }
-
-                foreach (XElement bossNode in stageNode.Elements("Boss"))
-                {
-                    XAttribute slotAttr = bossNode.Attribute("slot");
-                    int slot = -1;
-                    if (slotAttr != null) int.TryParse(slotAttr.Value, out slot);
-
-                    StageInfo info = new StageInfo();
-                    info.Slot = slot;
-                    info.Name = GetNodeVal(bossNode, "Name");
-                    info.PortraitPath = FilePath.FromRelative(GetNodeVal(bossNode, "Portrait"), this.BaseDir);
-                    info.StagePath = FilePath.FromRelative(GetNodeVal(bossNode, "Stage"), this.BaseDir);
-
-                    this.stages.Add(info);
-                }
-            }
-
-            XElement pauseNode = reader.Element("PauseScreen");
-
-            foreach (XElement entityNode in reader.Elements("Entities"))
-            {
-                if (!string.IsNullOrEmpty(entityNode.Value.Trim())) entityFiles.Add(entityNode.Value);
+                throw;
             }
         }
 
