@@ -10,11 +10,17 @@ using System.Drawing;
 
 namespace MegaMan_Level_Editor
 {
-    public class StageInfo
+    public class BossInfo
     {
         public int Slot { get; set; }
         public string Name { get; set; }
         public FilePath PortraitPath { get; set; }
+        public string Stage { get; set; }
+    }
+
+    public class StageInfo
+    {
+        public string Name { get; set; }
         public FilePath StagePath { get; set; }
     }
 
@@ -34,7 +40,8 @@ namespace MegaMan_Level_Editor
 
         #region Game XML File Stuff
 
-        private List<StageInfo> stages = new List<StageInfo>(8);
+        private List<StageInfo> stages = new List<StageInfo>();
+        private List<BossInfo> bosses = new List<BossInfo>(8);
         private List<string> entityFiles = new List<string>();
         private Sprite bossFrameSprite;
 
@@ -187,52 +194,64 @@ namespace MegaMan_Level_Editor
                     else ScreenHeight = 0;
                 }
 
-                XElement stageNode = reader.Element("StageSelect");
-                if (stageNode != null)
+                XElement stagesNode = reader.Element("Stages");
+                if (stagesNode != null)
                 {
-                    XElement musicNode = stageNode.Element("Music");
+                    foreach (XElement stageNode in stagesNode.Elements("Stage"))
+                    {
+                        var info = new StageInfo();
+                        info.Name = GetNodeAttr(stageNode, "name");
+                        info.StagePath = FilePath.FromRelative(GetNodeAttr(stageNode, "path"), this.BaseDir);
+                        stages.Add(info);
+                    }
+                }
+
+                XElement stageSelectNode = reader.Element("StageSelect");
+                if (stageSelectNode != null)
+                {
+                    XElement musicNode = stageSelectNode.Element("Music");
                     if (musicNode != null) this.StageSelectMusic = FilePath.FromRelative(musicNode.Value, this.BaseDir);
 
-                    string changepath = GetNodeAttr(stageNode, "ChangeSound", "path");
+                    string changepath = GetNodeAttr(stageSelectNode, "ChangeSound", "path");
                     if (changepath != "") this.StageSelectChangeSound = FilePath.FromRelative(changepath, this.BaseDir);
 
-                    string bgpath = GetNodeVal(stageNode, "Background");
+                    string bgpath = GetNodeVal(stageSelectNode, "Background");
                     if (bgpath != "") this.StageSelectBackground = FilePath.FromRelative(bgpath, this.BaseDir);
 
-                    XElement bossFrame = stageNode.Element("BossFrame");
+                    XElement bossFrame = stageSelectNode.Element("BossFrame");
                     if (bossFrame != null)
                     {
                         XElement bossSprite = bossFrame.Element("Sprite");
                         if (bossSprite != null) this.bossFrameSprite = Sprite.FromXml(bossSprite, this.BaseDir);
                     }
 
-                    string spaceX = GetNodeAttr(stageNode, "Spacing", "x");
+                    string spaceX = GetNodeAttr(stageSelectNode, "Spacing", "x");
                     if (spaceX != "")
                     {
                         int x = BossSpacingHorizontal;
                         if (int.TryParse(spaceX, out x)) BossSpacingHorizontal = x;
                     }
 
-                    string spaceY = GetNodeAttr(stageNode, "Spacing", "y");
+                    string spaceY = GetNodeAttr(stageSelectNode, "Spacing", "y");
                     if (spaceY != "")
                     {
                         int y = BossSpacingVertical;
                         if (int.TryParse(spaceY, out y)) BossSpacingVertical = y;
                     }
 
-                    foreach (XElement bossNode in stageNode.Elements("Boss"))
+                    foreach (XElement bossNode in stageSelectNode.Elements("Boss"))
                     {
                         XAttribute slotAttr = bossNode.Attribute("slot");
                         int slot = -1;
                         if (slotAttr != null) int.TryParse(slotAttr.Value, out slot);
 
-                        StageInfo info = new StageInfo();
+                        BossInfo info = new BossInfo();
                         info.Slot = slot;
-                        info.Name = GetNodeVal(bossNode, "Name");
-                        info.PortraitPath = FilePath.FromRelative(GetNodeVal(bossNode, "Portrait"), this.BaseDir);
-                        info.StagePath = FilePath.FromRelative(GetNodeVal(bossNode, "Stage"), this.BaseDir);
+                        info.Name = GetNodeAttr(bossNode, "name");
+                        info.PortraitPath = FilePath.FromRelative(GetNodeAttr(bossNode, "portrait"), this.BaseDir);
+                        info.Stage = GetNodeAttr(bossNode, "stage");
 
-                        this.stages.Add(info);
+                        this.bosses.Add(info);
                     }
                 }
 
@@ -250,7 +269,7 @@ namespace MegaMan_Level_Editor
                      PauseChangeSound = PauseScreenBackground = null;
                 PauseLivesPosition = Point.Empty;
                 PauseSound = null;
-                stages.Clear();
+                bosses.Clear();
                 bossFrameSprite = null;
                 entityFiles.Clear();
 
@@ -267,7 +286,11 @@ namespace MegaMan_Level_Editor
 
         private string GetNodeAttr(XElement parent, string nodename, string attrname)
         {
-            var node = parent.Element(nodename);
+            return GetNodeAttr(parent.Element(nodename), attrname);
+        }
+
+        private string GetNodeAttr(XElement node, string attrname)
+        {
             if (node == null) return "";
             var attr = node.Attribute(attrname);
             if (attr == null) return "";
@@ -298,7 +321,6 @@ namespace MegaMan_Level_Editor
 
             var info = new StageInfo();
             info.Name = name;
-            info.Slot = -1;
             info.StagePath = FilePath.FromAbsolute(stagePath, this.BaseDir);
             this.stages.Add(info);
 
@@ -319,11 +341,22 @@ namespace MegaMan_Level_Editor
             writer.WriteStartElement("Game");
             if (!string.IsNullOrEmpty(this.Name)) writer.WriteAttributeString("name", this.Name);
             if (!string.IsNullOrEmpty(this.Author)) writer.WriteAttributeString("author", this.Author);
+            writer.WriteAttributeString("editor_version", System.Windows.Forms.Application.ProductVersion);
 
             writer.WriteStartElement("Size");
             writer.WriteAttributeString("x", this.ScreenWidth.ToString());
             writer.WriteAttributeString("y", this.ScreenHeight.ToString());
             writer.WriteEndElement();
+
+            writer.WriteStartElement("Stages");
+            foreach (var info in stages)
+            {
+                writer.WriteStartElement("Stage");
+                writer.WriteAttributeString("name", info.Name);
+                writer.WriteAttributeString("path", info.StagePath.Relative);
+                writer.WriteEndElement();
+            }
+            writer.WriteEndElement(); // Stages
 
             writer.WriteStartElement("StageSelect");
 
@@ -343,13 +376,13 @@ namespace MegaMan_Level_Editor
                 writer.WriteEndElement(); // BossFrame
             }
 
-            foreach (StageInfo boss in this.stages)
+            foreach (BossInfo boss in this.bosses)
             {
                 writer.WriteStartElement("Boss");
                 if (boss.Slot >= 0) writer.WriteAttributeString("slot", boss.Slot.ToString());
-                if (!string.IsNullOrEmpty(boss.Name)) writer.WriteElementString("Name", boss.Name);
+                if (!string.IsNullOrEmpty(boss.Name)) writer.WriteAttributeString("name", boss.Name);
                 if (boss.PortraitPath != null && !string.IsNullOrEmpty(boss.PortraitPath.Relative)) writer.WriteElementString("Portrait", boss.PortraitPath.Relative);
-                if (boss.StagePath != null && !string.IsNullOrEmpty(boss.StagePath.Relative)) writer.WriteElementString("Stage", boss.StagePath.Relative);
+                if (!string.IsNullOrEmpty(boss.Stage)) writer.WriteAttributeString("stage", boss.Stage);
                 writer.WriteEndElement();
             }
 
