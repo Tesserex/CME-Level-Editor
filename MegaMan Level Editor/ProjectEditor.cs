@@ -93,14 +93,108 @@ namespace MegaMan_Level_Editor
             }
         }
 
-        public FilePath StageSelectMusic { get; private set; }
-        public FilePath StageSelectBackground { get; private set; }
-        public FilePath StageSelectChangeSound { get; private set; }
-        public int BossSpacingHorizontal { get; set; }
-        public int BossSpacingVertical { get; set; }
-        public FilePath PauseScreenBackground { get; private set; }
-        public FilePath PauseChangeSound { get; private set; }
-        public FilePath PauseSound { get; private set; }
+        public Sprite BossFrameSprite
+        {
+            get { return this.bossFrameSprite; }
+            set
+            {
+                this.bossFrameSprite = value;
+                Dirty = true;
+            }
+        }
+
+        private FilePath stageSelectBackground, stageSelectMusic, stageSelectChange, pauseBackground, pauseChange, pauseSound;
+
+        public FilePath StageSelectMusic
+        {
+            get { return stageSelectMusic; }
+            set
+            {
+                if (stageSelectMusic.Absolute == value.Absolute) return;
+                stageSelectMusic = value;
+                Dirty = true;
+            }
+        }
+
+        public FilePath StageSelectBackground
+        {
+            get { return stageSelectBackground; }
+            set
+            {
+                if (stageSelectBackground.Absolute == value.Absolute) return;
+                stageSelectBackground = value;
+                Dirty = true;
+            }
+        }
+
+        public FilePath StageSelectChangeSound
+        {
+            get { return stageSelectChange; }
+            set
+            {
+                if (stageSelectChange.Absolute == value.Absolute) return;
+                stageSelectChange = value;
+                Dirty = true;
+            }
+        }
+
+        private int bossHoriz, bossVert;
+
+        public int BossSpacingHorizontal
+        {
+            get { return bossHoriz; }
+            set
+            {
+                if (bossHoriz == value) return;
+                bossHoriz = value;
+                Dirty = true;
+            }
+        }
+
+        public int BossSpacingVertical
+        {
+            get { return bossVert; }
+            set
+            {
+                if (bossVert == value) return;
+                bossVert = value;
+                Dirty = true;
+            }
+        }
+
+        public FilePath PauseScreenBackground
+        {
+            get { return pauseBackground; }
+            set
+            {
+                if (pauseBackground.Absolute == value.Absolute) return;
+                pauseBackground = value;
+                Dirty = true;
+            }
+        }
+
+        public FilePath PauseChangeSound
+        {
+            get { return pauseChange; }
+            set
+            {
+                if (pauseChange.Absolute == value.Absolute) return;
+                pauseChange = value;
+                Dirty = true;
+            }
+        }
+
+        public FilePath PauseSound
+        {
+            get { return pauseSound; }
+            set
+            {
+                if (pauseSound.Absolute == value.Absolute) return;
+                pauseSound = value;
+                Dirty = true;
+            }
+        }
+
         public Point PauseLivesPosition { get; private set; }
 
         #endregion
@@ -275,6 +369,8 @@ namespace MegaMan_Level_Editor
 
                 throw;
             }
+
+            this.Dirty = false;
         }
 
         private string GetNodeVal(XElement parent, string name)

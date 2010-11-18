@@ -49,7 +49,8 @@ namespace MegaMan_Level_Editor
                     closeToolStripMenuItem.Enabled = propertiesToolStripMenuItem.Enabled =
                     newScreenMenuItem.Enabled =
                     manageEnemiesToolStripMenuItem.Enabled = mergeScreenToolStripMenuItem.Enabled =
-                    splitScreenToolStripMenuItem.Enabled = addEnemyToolStripMenuItem.Enabled = (value != null);
+                    splitScreenToolStripMenuItem.Enabled = addEnemyToolStripMenuItem.Enabled = 
+                    stageSelectToolStripMenuItem.Enabled = (value != null);
             }
         }
 
@@ -136,6 +137,7 @@ namespace MegaMan_Level_Editor
 
             LoadRecentFiles();
 
+            ActiveStage = null;
         }
 
         void CreateBrushForm()
@@ -183,7 +185,7 @@ namespace MegaMan_Level_Editor
 
         public void FocusScreen(StageDocument stage)
         {
-            activeStage = stage;
+            ActiveStage = stage;
             ChangeTileset(stage.Tileset);
         }
 
@@ -361,6 +363,7 @@ namespace MegaMan_Level_Editor
         {
             if (ActiveStage != null)
             {
+                ActiveStage.Project.Save();
                 ActiveStage.Save();
             }
         }
@@ -477,6 +480,11 @@ namespace MegaMan_Level_Editor
         private void joinsToolStripMenuItem_Click(object sender, EventArgs e)
         {
             DrawJoins = !DrawJoins;
+        }
+
+        private void stageSelectToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (this.ActiveStage != null) new StageSelectEdit(this.ActiveStage.Project).Show();
         }
     }
 }
