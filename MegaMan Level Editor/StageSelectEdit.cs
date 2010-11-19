@@ -20,8 +20,26 @@ namespace MegaMan_Level_Editor
             InitializeComponent();
             this.project = project;
             this.preview.Image = new Bitmap(project.ScreenWidth, project.ScreenHeight);
+
             bossX.Value = project.BossSpacingHorizontal;
             bossY.Value = project.BossSpacingVertical;
+
+            if (project.StageSelectBackground != null)
+            {
+                textBackground.Text = project.StageSelectBackground.Absolute;
+                try
+                {
+                    this.background = (Bitmap)Image.FromFile(project.StageSelectBackground.Absolute);
+                    this.background.SetResolution(this.preview.Image.HorizontalResolution, this.preview.Image.VerticalResolution);
+                }
+                catch
+                {
+                    this.textBackground.Text = "";
+                }
+            }
+
+            if (project.StageSelectMusic != null) textMusic.Text = project.StageSelectMusic.Absolute;
+            if (project.StageSelectChangeSound != null) textSound.Text = project.StageSelectChangeSound.Absolute;
 
             ReDraw();
         }
@@ -78,7 +96,7 @@ namespace MegaMan_Level_Editor
             var result = browse.ShowDialog();
             if (result == DialogResult.OK)
             {
-                this.textBackground.Text = browse.FileName;
+                this.textMusic.Text = browse.FileName;
                 project.StageSelectMusic = FilePath.FromAbsolute(browse.FileName, project.BaseDir);
             }
         }
