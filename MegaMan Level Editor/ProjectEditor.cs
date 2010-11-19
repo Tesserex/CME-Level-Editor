@@ -110,7 +110,7 @@ namespace MegaMan_Level_Editor
             get { return stageSelectMusic; }
             set
             {
-                if (stageSelectMusic.Absolute == value.Absolute) return;
+                if (stageSelectMusic != null && stageSelectMusic.Absolute == value.Absolute) return;
                 stageSelectMusic = value;
                 Dirty = true;
             }
@@ -121,7 +121,7 @@ namespace MegaMan_Level_Editor
             get { return stageSelectBackground; }
             set
             {
-                if (stageSelectBackground.Absolute == value.Absolute) return;
+                if (stageSelectBackground != null && stageSelectBackground.Absolute == value.Absolute) return;
                 stageSelectBackground = value;
                 Dirty = true;
             }
@@ -132,7 +132,7 @@ namespace MegaMan_Level_Editor
             get { return stageSelectChange; }
             set
             {
-                if (stageSelectChange.Absolute == value.Absolute) return;
+                if (stageSelectChange != null && stageSelectChange.Absolute == value.Absolute) return;
                 stageSelectChange = value;
                 Dirty = true;
             }
@@ -167,7 +167,7 @@ namespace MegaMan_Level_Editor
             get { return pauseBackground; }
             set
             {
-                if (pauseBackground.Absolute == value.Absolute) return;
+                if (pauseBackground != null && pauseBackground.Absolute == value.Absolute) return;
                 pauseBackground = value;
                 Dirty = true;
             }
@@ -178,7 +178,7 @@ namespace MegaMan_Level_Editor
             get { return pauseChange; }
             set
             {
-                if (pauseChange.Absolute == value.Absolute) return;
+                if (pauseChange != null && pauseChange.Absolute == value.Absolute) return;
                 pauseChange = value;
                 Dirty = true;
             }
@@ -189,7 +189,7 @@ namespace MegaMan_Level_Editor
             get { return pauseSound; }
             set
             {
-                if (pauseSound.Absolute == value.Absolute) return;
+                if (pauseSound != null && pauseSound.Absolute == value.Absolute) return;
                 pauseSound = value;
                 Dirty = true;
             }
