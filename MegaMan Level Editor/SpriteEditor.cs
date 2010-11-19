@@ -40,6 +40,8 @@ namespace MegaMan_Level_Editor
 
                 textWidth.Text = sprite.Width.ToString();
                 textHeight.Text = sprite.Height.ToString();
+
+                sprite.Play();
             }
         }
 
