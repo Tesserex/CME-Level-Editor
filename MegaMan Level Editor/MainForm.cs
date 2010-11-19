@@ -372,10 +372,10 @@ namespace MegaMan_Level_Editor
 
         private void saveToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            if (ActiveStage != null)
+            if (ActiveProject != null)
             {
                 ActiveProject.Save();
-                ActiveStage.Save();
+                if (ActiveStage != null) ActiveStage.Save();
             }
         }
 
