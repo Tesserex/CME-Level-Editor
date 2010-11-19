@@ -66,6 +66,11 @@ namespace MegaMan_Level_Editor
             };
         }
 
+        public void CloseProject()
+        {
+            this.projectView.Nodes.Clear();
+        }
+
         private void buttonNewStage_Click(object sender, EventArgs e)
         {
             if (projectView.SelectedNode != null)

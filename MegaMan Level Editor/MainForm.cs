@@ -14,9 +14,10 @@ namespace MegaMan_Level_Editor
 {
     public partial class MainForm : Form
     {
-        #region Public Members
+        #region Private Members
 
         private TilesetStrip tilestrip;
+        private ProjectEditor activeProject;
         private StageDocument activeStage;
 
         public BrushForm brushForm;
@@ -39,18 +40,27 @@ namespace MegaMan_Level_Editor
         #endregion Private Members
 
         #region Properties
+        public ProjectEditor ActiveProject
+        {
+            get { return activeProject; }
+            set
+            {
+                activeProject = value;
+                saveToolStripMenuItem.Enabled =
+                    closeToolStripMenuItem.Enabled = propertiesToolStripMenuItem.Enabled =
+                    newScreenMenuItem.Enabled =
+                    manageEnemiesToolStripMenuItem.Enabled = mergeScreenToolStripMenuItem.Enabled =
+                    splitScreenToolStripMenuItem.Enabled = addEnemyToolStripMenuItem.Enabled =
+                    stageSelectToolStripMenuItem.Enabled = (value != null);
+            }
+        }
+
         public StageDocument ActiveStage
         {
             get { return activeStage; }
             set
             {
                 activeStage = value;
-                saveToolStripMenuItem.Enabled =
-                    closeToolStripMenuItem.Enabled = propertiesToolStripMenuItem.Enabled =
-                    newScreenMenuItem.Enabled =
-                    manageEnemiesToolStripMenuItem.Enabled = mergeScreenToolStripMenuItem.Enabled =
-                    splitScreenToolStripMenuItem.Enabled = addEnemyToolStripMenuItem.Enabled = 
-                    stageSelectToolStripMenuItem.Enabled = (value != null);
             }
         }
 
@@ -286,6 +296,7 @@ namespace MegaMan_Level_Editor
                 var project = ProjectEditor.FromFile(gamefile);
                 projectForm.AddProject(project);
                 AddRecentFile(gamefile);
+                ActiveProject = project;
             }
             catch
             {
@@ -363,16 +374,22 @@ namespace MegaMan_Level_Editor
         {
             if (ActiveStage != null)
             {
-                ActiveStage.Project.Save();
+                ActiveProject.Save();
                 ActiveStage.Save();
             }
         }
 
         private void closeToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            if (ActiveStage == null)
-                return;
-            ActiveStage.Close();
+            if (ActiveProject == null) return;
+
+            if (ActiveProject.Close())
+            {
+                projectForm.CloseProject();
+                tilestrip.ChangeTileset(null);
+                ActiveProject = null;
+                ActiveStage = null;
+            }
         }
 
         //*****************
@@ -484,7 +501,7 @@ namespace MegaMan_Level_Editor
 
         private void stageSelectToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            if (this.ActiveStage != null) new StageSelectEdit(this.ActiveStage.Project).Show();
+            if (this.ActiveProject != null) new StageSelectEdit(this.ActiveProject).Show();
         }
     }
 }

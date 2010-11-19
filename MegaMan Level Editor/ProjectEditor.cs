@@ -7,6 +7,7 @@ using System.IO;
 using System.Xml.Linq;
 using System.Xml;
 using System.Drawing;
+using System.Windows.Forms;
 
 namespace MegaMan_Level_Editor
 {
@@ -492,6 +493,29 @@ namespace MegaMan_Level_Editor
             writer.WriteEndElement(); // Game
             
             writer.Close();
+        }
+
+        public bool Close()
+        {
+            foreach (StageDocument stage in this.openStages.Values)
+            {
+                if (!stage.Close()) return false;
+            }
+
+            if (!ConfirmSave()) return false;
+
+            return true;
+        }
+
+        public bool ConfirmSave()
+        {
+            if (Dirty)
+            {
+                DialogResult result = MessageBox.Show("Do you want to save changes to " + this.Name + " before closing?", "Save Changes", MessageBoxButtons.YesNoCancel);
+                if (result == DialogResult.Yes) this.Save();
+                else if (result == DialogResult.Cancel) return false;
+            }
+            return true;
         }
     }
 }

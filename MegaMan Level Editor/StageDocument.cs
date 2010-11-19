@@ -177,13 +177,14 @@ namespace MegaMan_Level_Editor
             stageForm.Focus();
         }
 
-        public void Close()
+        public bool Close()
         {
-            if (!ConfirmSave()) return;
+            if (!ConfirmSave()) return false;
 
             stageForm.FormClosing -= StageForm_FormClosing;
             stageForm.Close();
             if (Closed != null) Closed(this);
+            return true;
         }
 
         public bool ConfirmSave()
