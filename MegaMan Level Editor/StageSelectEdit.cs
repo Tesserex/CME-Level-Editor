@@ -160,7 +160,7 @@ namespace MegaMan_Level_Editor
         {
             BossInfo info = this.project.BossAtSlot(comboSlot.SelectedIndex);
 
-            if (info.PortraitPath != null) textPortrait.Text = info.PortraitPath.Absolute;
+            if (info.PortraitPath != null && info.PortraitPath.Relative != "") textPortrait.Text = info.PortraitPath.Absolute;
             else textPortrait.Text = "";
 
             textBossName.Text = info.Name;
@@ -174,6 +174,18 @@ namespace MegaMan_Level_Editor
             if (comboStages.SelectedItem != null)
             {
                 this.project.BossAtSlot(comboSlot.SelectedIndex).Stage = comboStages.SelectedItem.ToString();
+            }
+        }
+
+        private void portraitBrowse_Click(object sender, EventArgs e)
+        {
+            var browse = new OpenFileDialog();
+            browse.Filter = "Images (png, gif, bmp, jpg)|*.png;*.gif;*.bmp;*.jpg";
+            var result = browse.ShowDialog();
+            if (result == DialogResult.OK)
+            {
+                this.project.BossAtSlot(comboSlot.SelectedIndex).PortraitPath = FilePath.FromAbsolute(browse.FileName, this.project.BaseDir);
+                this.textPortrait.Text = browse.FileName;
             }
         }
     }
