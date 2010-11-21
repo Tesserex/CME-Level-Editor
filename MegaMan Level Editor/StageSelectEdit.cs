@@ -24,6 +24,9 @@ namespace MegaMan_Level_Editor
             bossX.Value = project.BossSpacingHorizontal;
             bossY.Value = project.BossSpacingVertical;
 
+            comboSlot.SelectedIndex = -1;
+            comboStages.Items.AddRange(project.StageNames.ToArray());
+
             if (project.StageSelectBackground != null)
             {
                 textBackground.Text = project.StageSelectBackground.Absolute;
@@ -50,6 +53,25 @@ namespace MegaMan_Level_Editor
             {
                 g.Clear(Color.Black);
                 if (background != null) g.DrawImage(background, 0, 0);
+
+                if (this.project.BossFrameSprite != null) 
+                {
+                    int mid_x = this.project.ScreenWidth / 2 - this.project.BossFrameSprite.Width / 2;
+                    int mid_y = this.project.ScreenHeight / 2 - this.project.BossFrameSprite.Height / 2;
+
+                    int space_x = this.project.BossSpacingHorizontal + this.project.BossFrameSprite.Width;
+                    int space_y = this.project.BossSpacingVertical + this.project.BossFrameSprite.Height;
+
+                    this.project.BossFrameSprite.Draw(g, mid_x - space_x, mid_y - space_y);
+                    this.project.BossFrameSprite.Draw(g, mid_x, mid_y - space_y);
+                    this.project.BossFrameSprite.Draw(g, mid_x + space_x, mid_y - space_y);
+                    this.project.BossFrameSprite.Draw(g, mid_x - space_x, mid_y);
+                    this.project.BossFrameSprite.Draw(g, mid_x, mid_y);
+                    this.project.BossFrameSprite.Draw(g, mid_x + space_x, mid_y);
+                    this.project.BossFrameSprite.Draw(g, mid_x - space_x, mid_y + space_y);
+                    this.project.BossFrameSprite.Draw(g, mid_x, mid_y + space_y);
+                    this.project.BossFrameSprite.Draw(g, mid_x + space_x, mid_y + space_y);
+                }
             }
             this.preview.Refresh();
         }
@@ -86,6 +108,10 @@ namespace MegaMan_Level_Editor
             {
                 project.BossFrameSprite = editor.Sprite;
             };
+            editor.FormClosed += (s, ev) =>
+                {
+                    ReDraw();
+                };
             editor.Show();
         }
 
@@ -121,11 +147,34 @@ namespace MegaMan_Level_Editor
         private void bossX_ValueChanged(object sender, EventArgs e)
         {
             project.BossSpacingHorizontal = (int)bossX.Value;
+            this.ReDraw();
         }
 
         private void bossY_ValueChanged(object sender, EventArgs e)
         {
             project.BossSpacingVertical = (int)bossY.Value;
+            this.ReDraw();
+        }
+
+        private void comboSlot_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            BossInfo info = this.project.BossAtSlot(comboSlot.SelectedIndex);
+
+            if (info.PortraitPath != null) textPortrait.Text = info.PortraitPath.Absolute;
+            else textPortrait.Text = "";
+
+            textBossName.Text = info.Name;
+
+            if (info.Stage == null) comboStages.SelectedIndex = -1;
+            else comboStages.SelectedIndex = comboStages.Items.IndexOf(info.Stage);
+        }
+
+        private void comboStages_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (comboStages.SelectedItem != null)
+            {
+                this.project.BossAtSlot(comboSlot.SelectedIndex).Stage = comboStages.SelectedItem.ToString();
+            }
         }
     }
 }

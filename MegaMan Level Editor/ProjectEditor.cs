@@ -247,6 +247,24 @@ namespace MegaMan_Level_Editor
             return null;
         }
 
+        public BossInfo BossAtSlot(int slot)
+        {
+            foreach (var info in bosses)
+            {
+                if (info.Slot == slot) return info;
+            }
+            // find the next available one
+            foreach (var info in bosses)
+            {
+                if (info.Slot == -1)
+                {
+                    info.Slot = slot;
+                    return info;
+                }
+            }
+            return null;
+        }
+
         private ProjectEditor()
         {
             // sensible defaults where possible
@@ -254,6 +272,13 @@ namespace MegaMan_Level_Editor
             ScreenHeight = 224;
             BossSpacingHorizontal = 24;
             BossSpacingVertical = 16;
+
+            for (int i = 0; i < 8; i++)
+            {
+                var boss = new BossInfo();
+                boss.Slot = -1;
+                bosses.Add(boss);
+            }
         }
 
         private void Load(string path)
@@ -334,19 +359,20 @@ namespace MegaMan_Level_Editor
                         if (int.TryParse(spaceY, out y)) BossSpacingVertical = y;
                     }
 
+                    int bossIndex = 0;
                     foreach (XElement bossNode in stageSelectNode.Elements("Boss"))
                     {
                         XAttribute slotAttr = bossNode.Attribute("slot");
                         int slot = -1;
                         if (slotAttr != null) int.TryParse(slotAttr.Value, out slot);
 
-                        BossInfo info = new BossInfo();
+                        BossInfo info = this.bosses[bossIndex];
                         info.Slot = slot;
                         info.Name = GetNodeAttr(bossNode, "name");
-                        info.PortraitPath = FilePath.FromRelative(GetNodeAttr(bossNode, "portrait"), this.BaseDir);
+                        var portrait = GetNodeAttr(bossNode, "portrait");
+                        if (portrait != null) info.PortraitPath = FilePath.FromRelative(portrait, this.BaseDir);
                         info.Stage = GetNodeAttr(bossNode, "stage");
-
-                        this.bosses.Add(info);
+                        bossIndex++;
                     }
                 }
 

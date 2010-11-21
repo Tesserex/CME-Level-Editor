@@ -46,10 +46,21 @@
             this.label6 = new System.Windows.Forms.Label();
             this.frameBrowse = new System.Windows.Forms.Button();
             this.buttonSave = new System.Windows.Forms.Button();
+            this.groupBox2 = new System.Windows.Forms.GroupBox();
+            this.comboSlot = new System.Windows.Forms.ComboBox();
+            this.label7 = new System.Windows.Forms.Label();
+            this.label8 = new System.Windows.Forms.Label();
+            this.textPortrait = new System.Windows.Forms.TextBox();
+            this.portraitBrowse = new System.Windows.Forms.Button();
+            this.label9 = new System.Windows.Forms.Label();
+            this.textBossName = new System.Windows.Forms.TextBox();
+            this.label10 = new System.Windows.Forms.Label();
+            this.comboStages = new System.Windows.Forms.ComboBox();
             this.groupBox1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.bossY)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.bossX)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.preview)).BeginInit();
+            this.groupBox2.SuspendLayout();
             this.SuspendLayout();
             // 
             // label1
@@ -207,7 +218,8 @@
             // 
             // buttonSave
             // 
-            this.buttonSave.Location = new System.Drawing.Point(137, 208);
+            this.buttonSave.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.buttonSave.Location = new System.Drawing.Point(271, 334);
             this.buttonSave.Name = "buttonSave";
             this.buttonSave.Size = new System.Drawing.Size(75, 23);
             this.buttonSave.TabIndex = 15;
@@ -215,11 +227,116 @@
             this.buttonSave.UseVisualStyleBackColor = true;
             this.buttonSave.Click += new System.EventHandler(this.buttonSave_Click);
             // 
+            // groupBox2
+            // 
+            this.groupBox2.Controls.Add(this.comboStages);
+            this.groupBox2.Controls.Add(this.label10);
+            this.groupBox2.Controls.Add(this.textBossName);
+            this.groupBox2.Controls.Add(this.label9);
+            this.groupBox2.Controls.Add(this.portraitBrowse);
+            this.groupBox2.Controls.Add(this.textPortrait);
+            this.groupBox2.Controls.Add(this.label8);
+            this.groupBox2.Controls.Add(this.label7);
+            this.groupBox2.Controls.Add(this.comboSlot);
+            this.groupBox2.Location = new System.Drawing.Point(12, 194);
+            this.groupBox2.Name = "groupBox2";
+            this.groupBox2.Size = new System.Drawing.Size(293, 134);
+            this.groupBox2.TabIndex = 16;
+            this.groupBox2.TabStop = false;
+            this.groupBox2.Text = "Bosses";
+            // 
+            // comboSlot
+            // 
+            this.comboSlot.FormattingEnabled = true;
+            this.comboSlot.Items.AddRange(new object[] {
+            "Top Left",
+            "Top",
+            "Top Right",
+            "Left",
+            "Right",
+            "Bottom Left",
+            "Bottom",
+            "Bottom Right"});
+            this.comboSlot.Location = new System.Drawing.Point(60, 19);
+            this.comboSlot.Name = "comboSlot";
+            this.comboSlot.Size = new System.Drawing.Size(92, 21);
+            this.comboSlot.TabIndex = 0;
+            this.comboSlot.SelectedIndexChanged += new System.EventHandler(this.comboSlot_SelectedIndexChanged);
+            // 
+            // label7
+            // 
+            this.label7.AutoSize = true;
+            this.label7.Location = new System.Drawing.Point(26, 22);
+            this.label7.Name = "label7";
+            this.label7.Size = new System.Drawing.Size(28, 13);
+            this.label7.TabIndex = 1;
+            this.label7.Text = "Slot:";
+            // 
+            // label8
+            // 
+            this.label8.AutoSize = true;
+            this.label8.Location = new System.Drawing.Point(11, 50);
+            this.label8.Name = "label8";
+            this.label8.Size = new System.Drawing.Size(43, 13);
+            this.label8.TabIndex = 2;
+            this.label8.Text = "Portrait:";
+            // 
+            // textPortrait
+            // 
+            this.textPortrait.Location = new System.Drawing.Point(60, 47);
+            this.textPortrait.Name = "textPortrait";
+            this.textPortrait.Size = new System.Drawing.Size(146, 20);
+            this.textPortrait.TabIndex = 3;
+            // 
+            // portraitBrowse
+            // 
+            this.portraitBrowse.Location = new System.Drawing.Point(212, 47);
+            this.portraitBrowse.Name = "portraitBrowse";
+            this.portraitBrowse.Size = new System.Drawing.Size(65, 23);
+            this.portraitBrowse.TabIndex = 4;
+            this.portraitBrowse.Text = "Browse...";
+            this.portraitBrowse.UseVisualStyleBackColor = true;
+            // 
+            // label9
+            // 
+            this.label9.AutoSize = true;
+            this.label9.Location = new System.Drawing.Point(16, 76);
+            this.label9.Name = "label9";
+            this.label9.Size = new System.Drawing.Size(38, 13);
+            this.label9.TabIndex = 5;
+            this.label9.Text = "Name:";
+            // 
+            // textBossName
+            // 
+            this.textBossName.Location = new System.Drawing.Point(60, 73);
+            this.textBossName.Name = "textBossName";
+            this.textBossName.Size = new System.Drawing.Size(107, 20);
+            this.textBossName.TabIndex = 6;
+            // 
+            // label10
+            // 
+            this.label10.AutoSize = true;
+            this.label10.Location = new System.Drawing.Point(16, 102);
+            this.label10.Name = "label10";
+            this.label10.Size = new System.Drawing.Size(38, 13);
+            this.label10.TabIndex = 7;
+            this.label10.Text = "Stage:";
+            // 
+            // comboStages
+            // 
+            this.comboStages.FormattingEnabled = true;
+            this.comboStages.Location = new System.Drawing.Point(60, 99);
+            this.comboStages.Name = "comboStages";
+            this.comboStages.Size = new System.Drawing.Size(121, 21);
+            this.comboStages.TabIndex = 8;
+            this.comboStages.SelectedIndexChanged += new System.EventHandler(this.comboStages_SelectedIndexChanged);
+            // 
             // StageSelectEdit
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(582, 243);
+            this.ClientSize = new System.Drawing.Size(582, 369);
+            this.Controls.Add(this.groupBox2);
             this.Controls.Add(this.buttonSave);
             this.Controls.Add(this.frameBrowse);
             this.Controls.Add(this.label6);
@@ -241,6 +358,8 @@
             ((System.ComponentModel.ISupportInitialize)(this.bossY)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.bossX)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.preview)).EndInit();
+            this.groupBox2.ResumeLayout(false);
+            this.groupBox2.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -266,5 +385,15 @@
         private System.Windows.Forms.Label label6;
         private System.Windows.Forms.Button frameBrowse;
         private System.Windows.Forms.Button buttonSave;
+        private System.Windows.Forms.GroupBox groupBox2;
+        private System.Windows.Forms.Label label7;
+        private System.Windows.Forms.ComboBox comboSlot;
+        private System.Windows.Forms.Button portraitBrowse;
+        private System.Windows.Forms.TextBox textPortrait;
+        private System.Windows.Forms.Label label8;
+        private System.Windows.Forms.TextBox textBossName;
+        private System.Windows.Forms.Label label9;
+        private System.Windows.Forms.ComboBox comboStages;
+        private System.Windows.Forms.Label label10;
     }
 }
