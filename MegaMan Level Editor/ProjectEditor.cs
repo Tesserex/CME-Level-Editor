@@ -499,6 +499,11 @@ namespace MegaMan_Level_Editor
                 writer.WriteEndElement(); // BossFrame
             }
 
+            writer.WriteStartElement("Spacing");
+            writer.WriteAttributeString("x", this.BossSpacingHorizontal.ToString());
+            writer.WriteAttributeString("y", this.BossSpacingVertical.ToString());
+            writer.WriteEndElement();
+
             foreach (BossInfo boss in this.bosses)
             {
                 writer.WriteStartElement("Boss");
