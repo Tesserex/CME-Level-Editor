@@ -509,7 +509,7 @@ namespace MegaMan_Level_Editor
                 writer.WriteStartElement("Boss");
                 if (boss.Slot >= 0) writer.WriteAttributeString("slot", boss.Slot.ToString());
                 if (!string.IsNullOrEmpty(boss.Name)) writer.WriteAttributeString("name", boss.Name);
-                if (boss.PortraitPath != null && !string.IsNullOrEmpty(boss.PortraitPath.Relative)) writer.WriteAttributeString("Portrait", boss.PortraitPath.Relative);
+                if (boss.PortraitPath != null && !string.IsNullOrEmpty(boss.PortraitPath.Relative)) writer.WriteAttributeString("portrait", boss.PortraitPath.Relative);
                 if (!string.IsNullOrEmpty(boss.Stage)) writer.WriteAttributeString("stage", boss.Stage);
                 writer.WriteEndElement();
             }
