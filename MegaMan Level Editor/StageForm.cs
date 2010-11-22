@@ -74,8 +74,8 @@ namespace MegaMan_Level_Editor
             Image tile = new Bitmap(16, 16);
             using (Graphics g = Graphics.FromImage(tile))
             {
-                g.DrawLine(Pens.Black, 15, 0, 15, 15);
-                g.DrawLine(Pens.Black, 0, 15, 15, 15);
+                g.DrawLine(Pens.Gray, 15, 0, 15, 15);
+                g.DrawLine(Pens.Gray, 0, 15, 15, 15);
             }
             this.BackgroundImage = tile;
             this.BackgroundImageLayout = ImageLayout.Tile;
