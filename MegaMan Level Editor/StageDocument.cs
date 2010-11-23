@@ -146,6 +146,8 @@ namespace MegaMan_Level_Editor
 
             this.map.Screens.Add(name, screen);
 
+            if (this.StartScreen == null) this.StartScreen = this.map.Screens.Keys.First();
+
             ScreenDocument doc = WrapScreen(screen);
             
             screen.Save(System.IO.Path.Combine(this.Path.Absolute, name + ".scn"));

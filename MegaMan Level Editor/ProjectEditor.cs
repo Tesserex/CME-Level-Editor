@@ -239,9 +239,17 @@ namespace MegaMan_Level_Editor
             {
                 if (info.Name == name)
                 {
-                    StageDocument stage = new StageDocument(this, this.BaseDir, info.StagePath.Absolute);
-                    openStages.Add(name, stage);
-                    return stage;
+                    try
+                    {
+                        StageDocument stage = new StageDocument(this, this.BaseDir, info.StagePath.Absolute);
+                        openStages.Add(name, stage);
+                        return stage;
+                    }
+                    catch (IOException ex)
+                    {
+                        MessageBox.Show("A required file or directory for the stage was not found:\n\n" + ex.Message, "CME Level Editor", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        return null;
+                    }
                 }
             }
             return null;

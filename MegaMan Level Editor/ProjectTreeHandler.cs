@@ -59,6 +59,8 @@ namespace MegaMan_Level_Editor
             if (this.Stage == null)
             {
                 this.Stage = this.Project.StageByName(stageName);
+                if (this.Stage == null) return;
+
                 parentNode.Nodes.Clear();
                 foreach (var screen in Stage.Screens)
                 {

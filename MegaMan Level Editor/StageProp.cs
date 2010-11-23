@@ -56,6 +56,17 @@ namespace MegaMan_Level_Editor
 
         private void buttonOK_Click(object sender, EventArgs e)
         {
+            if (nameField.Text == "")
+            {
+                MessageBox.Show("Stage name cannot be blank.", "CME Level Editor", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+            if (tilesetField.Text == "")
+            {
+                MessageBox.Show("Stage tileset path cannot be blank.", "CME Level Editor", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
             bool success = Save();
             if (success)
             {
@@ -67,7 +78,15 @@ namespace MegaMan_Level_Editor
         {
                 if (stage == null) // new
                 {
-                    project.AddStage(nameField.Text, tilesetField.Text);
+                    try
+                    {
+                        project.AddStage(nameField.Text, tilesetField.Text);
+                    }
+                    catch (Exception)
+                    {
+                        MessageBox.Show("There was an error creating the stage.\nPerhaps your tileset path is incorrect?", "CME Level Editor", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                        return false;
+                    }
                     return true;
                 }
                 else
