@@ -36,6 +36,7 @@ namespace MegaMan_Level_Editor
         private Bitmap tileLayer = null;
         private Bitmap gridLayer = null;
         private Bitmap blockLayer = null;
+        private Bitmap entityLayer = null;
         private Bitmap mouseLayer = null;
         private Bitmap joinLayer = null;
         private Bitmap masterImage = null;
@@ -323,6 +324,14 @@ namespace MegaMan_Level_Editor
 
                 g.CompositingMode = System.Drawing.Drawing2D.CompositingMode.SourceOver;
 
+                if (MainForm.Instance.DrawEntities)
+                {
+                    if (this.Screen.Name == this.Screen.Stage.StartScreen)
+                    {
+                        g.DrawImage(StartPositionTool.MegaMan, this.Screen.Stage.StartPoint.X - 4, this.Screen.Stage.StartPoint.Y - 12);
+                    }
+                }
+
                 if (MainForm.Instance.DrawBlock && blockLayer != null)
                     g.DrawImageUnscaled(blockLayer, 0, 0);
 
@@ -359,6 +368,7 @@ namespace MegaMan_Level_Editor
             InitLayer(ref grayTiles);
             InitLayer(ref gridLayer);
             InitLayer(ref blockLayer);
+            InitLayer(ref entityLayer);
             InitLayer(ref mouseLayer);
             InitLayer(ref joinLayer);
             InitLayer(ref masterImage);
@@ -369,6 +379,7 @@ namespace MegaMan_Level_Editor
             ResizeLayer(ref tileLayer);
             ResizeLayer(ref grayTiles);
             ResizeLayer(ref gridLayer);
+            ResizeLayer(ref entityLayer);
             ResizeLayer(ref blockLayer);
             ResizeLayer(ref mouseLayer);
             ResizeLayer(ref joinLayer);

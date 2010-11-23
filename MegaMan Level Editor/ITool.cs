@@ -303,6 +303,11 @@ namespace MegaMan_Level_Editor
             }
         }
 
+        public static Image MegaMan
+        {
+            get { return icon; }
+        }
+
         #region ITool Members
 
         public Image Icon

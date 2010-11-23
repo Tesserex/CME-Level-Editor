@@ -28,6 +28,7 @@ namespace MegaMan_Level_Editor
         private bool drawTiles;
         private bool drawBlock;
         private bool drawJoins;
+        private bool drawEntities;
 
         private string recentPath = Path.Combine(Application.StartupPath, "recent.ini");
         private List<string> recentFiles = new List<string>(10);
@@ -108,6 +109,17 @@ namespace MegaMan_Level_Editor
             }
         }
 
+        public bool DrawEntities
+        {
+            get { return drawEntities; }
+            set
+            {
+                drawEntities = value;
+                showEnemiesToolStripMenuItem.Checked = value;
+                if (DrawOptionToggled != null) DrawOptionToggled();
+            }
+        }
+
         public ITool CurrentTool { get; private set; }
         #endregion
 
@@ -144,6 +156,7 @@ namespace MegaMan_Level_Editor
             DrawGrid = false;
             DrawTiles = true;
             DrawBlock = false;
+            DrawEntities = true;
 
             LoadRecentFiles();
 
@@ -376,6 +389,16 @@ namespace MegaMan_Level_Editor
             DrawBlock = !DrawBlock;
         }
 
+        private void joinsToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            DrawJoins = !DrawJoins;
+        }
+
+        private void showEnemiesToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            DrawEntities = !DrawEntities;
+        }
+
         private void saveToolStripMenuItem_Click(object sender, EventArgs e)
         {
             if (ActiveProject != null)
@@ -498,11 +521,6 @@ namespace MegaMan_Level_Editor
             foreach (ToolStripButton item in toolBar.Items) { item.Checked = false; }
             joinToolButton.Checked = true;
             this.DrawJoins = true;
-        }
-
-        private void joinsToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            DrawJoins = !DrawJoins;
         }
 
         private void stageSelectToolStripMenuItem_Click(object sender, EventArgs e)
