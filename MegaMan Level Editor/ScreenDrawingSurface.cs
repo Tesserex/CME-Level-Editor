@@ -31,6 +31,7 @@ namespace MegaMan_Level_Editor
         private static Pen highlightPen = new Pen(Color.Green, 2);
         private static Pen passPen = new Pen(Color.Blue, 4);
         private static Pen blockPen = new Pen(Color.Red, 4);
+        private static Bitmap cursor;
 
         private Bitmap tileLayer = null;
         private Bitmap gridLayer = null;
@@ -50,6 +51,12 @@ namespace MegaMan_Level_Editor
         public ScreenDocument Screen { get; private set; }
 
         public event EventHandler<ScreenDrawEventArgs> DrawnOn;
+
+        static ScreenDrawingSurface()
+        {
+            cursor = new Bitmap(Cursor.Current.Size.Width, Cursor.Current.Size.Height);
+            using (Graphics g = Graphics.FromImage(cursor)) Cursor.Current.Draw(g, new Rectangle(0,0,cursor.Width,cursor.Height));
+        }
 
         public ScreenDrawingSurface(ScreenDocument screen)
         {
@@ -93,6 +100,7 @@ namespace MegaMan_Level_Editor
 
         protected override void OnMouseEnter(EventArgs e)
         {
+            Cursor.Hide();
             this.active = true;
             ReDrawMaster();
             base.OnMouseEnter(e);
@@ -100,6 +108,7 @@ namespace MegaMan_Level_Editor
 
         protected override void OnMouseLeave(EventArgs e)
         {
+            Cursor.Show();
             this.active = false;
             if (mouseLayer != null)
             {
@@ -128,21 +137,32 @@ namespace MegaMan_Level_Editor
 
         protected override void OnMouseMove(MouseEventArgs e)
         {
-            if (mouseLayer == null || MainForm.Instance.CurrentTool == null) return;
+            if (mouseLayer == null) return;
 
             int tx = (e.X / Screen.Tileset.TileSize) * Screen.Tileset.TileSize;
             int ty = (e.Y / Screen.Tileset.TileSize) * Screen.Tileset.TileSize;
 
-            if (MainForm.Instance.CurrentTool.Icon != null)
+            Bitmap icon;
+            if (MainForm.Instance.CurrentTool != null && MainForm.Instance.CurrentTool.Icon != null)
             {
-                using (Graphics g = Graphics.FromImage(mouseLayer))
-                {
-                    g.Clear(Color.Transparent);
-                    g.DrawImage(MainForm.Instance.CurrentTool.Icon, tx, ty);
-                }
+                icon = (Bitmap)MainForm.Instance.CurrentTool.Icon;
+                if (icon == null) icon = cursor;
+
+                icon.SetResolution(mouseLayer.HorizontalResolution, mouseLayer.VerticalResolution);
+
+                MainForm.Instance.CurrentTool.Move(this, e.Location);
+            }
+            else
+            {
+                icon = cursor;
             }
 
-            MainForm.Instance.CurrentTool.Move(this, e.Location);
+            using (Graphics g = Graphics.FromImage(mouseLayer))
+            {
+                g.Clear(Color.Transparent);
+                g.DrawImageUnscaled(icon, tx, ty, icon.Width, icon.Height);
+            }
+
             ReDrawMaster();
             base.OnMouseMove(e);
         }
