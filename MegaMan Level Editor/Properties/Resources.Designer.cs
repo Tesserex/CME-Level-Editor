@@ -116,6 +116,20 @@ namespace MegaMan_Level_Editor.Properties {
             }
         }
         
+        internal static System.Drawing.Bitmap megaman {
+            get {
+                object obj = ResourceManager.GetObject("megaman", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        internal static System.Drawing.Bitmap megaman_icon {
+            get {
+                object obj = ResourceManager.GetObject("megaman_icon", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
         internal static System.Drawing.Bitmap NewDocumentHS {
             get {
                 object obj = ResourceManager.GetObject("NewDocumentHS", resourceCulture);

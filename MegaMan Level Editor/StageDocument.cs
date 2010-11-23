@@ -5,6 +5,7 @@ using System.Text;
 using MegaMan;
 using System.Windows.Forms;
 using System.IO;
+using System.Drawing;
 
 namespace MegaMan_Level_Editor
 {
@@ -23,6 +24,16 @@ namespace MegaMan_Level_Editor
         private Dictionary<string, ScreenDocument> screens = new Dictionary<string,ScreenDocument>();
 
         public ProjectEditor Project { get; private set; }
+
+        public Point StartPoint
+        {
+            get { return new Point(map.PlayerStartX, map.PlayerStartY); }
+            set
+            {
+                map.PlayerStartX = value.X;
+                map.PlayerStartY = value.Y;
+            }
+        }
 
         public event Action<StageDocument> Closed;
         public event Action<ScreenDocument> ScreenAdded;
@@ -94,7 +105,11 @@ namespace MegaMan_Level_Editor
             Dirty = true;
         }
 
-        public string StartScreen { get { return map.StartScreen; } }
+        public string StartScreen
+        {
+            get { return map.StartScreen; }
+            set { map.StartScreen = value; }
+        }
 
         public int ScreenCount { get { return map.Screens.Count; } }
 

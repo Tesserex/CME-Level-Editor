@@ -143,10 +143,13 @@ namespace MegaMan_Level_Editor
             int ty = (e.Y / Screen.Tileset.TileSize) * Screen.Tileset.TileSize;
 
             Bitmap icon;
+            Point offset = Point.Empty;
             if (MainForm.Instance.CurrentTool != null && MainForm.Instance.CurrentTool.Icon != null)
             {
                 icon = (Bitmap)MainForm.Instance.CurrentTool.Icon;
                 if (icon == null) icon = cursor;
+
+                offset = MainForm.Instance.CurrentTool.IconOffset;
 
                 icon.SetResolution(mouseLayer.HorizontalResolution, mouseLayer.VerticalResolution);
 
@@ -160,7 +163,7 @@ namespace MegaMan_Level_Editor
             using (Graphics g = Graphics.FromImage(mouseLayer))
             {
                 g.Clear(Color.Transparent);
-                g.DrawImageUnscaled(icon, tx, ty, icon.Width, icon.Height);
+                g.DrawImageUnscaled(icon, tx + offset.X, ty + offset.Y, icon.Width, icon.Height);
             }
 
             ReDrawMaster();

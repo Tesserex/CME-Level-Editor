@@ -310,15 +310,21 @@ namespace MegaMan_Level_Editor
             switch (currentToolType)
             {
                 case ToolType.Brush:
+                    this.CurrentTool = null;
                     if (currentBrush != null) this.CurrentTool = new BrushTool(currentBrush);
                     break;
 
                 case ToolType.Bucket:
+                    this.CurrentTool = null;
                     if (currentBrush != null) this.CurrentTool = new Bucket(currentBrush);
                     break;
 
                 case ToolType.Join:
                     this.CurrentTool = new JoinTool();
+                    break;
+
+                case ToolType.Start:
+                    this.CurrentTool = new StartPositionTool();
                     break;
             }
             
@@ -502,6 +508,15 @@ namespace MegaMan_Level_Editor
         private void stageSelectToolStripMenuItem_Click(object sender, EventArgs e)
         {
             if (this.ActiveProject != null) new StageSelectEdit(this.ActiveProject).Show();
+        }
+
+        private void startPosToolButton_Click(object sender, EventArgs e)
+        {
+            currentToolType = ToolType.Start;
+            AssembleTool();
+            foreach (ToolStripButton item in toolBar.Items) { item.Checked = false; }
+            startPosToolButton.Checked = true;
+            this.DrawJoins = false;
         }
     }
 }
