@@ -6,6 +6,7 @@ using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
+using MegaMan;
 
 namespace MegaMan_Level_Editor
 {
@@ -41,6 +42,8 @@ namespace MegaMan_Level_Editor
             this.Text = stage.Name + " Properties";
             nameField.Text = stage.Name;
             tilesetField.Text = stage.Tileset.FilePath;
+            introField.Text = stage.MusicIntro.Absolute;
+            loopField.Text = stage.MusicLoop.Absolute;
         }
 
         private void tilesetChange_Click(object sender, EventArgs e)
@@ -76,33 +79,35 @@ namespace MegaMan_Level_Editor
 
         private bool Save()
         {
-                if (stage == null) // new
+            if (stage == null) // new
+            {
+                try
                 {
-                    try
-                    {
-                        project.AddStage(nameField.Text, tilesetField.Text);
-                    }
-                    catch (Exception)
-                    {
-                        MessageBox.Show("There was an error creating the stage.\nPerhaps your tileset path is incorrect?", "CME Level Editor", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                        return false;
-                    }
-                    return true;
+                    stage = project.AddStage(nameField.Text, tilesetField.Text);
                 }
-                else
+                catch (Exception)
                 {
-                    stage.Name = nameField.Text;
-                    try
-                    {
-                        stage.ChangeTileset(tilesetField.Text);
-                    }
-                    catch
-                    {
-                        MessageBox.Show("The tileset specified could not be loaded. Sorry.", "CME Project Editor", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                        return false;
-                    }
-                    return true;
+                    MessageBox.Show("There was an error creating the stage.\nPerhaps your tileset path is incorrect?", "CME Level Editor", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    return false;
                 }
+            }
+            else
+            {
+                stage.Name = nameField.Text;
+                try
+                {
+                    stage.ChangeTileset(tilesetField.Text);
+                }
+                catch
+                {
+                    MessageBox.Show("The tileset specified could not be loaded. Sorry.", "CME Project Editor", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return false;
+                }
+            }
+            if (introField.Text != "") stage.MusicIntro = FilePath.FromAbsolute(introField.Text, stage.Path.BasePath);
+            if (loopField.Text != "") stage.MusicLoop = FilePath.FromAbsolute(loopField.Text, stage.Path.BasePath);
+
+            return true;
         }
 
         private void Cancel()
@@ -113,6 +118,28 @@ namespace MegaMan_Level_Editor
         private void buttonCancel_Click(object sender, EventArgs e)
         {
             Cancel();
+        }
+
+        private void introChange_Click(object sender, EventArgs e)
+        {
+            OpenFileDialog dialog = new OpenFileDialog();
+            DialogResult result = dialog.ShowDialog();
+
+            if (result == DialogResult.OK)
+            {
+                introField.Text = dialog.FileName;
+            }
+        }
+
+        private void loopChange_Click(object sender, EventArgs e)
+        {
+            OpenFileDialog dialog = new OpenFileDialog();
+            DialogResult result = dialog.ShowDialog();
+
+            if (result == DialogResult.OK)
+            {
+                loopField.Text = dialog.FileName;
+            }
         }
     }
 }

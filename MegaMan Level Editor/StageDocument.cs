@@ -105,10 +105,22 @@ namespace MegaMan_Level_Editor
             Dirty = true;
         }
 
+        public FilePath MusicIntro
+        {
+            get { return map.MusicIntroPath; }
+            set { map.MusicIntroPath = value; Dirty = true; }
+        }
+
+        public FilePath MusicLoop
+        {
+            get { return map.MusicLoopPath; }
+            set { map.MusicLoopPath = value; Dirty = true; }
+        }
+
         public string StartScreen
         {
             get { return map.StartScreen; }
-            set { map.StartScreen = value; }
+            set { map.StartScreen = value; Dirty = true; }
         }
 
         public int ScreenCount { get { return map.Screens.Count; } }

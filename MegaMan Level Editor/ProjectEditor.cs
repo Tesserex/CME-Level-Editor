@@ -428,7 +428,7 @@ namespace MegaMan_Level_Editor
             return attr.Value;
         }
 
-        public void AddStage(string name, string tilesetPath)
+        public StageDocument AddStage(string name, string tilesetPath)
         {
             string stageDir = Path.Combine(this.BaseDir, "stages");
             if (!Directory.Exists(stageDir))
@@ -458,6 +458,8 @@ namespace MegaMan_Level_Editor
             this.Save(); // need to save the reference to the new stage
 
             if (StageAdded != null) StageAdded(stage);
+
+            return stage;
         }
 
         public void Save()
