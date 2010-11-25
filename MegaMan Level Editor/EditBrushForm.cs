@@ -10,17 +10,13 @@ using MegaMan;
 
 namespace MegaMan_Level_Editor {
     public partial class EditBrushForm : Form {
-        private TileBrush brush;
+        public TileBrush Brush { get; private set; }
         private Tileset Tileset;
-
-        private ITileBrush cursorBrush;
 
         public EditBrushForm(TileBrush brush, Tileset tileset) {
             InitializeComponent();
             this.Tileset = tileset;
-            this.brush = brush;
-
-            MainForm.Instance.brushForm.BrushChanged += new BrushChangedHandler(Instance_BrushChanged);
+            this.Brush = brush;
 
             this.brushPict.MouseDown += new MouseEventHandler(brushPict_MouseDown);
 
@@ -28,14 +24,14 @@ namespace MegaMan_Level_Editor {
         }
 
         void brushPict_MouseDown(object sender, MouseEventArgs e) {
-            if (cursorBrush == null) return;
+            if (MainForm.Instance.CurrentBrush == null) return;
 
             int tx = e.X / Tileset.TileSize;
             int ty = e.Y / Tileset.TileSize;
 
-            foreach (TileBrushCell cell in cursorBrush.Cells())
+            foreach (TileBrushCell cell in MainForm.Instance.CurrentBrush.Cells())
             {
-                brush.AddTile(cell.tile, cell.x + tx, cell.y + ty);
+                Brush.AddTile(cell.tile, cell.x + tx, cell.y + ty);
             }
 
             ReDraw();
@@ -44,13 +40,9 @@ namespace MegaMan_Level_Editor {
         private void ReDraw() {
             using (Graphics g = Graphics.FromImage(brushPict.Image)) {
                 g.Clear(Color.Black);
-                brush.DrawOn(g, 0, 0);
+                Brush.DrawOn(g, 0, 0);
             }
             brushPict.Refresh();
-        }
-
-        void Instance_BrushChanged(BrushChangedEventArgs e) {
-            this.cursorBrush = e.Brush;
         }
 
         private void resetButton_Click(object sender, EventArgs e) {
@@ -64,7 +56,7 @@ namespace MegaMan_Level_Editor {
 
         private void Reset(int width, int height)
         {
-            this.brush.Reset(width, height);
+            this.Brush.Reset(width, height);
 
             if (this.brushPict.Image != null) this.brushPict.Image.Dispose();
 

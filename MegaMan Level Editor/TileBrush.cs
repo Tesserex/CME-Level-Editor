@@ -89,8 +89,20 @@ namespace MegaMan_Level_Editor
 
         public void Reset(int width, int height)
         {
-            cells = new TileBrushCell[width][];
-            for (int i = 0; i < width; i++) cells[i] = new TileBrushCell[height];
+            TileBrushCell[][] newcells = new TileBrushCell[width][];
+            for (int i = 0; i < width; i++)
+            {
+                newcells[i] = new TileBrushCell[height];
+                if (cells != null && i < Width) // old width
+                {
+                    for (int j = 0; j < height; j++)
+                    {
+                        if (j < Height) newcells[i][j] = new TileBrushCell(i, j, cells[i][j].tile);
+                    }
+                }
+            }
+
+            cells = newcells;
             Height = height;
             Width = width;
         }
@@ -138,6 +150,7 @@ namespace MegaMan_Level_Editor
         {
             foreach (TileBrushCell cell in Cells())
             {
+                if (cell.tile == null) continue;
                 cell.tile.Draw(g, x + cell.x * cell.tile.Width, y + cell.y * cell.tile.Height);
             }
         }

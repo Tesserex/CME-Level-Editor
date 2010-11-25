@@ -35,7 +35,7 @@ namespace MegaMan_Level_Editor
 
         private string configFile = Path.Combine(Path.GetDirectoryName(Application.ExecutablePath), "DockPanel.config");
 
-        private ITileBrush currentBrush;
+        public ITileBrush CurrentBrush { get; private set; }
         private ToolType currentToolType;
 
         #endregion Private Members
@@ -221,13 +221,13 @@ namespace MegaMan_Level_Editor
 
         private void brushForm_BrushChanged(BrushChangedEventArgs e)
         {
-            currentBrush = e.Brush;
+            CurrentBrush = e.Brush;
             AssembleTool();
         }
 
         private void TileChanged(Tile tile)
         {
-            this.currentBrush = new SingleTileBrush(tile);
+            this.CurrentBrush = new SingleTileBrush(tile);
             AssembleTool();
         }
 
@@ -324,12 +324,12 @@ namespace MegaMan_Level_Editor
             {
                 case ToolType.Brush:
                     this.CurrentTool = null;
-                    if (currentBrush != null) this.CurrentTool = new BrushTool(currentBrush);
+                    if (CurrentBrush != null) this.CurrentTool = new BrushTool(CurrentBrush);
                     break;
 
                 case ToolType.Bucket:
                     this.CurrentTool = null;
-                    if (currentBrush != null) this.CurrentTool = new Bucket(currentBrush);
+                    if (CurrentBrush != null) this.CurrentTool = new Bucket(CurrentBrush);
                     break;
 
                 case ToolType.Join:
