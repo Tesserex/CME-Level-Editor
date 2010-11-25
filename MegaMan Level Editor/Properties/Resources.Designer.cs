@@ -60,6 +60,13 @@ namespace MegaMan_Level_Editor.Properties {
             }
         }
         
+        internal static System.Drawing.Bitmap add_brush {
+            get {
+                object obj = ResourceManager.GetObject("add_brush", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
         internal static System.Drawing.Bitmap AddEntity {
             get {
                 object obj = ResourceManager.GetObject("AddEntity", resourceCulture);
@@ -91,6 +98,13 @@ namespace MegaMan_Level_Editor.Properties {
         internal static System.Drawing.Bitmap CutHS {
             get {
                 object obj = ResourceManager.GetObject("CutHS", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        internal static System.Drawing.Bitmap edit {
+            get {
+                object obj = ResourceManager.GetObject("edit", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }

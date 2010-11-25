@@ -15,6 +15,8 @@ namespace MegaMan_Level_Editor
         private Dictionary<string, List<ITileBrush>> brushSets = new Dictionary<string, List<ITileBrush>>();
         private List<ITileBrush> brushes;
         private Tileset Tileset;
+        private ITileBrush currentBrush;
+        private Dictionary<ITileBrush, Panel> brushPanels = new Dictionary<ITileBrush, Panel>();
 
         public BrushForm()
         {
@@ -35,6 +37,10 @@ namespace MegaMan_Level_Editor
                 brushSets.Add(tileset.FilePath, brushes);
                 LoadBrushes();
             }
+
+            brushPanels.Clear();
+            brushPanel.Controls.Clear();
+            foreach (var brush in brushes) AddBrushPanel(brush);
         }
 
         public event BrushChangedHandler BrushChanged;
@@ -95,7 +101,7 @@ namespace MegaMan_Level_Editor
                         }
                     }
 
-                    AddBrush(brush);
+                    brushes.Add(brush);
                 }
             }
         }
@@ -110,16 +116,15 @@ namespace MegaMan_Level_Editor
 
             brushForm.FormClosed += (s, ev) =>
             {
-                AddBrush(brush);
+                brushes.Add(brush);
+                AddBrushPanel(brush);
 
                 SaveBrushes();
             };
         }
 
-        private void AddBrush(ITileBrush brush)
+        private void AddBrushPanel(ITileBrush brush)
         {
-            brushes.Add(brush);
-
             PictureBox brushPict = new PictureBox();
 
             if (Tileset != null)
@@ -132,15 +137,39 @@ namespace MegaMan_Level_Editor
                 }
             }
 
-            brushPict.Click += (snd, args) => ChangeBrush(brush);
+            Panel border = new Panel();
+            border.BackColor = brushPanel.BackColor;
+            border.Width = brushPict.Width + 8;
+            border.Height = brushPict.Height + 8;
+            border.Controls.Add(brushPict);
+            brushPict.Top = 4;
+            brushPict.Left = 4;
 
-            brushPanel.Controls.Add(brushPict);
+            brushPict.Click += (snd, args) =>
+            {
+                ChangeBrush(brush);
+                foreach (Control c in brushPanel.Controls) c.BackColor = brushPanel.BackColor;
+                border.BackColor = Color.Orange;
+            };
+
+            brushPanels.Add(brush, border);
+            brushPanel.Controls.Add(border);
         }
 
         private void ChangeBrush(ITileBrush brush)
         {
+            currentBrush = brush;
             BrushChangedEventArgs args = new BrushChangedEventArgs(brush);
             if (BrushChanged != null) BrushChanged(args);
+        }
+
+        private void deleteButton_Click(object sender, EventArgs e)
+        {
+            if (brushes == null || currentBrush == null) return;
+
+            brushPanel.Controls.Remove(brushPanels[currentBrush]);
+            brushes.Remove(currentBrush);
+            SaveBrushes();
         }
     }
 
