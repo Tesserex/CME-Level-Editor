@@ -313,11 +313,11 @@
             "Top Left",
             "Top",
             "Top Right",
-            "Left",
             "Right",
-            "Bottom Left",
+            "Bottom Right",
             "Bottom",
-            "Bottom Right"});
+            "Bottom Left",
+            "Left"});
             this.comboSlot.Location = new System.Drawing.Point(60, 19);
             this.comboSlot.Name = "comboSlot";
             this.comboSlot.Size = new System.Drawing.Size(92, 21);
