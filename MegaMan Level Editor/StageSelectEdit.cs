@@ -188,5 +188,13 @@ namespace MegaMan_Level_Editor
                 this.textPortrait.Text = browse.FileName;
             }
         }
+
+        private void textBossName_TextChanged(object sender, EventArgs e)
+        {
+            if (comboStages.SelectedItem != null)
+            {
+                this.project.BossAtSlot(comboSlot.SelectedIndex).Name = textBossName.Text;
+            }
+        }
     }
 }

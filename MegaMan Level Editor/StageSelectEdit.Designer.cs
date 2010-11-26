@@ -42,7 +42,6 @@
             this.bossY = new System.Windows.Forms.NumericUpDown();
             this.bossX = new System.Windows.Forms.NumericUpDown();
             this.label5 = new System.Windows.Forms.Label();
-            this.preview = new System.Windows.Forms.PictureBox();
             this.label6 = new System.Windows.Forms.Label();
             this.frameBrowse = new System.Windows.Forms.Button();
             this.buttonSave = new System.Windows.Forms.Button();
@@ -56,11 +55,12 @@
             this.label8 = new System.Windows.Forms.Label();
             this.label7 = new System.Windows.Forms.Label();
             this.comboSlot = new System.Windows.Forms.ComboBox();
+            this.preview = new System.Windows.Forms.PictureBox();
             this.groupBox1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.bossY)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.bossX)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.preview)).BeginInit();
             this.groupBox2.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.preview)).BeginInit();
             this.SuspendLayout();
             // 
             // label1
@@ -188,15 +188,6 @@
             this.label5.TabIndex = 11;
             this.label5.Text = "Vertical:";
             // 
-            // preview
-            // 
-            this.preview.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.preview.Location = new System.Drawing.Point(314, 10);
-            this.preview.Name = "preview";
-            this.preview.Size = new System.Drawing.Size(256, 224);
-            this.preview.TabIndex = 0;
-            this.preview.TabStop = false;
-            // 
             // label6
             // 
             this.label6.AutoSize = true;
@@ -269,6 +260,7 @@
             this.textBossName.Name = "textBossName";
             this.textBossName.Size = new System.Drawing.Size(107, 20);
             this.textBossName.TabIndex = 6;
+            this.textBossName.TextChanged += new System.EventHandler(this.textBossName_TextChanged);
             // 
             // label9
             // 
@@ -332,6 +324,15 @@
             this.comboSlot.TabIndex = 0;
             this.comboSlot.SelectedIndexChanged += new System.EventHandler(this.comboSlot_SelectedIndexChanged);
             // 
+            // preview
+            // 
+            this.preview.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.preview.Location = new System.Drawing.Point(314, 10);
+            this.preview.Name = "preview";
+            this.preview.Size = new System.Drawing.Size(256, 224);
+            this.preview.TabIndex = 0;
+            this.preview.TabStop = false;
+            // 
             // StageSelectEdit
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -358,9 +359,9 @@
             this.groupBox1.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.bossY)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.bossX)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.preview)).EndInit();
             this.groupBox2.ResumeLayout(false);
             this.groupBox2.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.preview)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
