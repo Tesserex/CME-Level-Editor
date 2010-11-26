@@ -76,6 +76,7 @@ namespace MegaMan_Level_Editor
             }
             foreach (TileBrushCell cell in reverse.Cells())
             {
+                if (cell.tile == null) continue;
                 // this will NOT work properly for multi-cell brushes - if you paint over a place you just painted,
                 // the cell will change, but reversing the changes in an undo will be wrong.
                 if (tiles[cell.x, cell.y] != cell.tile.Id)
