@@ -183,6 +183,7 @@ namespace MegaMan_Level_Editor
             if (surfaces.ContainsKey(stage.StartScreen))
             {
                 placeable.Remove(stage.StartScreen);
+                orphans.Remove(stage.StartScreen);
                 placedScreens.Add(surfaces[stage.StartScreen]);
                 surfaces[stage.StartScreen].Placed = true;
             }

@@ -41,7 +41,8 @@ namespace MegaMan_Level_Editor
                 }
             }
 
-            if (project.StageSelectMusic != null) textMusic.Text = project.StageSelectMusic.Absolute;
+            if (project.StageSelectIntro != null) textMusicIntro.Text = project.StageSelectIntro.Absolute;
+            if (project.StageSelectLoop != null) textMusicLoop.Text = project.StageSelectLoop.Absolute;
             if (project.StageSelectChangeSound != null) textSound.Text = project.StageSelectChangeSound.Absolute;
 
             ReDraw();
@@ -57,7 +58,7 @@ namespace MegaMan_Level_Editor
                 if (this.project.BossFrameSprite != null) 
                 {
                     int mid_x = this.project.ScreenWidth / 2 - this.project.BossFrameSprite.Width / 2;
-                    int mid_y = this.project.ScreenHeight / 2 - this.project.BossFrameSprite.Height / 2;
+                    int mid_y = this.project.ScreenHeight / 2 - this.project.BossFrameSprite.Height / 2 + project.BossOffset;
 
                     int space_x = this.project.BossSpacingHorizontal + this.project.BossFrameSprite.Width;
                     int space_y = this.project.BossSpacingVertical + this.project.BossFrameSprite.Height;
@@ -115,15 +116,27 @@ namespace MegaMan_Level_Editor
             editor.Show();
         }
 
-        private void musicBrowse_Click(object sender, EventArgs e)
+        private void musicIntroBrowse_Click(object sender, EventArgs e)
         {
             var browse = new OpenFileDialog();
             browse.Filter = "Music (wav, mp3, ogg)|*.wav;*.mp3;*.ogg";
             var result = browse.ShowDialog();
             if (result == DialogResult.OK)
             {
-                this.textMusic.Text = browse.FileName;
-                project.StageSelectMusic = FilePath.FromAbsolute(browse.FileName, project.BaseDir);
+                this.textMusicIntro.Text = browse.FileName;
+                project.StageSelectIntro = FilePath.FromAbsolute(browse.FileName, project.BaseDir);
+            }
+        }
+
+        private void musicLoopBrowse_Click(object sender, EventArgs e)
+        {
+            var browse = new OpenFileDialog();
+            browse.Filter = "Music (wav, mp3, ogg)|*.wav;*.mp3;*.ogg";
+            var result = browse.ShowDialog();
+            if (result == DialogResult.OK)
+            {
+                this.textMusicLoop.Text = browse.FileName;
+                project.StageSelectLoop = FilePath.FromAbsolute(browse.FileName, project.BaseDir);
             }
         }
 
@@ -195,6 +208,12 @@ namespace MegaMan_Level_Editor
             {
                 this.project.BossAtSlot(comboSlot.SelectedIndex).Name = textBossName.Text;
             }
+        }
+
+        private void bossOffset_ValueChanged(object sender, EventArgs e)
+        {
+            project.BossOffset = (int)bossOffset.Value;
+            this.ReDraw();
         }
     }
 }

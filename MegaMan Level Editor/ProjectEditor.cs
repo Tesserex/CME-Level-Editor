@@ -104,15 +104,26 @@ namespace MegaMan_Level_Editor
             }
         }
 
-        private FilePath stageSelectBackground, stageSelectMusic, stageSelectChange, pauseBackground, pauseChange, pauseSound;
+        private FilePath stageSelectBackground, stageSelectIntro, stageSelectLoop, stageSelectChange, pauseBackground, pauseChange, pauseSound;
 
-        public FilePath StageSelectMusic
+        public FilePath StageSelectIntro
         {
-            get { return stageSelectMusic; }
+            get { return stageSelectIntro; }
             set
             {
-                if (stageSelectMusic != null && stageSelectMusic.Absolute == value.Absolute) return;
-                stageSelectMusic = value;
+                if (stageSelectIntro != null && stageSelectIntro.Absolute == value.Absolute) return;
+                stageSelectIntro = value;
+                Dirty = true;
+            }
+        }
+
+        public FilePath StageSelectLoop
+        {
+            get { return stageSelectLoop; }
+            set
+            {
+                if (stageSelectLoop != null && stageSelectLoop.Absolute == value.Absolute) return;
+                stageSelectLoop = value;
                 Dirty = true;
             }
         }
@@ -139,7 +150,7 @@ namespace MegaMan_Level_Editor
             }
         }
 
-        private int bossHoriz, bossVert;
+        private int bossHoriz, bossVert, bossOffset;
 
         public int BossSpacingHorizontal
         {
@@ -159,6 +170,17 @@ namespace MegaMan_Level_Editor
             {
                 if (bossVert == value) return;
                 bossVert = value;
+                Dirty = true;
+            }
+        }
+
+        public int BossOffset
+        {
+            get { return bossOffset; }
+            set
+            {
+                if (bossOffset == value) return;
+                bossOffset = value;
                 Dirty = true;
             }
         }
@@ -338,7 +360,13 @@ namespace MegaMan_Level_Editor
                 if (stageSelectNode != null)
                 {
                     XElement musicNode = stageSelectNode.Element("Music");
-                    if (musicNode != null) this.StageSelectMusic = FilePath.FromRelative(musicNode.Value, this.BaseDir);
+                    if (musicNode != null)
+                    {
+                        var introNode = musicNode.Element("Intro");
+                        var loopNode = musicNode.Element("Loop");
+                        if (introNode != null) this.StageSelectIntro = FilePath.FromRelative(introNode.Value, this.BaseDir);
+                        if (loopNode != null) this.StageSelectLoop = FilePath.FromRelative(loopNode.Value, this.BaseDir);
+                    }
 
                     string changepath = GetNodeAttr(stageSelectNode, "ChangeSound", "path");
                     if (changepath != "") this.StageSelectChangeSound = FilePath.FromRelative(changepath, this.BaseDir);
@@ -365,6 +393,13 @@ namespace MegaMan_Level_Editor
                     {
                         int y = BossSpacingVertical;
                         if (int.TryParse(spaceY, out y)) BossSpacingVertical = y;
+                    }
+
+                    string spaceOffset = GetNodeAttr(stageSelectNode, "Spacing", "offset");
+                    if (spaceOffset != "")
+                    {
+                        int off = BossOffset;
+                        if (int.TryParse(spaceOffset, out off)) BossOffset = off;
                     }
 
                     int bossIndex = 0;
@@ -394,7 +429,7 @@ namespace MegaMan_Level_Editor
             catch
             {
                 Name = Author = GameFile = BaseDir = null;
-                StageSelectBackground = StageSelectChangeSound = StageSelectMusic =
+                StageSelectBackground = StageSelectChangeSound = StageSelectIntro =
                      PauseChangeSound = PauseScreenBackground = null;
                 PauseLivesPosition = Point.Empty;
                 PauseSound = null;
@@ -493,7 +528,11 @@ namespace MegaMan_Level_Editor
 
             writer.WriteStartElement("StageSelect");
 
-            if (this.StageSelectMusic != null) writer.WriteElementString("Music", this.StageSelectMusic.Relative);
+            writer.WriteStartElement("Music");
+            if (this.StageSelectIntro != null) writer.WriteElementString("Intro", this.StageSelectIntro.Relative);
+            if (this.StageSelectLoop != null) writer.WriteElementString("Loop", this.StageSelectLoop.Relative);
+            writer.WriteEndElement();
+
             if (this.StageSelectChangeSound != null)
             {
                 writer.WriteStartElement("ChangeSound");
@@ -512,6 +551,7 @@ namespace MegaMan_Level_Editor
             writer.WriteStartElement("Spacing");
             writer.WriteAttributeString("x", this.BossSpacingHorizontal.ToString());
             writer.WriteAttributeString("y", this.BossSpacingVertical.ToString());
+            writer.WriteAttributeString("offset", this.BossOffset.ToString());
             writer.WriteEndElement();
 
             foreach (BossInfo boss in this.bosses)
