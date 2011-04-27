@@ -5,6 +5,7 @@ using System.Text;
 using System.Drawing;
 using System.Windows.Forms;
 using MegaMan;
+using System.Drawing.Imaging;
 
 namespace MegaMan_Level_Editor
 {
@@ -44,6 +45,16 @@ namespace MegaMan_Level_Editor
 
         private bool grayDirty = false;
 
+        private static ColorMatrix grayMatrix = new ColorMatrix(
+           new float[][] 
+          {
+             new float[] {.3f, .3f, .3f, 0, 0},
+             new float[] {.59f, .59f, .59f, 0, 0},
+             new float[] {.11f, .11f, .11f, 0, 0},
+             new float[] {0, 0, 0, 1, 0},
+             new float[] {0, 0, 0, 0, 1}
+          });
+
         public bool Drawing { get; private set; }
 
         private bool active = false;
@@ -74,7 +85,6 @@ namespace MegaMan_Level_Editor
 
             RedrawJoins();
             ReDrawAll();
-            DrawGray();
 
             MainForm.Instance.DrawOptionToggled += ReDrawMaster;
         }
@@ -241,20 +251,28 @@ namespace MegaMan_Level_Editor
             grayTiles = ConvertToGrayscale(tileLayer);
         }
 
-        private Bitmap ConvertToGrayscale(Bitmap source)
+        private Bitmap ConvertToGrayscale(Bitmap original)
         {
-            Bitmap bm = new Bitmap(source.Width, source.Height);
-            for (int y = 0; y < bm.Height; y++)
-            {
-                for (int x = 0; x < bm.Width; x++)
-                {
-                    Color c = source.GetPixel(x, y);
-                    int luma = (int)(c.R * 0.3 + c.G * 0.59 + c.B * 0.11);
-                    bm.SetPixel(x, y, Color.FromArgb(luma, luma, luma));
-                }
-            }
+            //create a blank bitmap the same size as original
+            Bitmap newBitmap = new Bitmap(original.Width, original.Height);
 
-            return bm;
+            //get a graphics object from the new image
+            Graphics g = Graphics.FromImage(newBitmap);
+
+            //create some image attributes
+            ImageAttributes attributes = new ImageAttributes();
+
+            //set the color matrix attribute
+            attributes.SetColorMatrix(grayMatrix);
+
+            //draw the original image on the new image
+            //using the grayscale color matrix
+            g.DrawImage(original, new Rectangle(0, 0, original.Width, original.Height),
+               0, 0, original.Width, original.Height, GraphicsUnit.Pixel, attributes);
+
+            //dispose the Graphics object
+            g.Dispose();
+            return newBitmap;
         }
 
         private void ReDrawBlocking()
