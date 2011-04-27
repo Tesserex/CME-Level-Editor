@@ -262,12 +262,12 @@ namespace MegaMan_Level_Editor
                 minY = Math.Min(minY, collision.Surface.Location.Y);
             }
 
-            if (minX < 0 || minY < 0)
+            if (minX < -this.HorizontalScroll.Value || minY < -this.VerticalScroll.Value)
             {
                 // now readjust to all positive locations
                 foreach (var surface in surfaces.Values)
                 {
-                    surface.Location = new Point(surface.Location.X - minX, surface.Location.Y - minY);
+                    surface.Location = new Point(surface.Location.X - minX - this.HorizontalScroll.Value, surface.Location.Y - minY - this.VerticalScroll.Value);
                 }
             }
 
