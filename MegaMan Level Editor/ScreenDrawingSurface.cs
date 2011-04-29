@@ -111,7 +111,6 @@ namespace MegaMan_Level_Editor
 
         protected override void OnMouseEnter(EventArgs e)
         {
-            Cursor.Hide();
             this.active = true;
             ReDrawMaster();
             base.OnMouseEnter(e);
@@ -119,7 +118,6 @@ namespace MegaMan_Level_Editor
 
         protected override void OnMouseLeave(EventArgs e)
         {
-            Cursor.Show();
             this.active = false;
             if (mouseLayer != null)
             {
@@ -150,34 +148,29 @@ namespace MegaMan_Level_Editor
         {
             if (mouseLayer == null) return;
 
-            int tx = (e.X / Screen.Tileset.TileSize) * Screen.Tileset.TileSize;
-            int ty = (e.Y / Screen.Tileset.TileSize) * Screen.Tileset.TileSize;
-
-            Bitmap icon;
-            Point offset = Point.Empty;
             if (MainForm.Instance.CurrentTool != null && MainForm.Instance.CurrentTool.Icon != null)
             {
-                icon = (Bitmap)MainForm.Instance.CurrentTool.Icon;
+                int tx = (e.X / Screen.Tileset.TileSize) * Screen.Tileset.TileSize;
+                int ty = (e.Y / Screen.Tileset.TileSize) * Screen.Tileset.TileSize;
+
+                Bitmap icon = (Bitmap)MainForm.Instance.CurrentTool.Icon;
                 if (icon == null) icon = cursor;
 
-                offset = MainForm.Instance.CurrentTool.IconOffset;
+                Point offset = MainForm.Instance.CurrentTool.IconOffset;
 
                 icon.SetResolution(mouseLayer.HorizontalResolution, mouseLayer.VerticalResolution);
 
                 MainForm.Instance.CurrentTool.Move(this, e.Location);
-            }
-            else
-            {
-                icon = cursor;
+
+                using (Graphics g = Graphics.FromImage(mouseLayer))
+                {
+                    g.Clear(Color.Transparent);
+                    g.DrawImageUnscaled(icon, tx + offset.X, ty + offset.Y, icon.Width, icon.Height);
+                }
+
+                ReDrawMaster();
             }
 
-            using (Graphics g = Graphics.FromImage(mouseLayer))
-            {
-                g.Clear(Color.Transparent);
-                g.DrawImageUnscaled(icon, tx + offset.X, ty + offset.Y, icon.Width, icon.Height);
-            }
-
-            ReDrawMaster();
             base.OnMouseMove(e);
         }
 
