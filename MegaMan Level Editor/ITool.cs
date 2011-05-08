@@ -158,71 +158,75 @@ namespace MegaMan_Level_Editor
         public Image Icon { get { return null; } }
         public Point IconOffset { get { return Point.Empty; } }
 
-        public void Click(ScreenDrawingSurface surface, Point location)
+        private MegaMan.Join NearestJoin(ScreenDrawingSurface surface, Point location)
         {
-            ContextMenu menu = new ContextMenu();
-            // find a join to modify
-            foreach (var j in surface.Screen.Stage.Joins)
+            MegaMan.Join nearest = null;
+
+            foreach (var join in surface.Screen.Stage.Joins)
             {
-                MegaMan.Join join = j; // for lambda closure
                 if (join.screenOne == surface.Screen.Name)
                 {
+                    int begin = join.offsetOne * surface.Screen.Tileset.TileSize;
+                    int end = (join.offsetOne + join.Size) * surface.Screen.Tileset.TileSize;
                     if (join.type == MegaMan.JoinType.Vertical)
                     {
-                        if (location.X > surface.Width - surface.Screen.Tileset.TileSize &&
-                            location.Y >= (join.offsetOne * surface.Screen.Tileset.TileSize) &&
-                            location.Y <= ((join.offsetOne + join.Size) * surface.Screen.Tileset.TileSize))
+                        if (location.X > surface.Width - surface.Screen.Tileset.TileSize && location.Y >= begin && location.Y <= end)
                         {
-                            menu.MenuItems.Add(new MenuItem("Modify Left-Right Join " + join.screenOne + " to " + join.screenTwo,
-                                (s, e) =>
-                                {
-                                    EditJoin(surface, join);
-                                }));
+                            nearest = join;
                         }
                     }
                     else
                     {
-                        if (location.Y > surface.Height - surface.Screen.Tileset.TileSize &&
-                            location.X >= (join.offsetOne * surface.Screen.Tileset.TileSize) &&
-                            location.X <= ((join.offsetOne + join.Size) * surface.Screen.Tileset.TileSize))
+                        if (location.Y > surface.Height - surface.Screen.Tileset.TileSize && location.X >= begin && location.X <= end)
                         {
-                            menu.MenuItems.Add(new MenuItem("Modify Up-Down Join " + join.screenOne + " to " + join.screenTwo,
-                                (s, e) =>
-                                {
-                                    EditJoin(surface, join);
-                                }));
+                            nearest = join;
                         }
                     }
                 }
                 else if (join.screenTwo == surface.Screen.Name)
                 {
+                    int begin = join.offsetTwo * surface.Screen.Tileset.TileSize;
+                    int end = (join.offsetTwo + join.Size) * surface.Screen.Tileset.TileSize;
                     if (join.type == MegaMan.JoinType.Vertical)
                     {
-                        if (location.X < surface.Screen.Tileset.TileSize &&
-                            location.Y >= (join.offsetTwo * surface.Screen.Tileset.TileSize) &&
-                            location.Y <= ((join.offsetTwo + join.Size) * surface.Screen.Tileset.TileSize))
+                        if (location.X < surface.Screen.Tileset.TileSize && location.Y >= begin && location.Y <= end)
                         {
-                            menu.MenuItems.Add(new MenuItem("Modify Left-Right Join " + join.screenOne + " to " + join.screenTwo,
-                                (s, e) =>
-                                {
-                                    EditJoin(surface, join);
-                                }));
+                            nearest = join;
                         }
                     }
                     else
                     {
-                        if (location.Y < surface.Screen.Tileset.TileSize &&
-                            location.X >= (join.offsetTwo * surface.Screen.Tileset.TileSize) &&
-                            location.X <= ((join.offsetTwo + join.Size) * surface.Screen.Tileset.TileSize))
+                        if (location.Y < surface.Screen.Tileset.TileSize && location.X >= begin && location.X <= end)
                         {
-                            menu.MenuItems.Add(new MenuItem("Modify Up-Down Join " + join.screenOne + " to " + join.screenTwo,
-                                (s, e) =>
-                                {
-                                    EditJoin(surface, join);
-                                }));
+                            nearest = join;
                         }
                     }
                 }
+            }
+            return nearest;
+        }
+
+        public void Click(ScreenDrawingSurface surface, Point location)
+        {
+            ContextMenu menu = new ContextMenu();
+
+            // find a join to modify
+            var nearest = NearestJoin(surface, location);
+
+            if (nearest != null)
+            {
+                string menuText;
+
+                if (nearest.type == MegaMan.JoinType.Vertical)
+                {
+                    menuText = "Modify Left-Right Join " + nearest.screenOne + " to " + nearest.screenTwo;
+                }
+                else
+                {
+                    menuText = "Modify Up-Down Join " + nearest.screenOne + " to " + nearest.screenTwo;
+                }
+
+                menu.MenuItems.Add(menuText, (s, e) => { EditJoin(surface, nearest); });
             }
 
             if (location.X > surface.Width - surface.Screen.Tileset.TileSize)

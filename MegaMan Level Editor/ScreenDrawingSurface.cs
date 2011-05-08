@@ -32,6 +32,8 @@ namespace MegaMan_Level_Editor
         private static Pen highlightPen = new Pen(Color.Green, 2);
         private static Pen passPen = new Pen(Color.Blue, 4);
         private static Pen blockPen = new Pen(Color.Red, 4);
+        private static Pen passHighPen = new Pen(Color.FromArgb(96,128,255), 4);
+        private static Pen blockHighPen = new Pen(Color.FromArgb(255,128,96), 4);
         private static Bitmap cursor;
 
         private Bitmap tileLayer = null;
@@ -61,6 +63,8 @@ namespace MegaMan_Level_Editor
         public bool Placed { get; set; }
 
         public ScreenDocument Screen { get; private set; }
+
+        public MegaMan.Join Nearest { get; set; }
 
         public event EventHandler<ScreenDrawEventArgs> DrawnOn;
 
@@ -148,27 +152,29 @@ namespace MegaMan_Level_Editor
         {
             if (mouseLayer == null) return;
 
-            if (MainForm.Instance.CurrentTool != null && MainForm.Instance.CurrentTool.Icon != null)
+            if (MainForm.Instance.CurrentTool != null)
             {
-                int tx = (e.X / Screen.Tileset.TileSize) * Screen.Tileset.TileSize;
-                int ty = (e.Y / Screen.Tileset.TileSize) * Screen.Tileset.TileSize;
-
-                Bitmap icon = (Bitmap)MainForm.Instance.CurrentTool.Icon;
-                if (icon == null) icon = cursor;
-
-                Point offset = MainForm.Instance.CurrentTool.IconOffset;
-
-                icon.SetResolution(mouseLayer.HorizontalResolution, mouseLayer.VerticalResolution);
-
-                MainForm.Instance.CurrentTool.Move(this, e.Location);
-
-                using (Graphics g = Graphics.FromImage(mouseLayer))
+                if (MainForm.Instance.CurrentTool.Icon != null)
                 {
-                    g.Clear(Color.Transparent);
-                    g.DrawImageUnscaled(icon, tx + offset.X, ty + offset.Y, icon.Width, icon.Height);
-                }
+                    int tx = (e.X / Screen.Tileset.TileSize) * Screen.Tileset.TileSize;
+                    int ty = (e.Y / Screen.Tileset.TileSize) * Screen.Tileset.TileSize;
 
-                ReDrawMaster();
+                    Bitmap icon = (Bitmap)MainForm.Instance.CurrentTool.Icon;
+                    if (icon == null) icon = cursor;
+
+                    Point offset = MainForm.Instance.CurrentTool.IconOffset;
+
+                    icon.SetResolution(mouseLayer.HorizontalResolution, mouseLayer.VerticalResolution);
+
+                    using (Graphics g = Graphics.FromImage(mouseLayer))
+                    {
+                        g.Clear(Color.Transparent);
+                        g.DrawImageUnscaled(icon, tx + offset.X, ty + offset.Y, icon.Width, icon.Height);
+                    }
+
+                    ReDrawMaster();
+                }
+                MainForm.Instance.CurrentTool.Move(this, e.Location);
             }
 
             base.OnMouseMove(e);
@@ -200,8 +206,16 @@ namespace MegaMan_Level_Editor
                 int end = start + (join.Size * Screen.Tileset.TileSize);
                 int edge;
                 Pen pen;
-                if (one ? join.direction == JoinDirection.BackwardOnly : join.direction == JoinDirection.ForwardOnly) pen = blockPen;
-                else pen = passPen;
+                if (join == Nearest)
+                {
+                    if (one ? join.direction == JoinDirection.BackwardOnly : join.direction == JoinDirection.ForwardOnly) pen = blockHighPen;
+                    else pen = passHighPen;
+                }
+                else
+                {
+                    if (one ? join.direction == JoinDirection.BackwardOnly : join.direction == JoinDirection.ForwardOnly) pen = blockPen;
+                    else pen = passPen;
+                }
                 if (join.type == JoinType.Horizontal)
                 {
                     edge = one ? Screen.PixelHeight - 2 : 2;
