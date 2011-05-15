@@ -12,7 +12,7 @@ namespace MegaMan_Level_Editor
 {
     public partial class SpriteEditor : Form
     {
-        private ProjectEditor project;
+        private Project project;
         private Image tileSheet;
         private Image transparency;
         private Timer timer;
@@ -45,7 +45,7 @@ namespace MegaMan_Level_Editor
             }
         }
 
-        public SpriteEditor(ProjectEditor project)
+        public SpriteEditor(Project project)
         {
             InitializeComponent();
             this.project = project;

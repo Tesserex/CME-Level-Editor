@@ -12,27 +12,30 @@ namespace MegaMan_Level_Editor
 {
     public partial class StageSelectEdit : Form
     {
-        private ProjectEditor project;
+        private Project project;
+        private StageSelect stageSelect;
         private Bitmap background;
 
-        public StageSelectEdit(ProjectEditor project)
+        public StageSelectEdit(ProjectEditor editor)
         {
+            project = editor.Project;
+
             InitializeComponent();
-            this.project = project;
+            this.stageSelect = project.StageSelect;
             this.preview.Image = new Bitmap(project.ScreenWidth, project.ScreenHeight);
 
-            bossX.Value = project.BossSpacingHorizontal;
-            bossY.Value = project.BossSpacingVertical;
+            bossX.Value = stageSelect.BossSpacingHorizontal;
+            bossY.Value = stageSelect.BossSpacingVertical;
 
             comboSlot.SelectedIndex = -1;
-            comboStages.Items.AddRange(project.StageNames.ToArray());
+            foreach (var stage in project.Stages) comboStages.Items.Add(stage.Name);
 
-            if (project.StageSelectBackground != null)
+            if (stageSelect.Background != null)
             {
-                textBackground.Text = project.StageSelectBackground.Absolute;
+                textBackground.Text = stageSelect.Background.Absolute;
                 try
                 {
-                    this.background = (Bitmap)Image.FromFile(project.StageSelectBackground.Absolute);
+                    this.background = (Bitmap)Image.FromFile(stageSelect.Background.Absolute);
                     this.background.SetResolution(this.preview.Image.HorizontalResolution, this.preview.Image.VerticalResolution);
                 }
                 catch
@@ -41,9 +44,21 @@ namespace MegaMan_Level_Editor
                 }
             }
 
-            if (project.StageSelectIntro != null) textMusicIntro.Text = project.StageSelectIntro.Absolute;
-            if (project.StageSelectLoop != null) textMusicLoop.Text = project.StageSelectLoop.Absolute;
-            if (project.StageSelectChangeSound != null) textSound.Text = project.StageSelectChangeSound.Absolute;
+            if (stageSelect.Music != null)
+            {
+                if (stageSelect.Music.Type == AudioType.Wav)
+                {
+                    if (stageSelect.Music.IntroPath != null) textMusicIntro.Text = stageSelect.Music.IntroPath.Absolute;
+                    if (stageSelect.Music.LoopPath != null) textMusicLoop.Text = stageSelect.Music.LoopPath.Absolute;
+                }
+            }
+            if (stageSelect.ChangeSound != null)
+            {
+                if (stageSelect.ChangeSound.Type == AudioType.Wav)
+                {
+                    textSound.Text = stageSelect.ChangeSound.Path.Absolute;
+                }
+            }
 
             ReDraw();
         }
@@ -55,23 +70,23 @@ namespace MegaMan_Level_Editor
                 g.Clear(Color.Black);
                 if (background != null) g.DrawImage(background, 0, 0);
 
-                if (this.project.BossFrameSprite != null) 
+                if (stageSelect.BossFrame != null)
                 {
-                    int mid_x = this.project.ScreenWidth / 2 - this.project.BossFrameSprite.Width / 2;
-                    int mid_y = this.project.ScreenHeight / 2 - this.project.BossFrameSprite.Height / 2 + project.BossOffset;
+                    int mid_x = project.ScreenWidth / 2 - stageSelect.BossFrame.Width / 2;
+                    int mid_y = project.ScreenHeight / 2 - stageSelect.BossFrame.Height / 2 + stageSelect.BossOffset;
 
-                    int space_x = this.project.BossSpacingHorizontal + this.project.BossFrameSprite.Width;
-                    int space_y = this.project.BossSpacingVertical + this.project.BossFrameSprite.Height;
+                    int space_x = stageSelect.BossSpacingHorizontal + stageSelect.BossFrame.Width;
+                    int space_y = stageSelect.BossSpacingVertical + stageSelect.BossFrame.Height;
 
-                    this.project.BossFrameSprite.Draw(g, mid_x - space_x, mid_y - space_y);
-                    this.project.BossFrameSprite.Draw(g, mid_x, mid_y - space_y);
-                    this.project.BossFrameSprite.Draw(g, mid_x + space_x, mid_y - space_y);
-                    this.project.BossFrameSprite.Draw(g, mid_x - space_x, mid_y);
-                    this.project.BossFrameSprite.Draw(g, mid_x, mid_y);
-                    this.project.BossFrameSprite.Draw(g, mid_x + space_x, mid_y);
-                    this.project.BossFrameSprite.Draw(g, mid_x - space_x, mid_y + space_y);
-                    this.project.BossFrameSprite.Draw(g, mid_x, mid_y + space_y);
-                    this.project.BossFrameSprite.Draw(g, mid_x + space_x, mid_y + space_y);
+                    stageSelect.BossFrame.Draw(g, mid_x - space_x, mid_y - space_y);
+                    stageSelect.BossFrame.Draw(g, mid_x, mid_y - space_y);
+                    stageSelect.BossFrame.Draw(g, mid_x + space_x, mid_y - space_y);
+                    stageSelect.BossFrame.Draw(g, mid_x - space_x, mid_y);
+                    stageSelect.BossFrame.Draw(g, mid_x, mid_y);
+                    stageSelect.BossFrame.Draw(g, mid_x + space_x, mid_y);
+                    stageSelect.BossFrame.Draw(g, mid_x - space_x, mid_y + space_y);
+                    stageSelect.BossFrame.Draw(g, mid_x, mid_y + space_y);
+                    stageSelect.BossFrame.Draw(g, mid_x + space_x, mid_y + space_y);
                 }
             }
             this.preview.Refresh();
@@ -89,7 +104,7 @@ namespace MegaMan_Level_Editor
                     this.background = (Bitmap)Image.FromFile(browse.FileName);
                     this.background.SetResolution(this.preview.Image.HorizontalResolution, this.preview.Image.VerticalResolution);
 
-                    project.StageSelectBackground = FilePath.FromAbsolute(browse.FileName, project.BaseDir);
+                    stageSelect.Background = FilePath.FromAbsolute(browse.FileName, project.BaseDir);
                 }
                 catch
                 {
@@ -104,15 +119,15 @@ namespace MegaMan_Level_Editor
         private void frameBrowse_Click(object sender, EventArgs e)
         {
             var editor = new SpriteEditor(this.project);
-            if (project.BossFrameSprite != null) editor.Sprite = project.BossFrameSprite;
+            if (stageSelect.BossFrame != null) editor.Sprite = stageSelect.BossFrame;
             editor.SpriteChange += () =>
             {
-                project.BossFrameSprite = editor.Sprite;
+                stageSelect.BossFrame = editor.Sprite;
             };
             editor.FormClosed += (s, ev) =>
-                {
-                    ReDraw();
-                };
+            {
+                ReDraw();
+            };
             editor.Show();
         }
 
@@ -124,7 +139,8 @@ namespace MegaMan_Level_Editor
             if (result == DialogResult.OK)
             {
                 this.textMusicIntro.Text = browse.FileName;
-                project.StageSelectIntro = FilePath.FromAbsolute(browse.FileName, project.BaseDir);
+                stageSelect.Music.Type = AudioType.Wav;
+                stageSelect.Music.IntroPath = FilePath.FromAbsolute(browse.FileName, project.BaseDir);
             }
         }
 
@@ -136,7 +152,8 @@ namespace MegaMan_Level_Editor
             if (result == DialogResult.OK)
             {
                 this.textMusicLoop.Text = browse.FileName;
-                project.StageSelectLoop = FilePath.FromAbsolute(browse.FileName, project.BaseDir);
+                stageSelect.Music.Type = AudioType.Wav;
+                stageSelect.Music.LoopPath = FilePath.FromAbsolute(browse.FileName, project.BaseDir);
             }
         }
 
@@ -148,7 +165,8 @@ namespace MegaMan_Level_Editor
             if (result == DialogResult.OK)
             {
                 this.textSound.Text = browse.FileName;
-                project.StageSelectChangeSound = FilePath.FromAbsolute(browse.FileName, project.BaseDir);
+                stageSelect.ChangeSound.Type = AudioType.Wav;
+                stageSelect.ChangeSound.Path = FilePath.FromAbsolute(browse.FileName, project.BaseDir);
             }
         }
 
@@ -159,19 +177,19 @@ namespace MegaMan_Level_Editor
 
         private void bossX_ValueChanged(object sender, EventArgs e)
         {
-            project.BossSpacingHorizontal = (int)bossX.Value;
+            stageSelect.BossSpacingHorizontal = (int)bossX.Value;
             this.ReDraw();
         }
 
         private void bossY_ValueChanged(object sender, EventArgs e)
         {
-            project.BossSpacingVertical = (int)bossY.Value;
+            stageSelect.BossSpacingVertical = (int)bossY.Value;
             this.ReDraw();
         }
 
         private void comboSlot_SelectedIndexChanged(object sender, EventArgs e)
         {
-            BossInfo info = this.project.BossAtSlot(comboSlot.SelectedIndex);
+            BossInfo info = BossAtSlot(comboSlot.SelectedIndex);
 
             if (info.PortraitPath != null && info.PortraitPath.Relative != "") textPortrait.Text = info.PortraitPath.Absolute;
             else textPortrait.Text = "";
@@ -186,7 +204,7 @@ namespace MegaMan_Level_Editor
         {
             if (comboStages.SelectedItem != null)
             {
-                this.project.BossAtSlot(comboSlot.SelectedIndex).Stage = comboStages.SelectedItem.ToString();
+                BossAtSlot(comboSlot.SelectedIndex).Stage = comboStages.SelectedItem.ToString();
             }
         }
 
@@ -197,7 +215,7 @@ namespace MegaMan_Level_Editor
             var result = browse.ShowDialog();
             if (result == DialogResult.OK)
             {
-                this.project.BossAtSlot(comboSlot.SelectedIndex).PortraitPath = FilePath.FromAbsolute(browse.FileName, this.project.BaseDir);
+                BossAtSlot(comboSlot.SelectedIndex).PortraitPath = FilePath.FromAbsolute(browse.FileName, this.project.BaseDir);
                 this.textPortrait.Text = browse.FileName;
             }
         }
@@ -206,14 +224,35 @@ namespace MegaMan_Level_Editor
         {
             if (comboStages.SelectedItem != null)
             {
-                this.project.BossAtSlot(comboSlot.SelectedIndex).Name = textBossName.Text;
+                BossAtSlot(comboSlot.SelectedIndex).Name = textBossName.Text;
             }
         }
 
         private void bossOffset_ValueChanged(object sender, EventArgs e)
         {
-            project.BossOffset = (int)bossOffset.Value;
+            stageSelect.BossOffset = (int)bossOffset.Value;
             this.ReDraw();
+        }
+
+        private BossInfo BossAtSlot(int slot)
+        {
+            foreach (var info in stageSelect.Bosses)
+            {
+                if (info.Slot == slot) return info;
+            }
+            // find the next available one
+            foreach (var info in stageSelect.Bosses)
+            {
+                if (info.Slot == -1)
+                {
+                    info.Slot = slot;
+                    return info;
+                }
+            }
+            BossInfo boss = new BossInfo();
+            boss.Slot = slot;
+            stageSelect.AddBoss(boss);
+            return boss;
         }
     }
 }
