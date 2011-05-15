@@ -13,6 +13,7 @@ namespace MegaMan_Level_Editor
         private Tileset tileset;
         private TileButton selected;
         private ToolStripSeparator sep;
+        private Dictionary<Tileset, Tile> selectedTiles;
 
         public event Action<Tile> TileChanged;
 
@@ -22,6 +23,7 @@ namespace MegaMan_Level_Editor
             this.Padding = new Padding(0);
             this.Margin = new Padding(0);
 
+            selectedTiles = new Dictionary<Tileset, Tile>();
             selected = new TileButton(null);
             selected.Margin = new Padding(10, 0, 5, 0);
             selected.Padding = new Padding(0);
@@ -52,6 +54,16 @@ namespace MegaMan_Level_Editor
                 button.Click += new EventHandler(button_Click);
                 this.Items.Add(button);
             }
+
+            if (selectedTiles.ContainsKey(tileset))
+            {
+                selected.Tile = selectedTiles[tileset];
+            }
+            else
+            {
+                selected.Tile = null;
+            }
+            selected.Invalidate();
         }
 
         private void TickSprites()
@@ -62,8 +74,6 @@ namespace MegaMan_Level_Editor
                 {
                     tile.Sprite.Update();
                 }
-
-                
             }
         }
 
@@ -71,6 +81,7 @@ namespace MegaMan_Level_Editor
         {
             TileButton button = sender as TileButton;
             selected.Tile = button.Tile;
+            selectedTiles[tileset] = button.Tile;
             selected.Invalidate();
 
             if (TileChanged != null) TileChanged(selected.Tile);
