@@ -215,53 +215,47 @@ namespace MegaMan_Level_Editor
 
             if (nearest != null)
             {
-                string menuText;
+                string typeText = (nearest.type == MegaMan.JoinType.Vertical)? "Left-Right" : "Up-Down";
 
-                if (nearest.type == MegaMan.JoinType.Vertical)
+                menu.MenuItems.Add("Modify " + typeText + " Join from " + nearest.screenOne + " to " + nearest.screenTwo, (s, e) => { EditJoin(surface, nearest); });
+
+                menu.MenuItems.Add("Delete " + typeText + " Join from " + nearest.screenOne + " to " + nearest.screenTwo, (s, e) => { DeleteJoin(surface, nearest); });
+            }
+            else
+            {
+                if (location.X > surface.Width - surface.Screen.Tileset.TileSize)
                 {
-                    menuText = "Modify Left-Right Join " + nearest.screenOne + " to " + nearest.screenTwo;
+                    menu.MenuItems.Add(new MenuItem("New Rightward Join from " + surface.Screen.Name,
+                        (s, e) =>
+                        {
+                            NewJoin(surface, surface.Screen.Name, "", MegaMan.JoinType.Vertical, location.Y / surface.Screen.Tileset.TileSize);
+                        }));
                 }
-                else
+                if (location.X < surface.Screen.Tileset.TileSize)
                 {
-                    menuText = "Modify Up-Down Join " + nearest.screenOne + " to " + nearest.screenTwo;
+                    menu.MenuItems.Add(new MenuItem("New Leftward Join from " + surface.Screen.Name,
+                        (s, e) =>
+                        {
+                            NewJoin(surface, "", surface.Screen.Name, MegaMan.JoinType.Vertical, location.Y / surface.Screen.Tileset.TileSize);
+                        }));
                 }
-
-                menu.MenuItems.Add(menuText, (s, e) => { EditJoin(surface, nearest); });
+                if (location.Y > surface.Height - surface.Screen.Tileset.TileSize)
+                {
+                    menu.MenuItems.Add(new MenuItem("New Downward Join from " + surface.Screen.Name,
+                        (s, e) =>
+                        {
+                            NewJoin(surface, surface.Screen.Name, "", MegaMan.JoinType.Horizontal, location.X / surface.Screen.Tileset.TileSize);
+                        }));
+                }
+                if (location.Y < surface.Screen.Tileset.TileSize)
+                {
+                    menu.MenuItems.Add(new MenuItem("New Upward Join from " + surface.Screen.Name,
+                        (s, e) =>
+                        {
+                            NewJoin(surface, "", surface.Screen.Name, MegaMan.JoinType.Horizontal, location.X / surface.Screen.Tileset.TileSize);
+                        }));
+                }
             }
-
-            if (location.X > surface.Width - surface.Screen.Tileset.TileSize)
-            {
-                menu.MenuItems.Add(new MenuItem("New Rightward Join from " + surface.Screen.Name,
-                    (s, e) =>
-                    {
-                        NewJoin(surface, surface.Screen.Name, "", MegaMan.JoinType.Vertical, location.Y / surface.Screen.Tileset.TileSize);
-                    }));
-            }
-            if (location.X < surface.Screen.Tileset.TileSize)
-            {
-                menu.MenuItems.Add(new MenuItem("New Leftward Join from " + surface.Screen.Name,
-                    (s, e) =>
-                    {
-                        NewJoin(surface, "", surface.Screen.Name, MegaMan.JoinType.Vertical, location.Y / surface.Screen.Tileset.TileSize);
-                    }));
-            }
-            if (location.Y > surface.Height - surface.Screen.Tileset.TileSize)
-            {
-                menu.MenuItems.Add(new MenuItem("New Downward Join from " + surface.Screen.Name,
-                    (s, e) =>
-                    {
-                        NewJoin(surface, surface.Screen.Name, "", MegaMan.JoinType.Horizontal, location.X / surface.Screen.Tileset.TileSize);
-                    }));
-            }
-            if (location.Y < surface.Screen.Tileset.TileSize)
-            {
-                menu.MenuItems.Add(new MenuItem("New Upward Join from " + surface.Screen.Name,
-                    (s, e) =>
-                    {
-                        NewJoin(surface, "", surface.Screen.Name, MegaMan.JoinType.Horizontal, location.X / surface.Screen.Tileset.TileSize);
-                    }));
-            }
-
             menu.Show(surface, location);
         }
 
@@ -291,6 +285,11 @@ namespace MegaMan_Level_Editor
             JoinForm form = new JoinForm(join, surface.Screen.Stage.Screens);
             form.OK += () => surface.Screen.Stage.RaiseJoinChange(join);
             form.Show();
+        }
+
+        private void DeleteJoin(ScreenDrawingSurface surface, MegaMan.Join join)
+        {
+            surface.Screen.Stage.RemoveJoin(join);
         }
     }
 

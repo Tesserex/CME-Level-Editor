@@ -177,6 +177,13 @@ namespace MegaMan_Level_Editor
             if (JoinChanged != null) JoinChanged(join);
         }
 
+        public void RemoveJoin(Join join)
+        {
+            map.Joins.Remove(join);
+            this.Dirty = true;
+            if (JoinChanged != null) JoinChanged(join);
+        }
+
         // this should probably be replaced by a join wrapper that has events
         public void RaiseJoinChange(Join join)
         {
