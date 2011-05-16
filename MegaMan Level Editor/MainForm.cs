@@ -227,7 +227,8 @@ namespace MegaMan_Level_Editor
 
         private void TileChanged(Tile tile)
         {
-            this.CurrentBrush = new SingleTileBrush(tile);
+            if (tile == null) this.CurrentBrush = null;
+            else this.CurrentBrush = new SingleTileBrush(tile);
             AssembleTool();
         }
 

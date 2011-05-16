@@ -64,6 +64,8 @@ namespace MegaMan_Level_Editor
                 selected.Tile = null;
             }
             selected.Invalidate();
+
+            if (TileChanged != null) TileChanged(selected.Tile);
         }
 
         private void TickSprites()
