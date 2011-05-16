@@ -269,17 +269,16 @@ namespace MegaMan_Level_Editor
             try
             {
                 string[] recent = File.ReadAllLines(recentPath);
-                int i = 0;
-                foreach (string path in recent)
+                int i = 1;
+                foreach (string path in recent.Take(9).Reverse())
                 {
                     recentFiles.Add(path);
                     ToolStripMenuItem r = new ToolStripMenuItem(path);
                     r.Click += new EventHandler(RecentMenu_Click);
                     Keys key = (Keys)Enum.Parse(typeof(Keys), ("D" + i.ToString()));
                     r.ShortcutKeys = Keys.Control | key;
-                    recentMenuItem.DropDownItems.Insert(0, r);
+                    recentMenuItem.DropDownItems.Add(r);
                     i++;
-                    if (i >= 10) break;
                 }
                 if (recentFiles.Count > 0)
                 {
