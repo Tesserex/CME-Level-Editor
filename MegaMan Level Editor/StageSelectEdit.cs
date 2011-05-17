@@ -46,12 +46,9 @@ namespace MegaMan_Level_Editor
 
             if (stageSelect.Music != null)
             {
-                if (stageSelect.Music.Type == AudioType.Wav)
-                {
-                    if (stageSelect.Music.IntroPath != null) textMusicIntro.Text = stageSelect.Music.IntroPath.Absolute;
-                    if (stageSelect.Music.LoopPath != null) textMusicLoop.Text = stageSelect.Music.LoopPath.Absolute;
-                }
+                
             }
+
             if (stageSelect.ChangeSound != null)
             {
                 if (stageSelect.ChangeSound.Type == AudioType.Wav)
@@ -129,32 +126,6 @@ namespace MegaMan_Level_Editor
                 ReDraw();
             };
             editor.Show();
-        }
-
-        private void musicIntroBrowse_Click(object sender, EventArgs e)
-        {
-            var browse = new OpenFileDialog();
-            browse.Filter = "Music (wav, mp3, ogg)|*.wav;*.mp3;*.ogg";
-            var result = browse.ShowDialog();
-            if (result == DialogResult.OK)
-            {
-                this.textMusicIntro.Text = browse.FileName;
-                stageSelect.Music.Type = AudioType.Wav;
-                stageSelect.Music.IntroPath = FilePath.FromAbsolute(browse.FileName, project.BaseDir);
-            }
-        }
-
-        private void musicLoopBrowse_Click(object sender, EventArgs e)
-        {
-            var browse = new OpenFileDialog();
-            browse.Filter = "Music (wav, mp3, ogg)|*.wav;*.mp3;*.ogg";
-            var result = browse.ShowDialog();
-            if (result == DialogResult.OK)
-            {
-                this.textMusicLoop.Text = browse.FileName;
-                stageSelect.Music.Type = AudioType.Wav;
-                stageSelect.Music.LoopPath = FilePath.FromAbsolute(browse.FileName, project.BaseDir);
-            }
         }
 
         private void soundBrowse_Click(object sender, EventArgs e)

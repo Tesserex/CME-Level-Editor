@@ -33,12 +33,12 @@
             this.backgroundBrowse = new System.Windows.Forms.Button();
             this.label2 = new System.Windows.Forms.Label();
             this.label3 = new System.Windows.Forms.Label();
-            this.textMusicIntro = new System.Windows.Forms.TextBox();
             this.textSound = new System.Windows.Forms.TextBox();
-            this.musicIntroBrowse = new System.Windows.Forms.Button();
             this.soundBrowse = new System.Windows.Forms.Button();
             this.label4 = new System.Windows.Forms.Label();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.bossOffset = new System.Windows.Forms.NumericUpDown();
+            this.label12 = new System.Windows.Forms.Label();
             this.bossY = new System.Windows.Forms.NumericUpDown();
             this.bossX = new System.Windows.Forms.NumericUpDown();
             this.label5 = new System.Windows.Forms.Label();
@@ -56,17 +56,13 @@
             this.label7 = new System.Windows.Forms.Label();
             this.comboSlot = new System.Windows.Forms.ComboBox();
             this.preview = new System.Windows.Forms.PictureBox();
-            this.label11 = new System.Windows.Forms.Label();
-            this.textMusicLoop = new System.Windows.Forms.TextBox();
-            this.musicLoopBrowse = new System.Windows.Forms.Button();
-            this.label12 = new System.Windows.Forms.Label();
-            this.bossOffset = new System.Windows.Forms.NumericUpDown();
+            this.musicSoundControl1 = new MegaMan_Level_Editor.SoundControl();
             this.groupBox1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.bossOffset)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.bossY)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.bossX)).BeginInit();
             this.groupBox2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.preview)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.bossOffset)).BeginInit();
             this.SuspendLayout();
             // 
             // label1
@@ -98,11 +94,11 @@
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(19, 63);
+            this.label2.Location = new System.Drawing.Point(43, 64);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(62, 13);
+            this.label2.Size = new System.Drawing.Size(38, 13);
             this.label2.TabIndex = 4;
-            this.label2.Text = "Music Intro:";
+            this.label2.Text = "Music:";
             // 
             // label3
             // 
@@ -113,29 +109,12 @@
             this.label3.TabIndex = 5;
             this.label3.Text = "Change Sound:";
             // 
-            // textMusicIntro
-            // 
-            this.textMusicIntro.Location = new System.Drawing.Point(87, 60);
-            this.textMusicIntro.Name = "textMusicIntro";
-            this.textMusicIntro.Size = new System.Drawing.Size(147, 20);
-            this.textMusicIntro.TabIndex = 6;
-            // 
             // textSound
             // 
             this.textSound.Location = new System.Drawing.Point(87, 106);
             this.textSound.Name = "textSound";
             this.textSound.Size = new System.Drawing.Size(147, 20);
             this.textSound.TabIndex = 7;
-            // 
-            // musicIntroBrowse
-            // 
-            this.musicIntroBrowse.Location = new System.Drawing.Point(239, 60);
-            this.musicIntroBrowse.Name = "musicIntroBrowse";
-            this.musicIntroBrowse.Size = new System.Drawing.Size(66, 21);
-            this.musicIntroBrowse.TabIndex = 8;
-            this.musicIntroBrowse.Text = "Browse...";
-            this.musicIntroBrowse.UseVisualStyleBackColor = true;
-            this.musicIntroBrowse.Click += new System.EventHandler(this.musicIntroBrowse_Click);
             // 
             // soundBrowse
             // 
@@ -170,6 +149,28 @@
             this.groupBox1.TabIndex = 11;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Boss Spacing";
+            // 
+            // bossOffset
+            // 
+            this.bossOffset.Location = new System.Drawing.Point(98, 72);
+            this.bossOffset.Minimum = new decimal(new int[] {
+            100,
+            0,
+            0,
+            -2147483648});
+            this.bossOffset.Name = "bossOffset";
+            this.bossOffset.Size = new System.Drawing.Size(48, 20);
+            this.bossOffset.TabIndex = 15;
+            this.bossOffset.ValueChanged += new System.EventHandler(this.bossOffset_ValueChanged);
+            // 
+            // label12
+            // 
+            this.label12.AutoSize = true;
+            this.label12.Location = new System.Drawing.Point(16, 74);
+            this.label12.Name = "label12";
+            this.label12.Size = new System.Drawing.Size(76, 13);
+            this.label12.TabIndex = 14;
+            this.label12.Text = "Vertical Offset:";
             // 
             // bossY
             // 
@@ -341,71 +342,26 @@
             this.preview.TabIndex = 0;
             this.preview.TabStop = false;
             // 
-            // label11
+            // musicSoundControl1
             // 
-            this.label11.AutoSize = true;
-            this.label11.Location = new System.Drawing.Point(16, 86);
-            this.label11.Name = "label11";
-            this.label11.Size = new System.Drawing.Size(65, 13);
-            this.label11.TabIndex = 17;
-            this.label11.Text = "Music Loop:";
-            // 
-            // textMusicLoop
-            // 
-            this.textMusicLoop.Location = new System.Drawing.Point(87, 83);
-            this.textMusicLoop.Name = "textMusicLoop";
-            this.textMusicLoop.Size = new System.Drawing.Size(147, 20);
-            this.textMusicLoop.TabIndex = 18;
-            // 
-            // musicLoopBrowse
-            // 
-            this.musicLoopBrowse.Location = new System.Drawing.Point(239, 83);
-            this.musicLoopBrowse.Name = "musicLoopBrowse";
-            this.musicLoopBrowse.Size = new System.Drawing.Size(66, 20);
-            this.musicLoopBrowse.TabIndex = 19;
-            this.musicLoopBrowse.Text = "Browse...";
-            this.musicLoopBrowse.UseVisualStyleBackColor = true;
-            this.musicLoopBrowse.Click += new System.EventHandler(this.musicLoopBrowse_Click);
-            // 
-            // label12
-            // 
-            this.label12.AutoSize = true;
-            this.label12.Location = new System.Drawing.Point(16, 74);
-            this.label12.Name = "label12";
-            this.label12.Size = new System.Drawing.Size(76, 13);
-            this.label12.TabIndex = 14;
-            this.label12.Text = "Vertical Offset:";
-            // 
-            // bossOffset
-            // 
-            this.bossOffset.Location = new System.Drawing.Point(98, 72);
-            this.bossOffset.Minimum = new decimal(new int[] {
-            100,
-            0,
-            0,
-            -2147483648});
-            this.bossOffset.Name = "bossOffset";
-            this.bossOffset.Size = new System.Drawing.Size(48, 20);
-            this.bossOffset.TabIndex = 15;
-            this.bossOffset.ValueChanged += new System.EventHandler(this.bossOffset_ValueChanged);
+            this.musicSoundControl1.Location = new System.Drawing.Point(87, 56);
+            this.musicSoundControl1.Name = "musicSoundControl1";
+            this.musicSoundControl1.Size = new System.Drawing.Size(150, 44);
+            this.musicSoundControl1.TabIndex = 17;
             // 
             // StageSelectEdit
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(582, 415);
-            this.Controls.Add(this.musicLoopBrowse);
-            this.Controls.Add(this.textMusicLoop);
-            this.Controls.Add(this.label11);
+            this.Controls.Add(this.musicSoundControl1);
             this.Controls.Add(this.groupBox2);
             this.Controls.Add(this.buttonSave);
             this.Controls.Add(this.frameBrowse);
             this.Controls.Add(this.label6);
             this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.soundBrowse);
-            this.Controls.Add(this.musicIntroBrowse);
             this.Controls.Add(this.textSound);
-            this.Controls.Add(this.textMusicIntro);
             this.Controls.Add(this.label3);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.backgroundBrowse);
@@ -416,12 +372,12 @@
             this.Text = "StageSelectEdit";
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.bossOffset)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.bossY)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.bossX)).EndInit();
             this.groupBox2.ResumeLayout(false);
             this.groupBox2.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.preview)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.bossOffset)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -435,9 +391,7 @@
         private System.Windows.Forms.Button backgroundBrowse;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Label label3;
-        private System.Windows.Forms.TextBox textMusicIntro;
         private System.Windows.Forms.TextBox textSound;
-        private System.Windows.Forms.Button musicIntroBrowse;
         private System.Windows.Forms.Button soundBrowse;
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.GroupBox groupBox1;
@@ -457,10 +411,8 @@
         private System.Windows.Forms.Label label9;
         private System.Windows.Forms.ComboBox comboStages;
         private System.Windows.Forms.Label label10;
-        private System.Windows.Forms.Label label11;
-        private System.Windows.Forms.TextBox textMusicLoop;
-        private System.Windows.Forms.Button musicLoopBrowse;
         private System.Windows.Forms.NumericUpDown bossOffset;
         private System.Windows.Forms.Label label12;
+        private SoundControl musicSoundControl1;
     }
 }

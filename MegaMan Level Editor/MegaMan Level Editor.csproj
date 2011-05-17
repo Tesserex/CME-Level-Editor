@@ -127,6 +127,12 @@
     <Compile Include="JoinOverlay.cs">
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="SoundControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="SoundControl.Designer.cs">
+      <DependentUpon>SoundControl.cs</DependentUpon>
+    </Compile>
     <Compile Include="SpriteEditor.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -177,6 +183,9 @@
     <EmbeddedResource Include="JoinForm.resx">
       <DependentUpon>JoinForm.cs</DependentUpon>
       <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="SoundControl.resx">
+      <DependentUpon>SoundControl.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="SpriteEditor.resx">
       <DependentUpon>SpriteEditor.cs</DependentUpon>
