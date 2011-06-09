@@ -23,6 +23,7 @@ namespace MegaMan_Level_Editor
         public BrushForm brushForm;
         public ProjectForm projectForm;
         public HistoryForm historyForm;
+        public EntityForm entityForm;
 
         private bool drawGrid;
         private bool drawTiles;
@@ -143,6 +144,7 @@ namespace MegaMan_Level_Editor
             CreateBrushForm();
             CreateProjectForm();
             CreateHistoryForm();
+            CreateEntityForm();
 
             if (File.Exists(configFile))
             {
@@ -152,6 +154,7 @@ namespace MegaMan_Level_Editor
             if (!projectForm.Visible) projectForm.Show(this.dockPanel1, DockState.DockRight);
             if (!historyForm.Visible) historyForm.Show(this.dockPanel1, DockState.DockRight);
             if (!brushForm.Visible) brushForm.Show(this.dockPanel1, DockState.DockLeft);
+            if (!entityForm.Visible) entityForm.Show(this.dockPanel1, DockState.DockLeft);
 
             DrawGrid = false;
             DrawTiles = true;
@@ -197,6 +200,18 @@ namespace MegaMan_Level_Editor
                 e.Cancel = true;
                 historyForm.Hide();
                 historyToolStripMenuItem.Checked = false;
+            };
+        }
+
+        private void CreateEntityForm()
+        {
+            entityForm = new EntityForm();
+            entityForm.Shown += (s, e) => entitiesToolStripMenuItem.Checked = true;
+            entityForm.FormClosing += (s, e) =>
+            {
+                e.Cancel = true;
+                entityForm.Hide();
+                entitiesToolStripMenuItem.Checked = false;
             };
         }
 
@@ -250,6 +265,8 @@ namespace MegaMan_Level_Editor
                 return historyForm;
             else if (persistString == typeof(BrushForm).ToString())
                 return brushForm;
+            else if (persistString == typeof(EntityForm).ToString())
+                return entityForm;
             else return null;
         }
 
@@ -492,6 +509,16 @@ namespace MegaMan_Level_Editor
                 historyForm.Show();
 
             historyToolStripMenuItem.Checked = historyForm.Visible;
+        }
+
+        private void entitiesToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (entityForm.Visible)
+                entityForm.Hide();
+            else
+                entityForm.Show();
+
+            entitiesToolStripMenuItem.Checked = entityForm.Visible;
         }
 
         private void brushToolButton_Click(object sender, EventArgs e)
