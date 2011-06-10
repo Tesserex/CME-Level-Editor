@@ -107,6 +107,12 @@
       <DependentUpon>EditBrushForm.cs</DependentUpon>
     </Compile>
     <Compile Include="Entity.cs" />
+    <Compile Include="EntityButton.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="EntityButton.Designer.cs">
+      <DependentUpon>EntityButton.cs</DependentUpon>
+    </Compile>
     <Compile Include="EntityForm.cs">
       <SubType>Form</SubType>
     </Compile>

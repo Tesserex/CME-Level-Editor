@@ -30,30 +30,18 @@ namespace MegaMan_Level_Editor
             {
                 if (entity.MainSprite == null) continue;
 
-                var sprite = entity.MainSprite;
+                var button = new EntityButton(entity);
 
-                PictureBox spritePict = new PictureBox();
-                spritePict.Image = new Bitmap(sprite.Width, sprite.Height);
-                spritePict.Paint += (s, e) => spritePict_Paint(spritePict, sprite);
-                spritePict.Size = spritePict.Image.Size;
-
-                Panel border = new Panel();
-                border.BackColor = container.BackColor;
-                border.Width = spritePict.Width + 8;
-                border.Height = spritePict.Height + 8;
-                border.Controls.Add(spritePict);
-                spritePict.Top = 4;
-                spritePict.Left = 4;
-
-                spritePict.Click += (snd, args) =>
+                button.Click += (snd, args) =>
                 {
                     //ChangeBrush(brush);
                     foreach (Control c in container.Controls) c.BackColor = container.BackColor;
-                    border.BackColor = Color.Orange;
+                    button.BackColor = Color.Orange;
                 };
 
-                container.Controls.Add(border);
+                container.Controls.Add(button);
             }
+            container.Refresh();
         }
 
         private void spritePict_Paint(PictureBox pict, Sprite sprite)
