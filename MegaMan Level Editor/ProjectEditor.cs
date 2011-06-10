@@ -29,6 +29,13 @@ namespace MegaMan_Level_Editor
 
         #region Game XML File Stuff
 
+        private Dictionary<string, Entity> entities = new Dictionary<string,Entity>();
+
+        public IEnumerable<Entity> Entities
+        {
+            get { return entities.Values; }
+        }
+
         public string BaseDir
         {
             get { return Project.BaseDir; }
@@ -106,6 +113,7 @@ namespace MegaMan_Level_Editor
         {
             var p = new ProjectEditor();
             p.Project.Load(path);
+            p.LoadIncludes();
             return p;
         }
 
@@ -137,24 +145,31 @@ namespace MegaMan_Level_Editor
             Project = new Project();
         }
 
-        private string GetNodeVal(XElement parent, string name)
+        private void LoadIncludes()
         {
-            var node = parent.Element(name);
-            if (node == null) return "";
-            return node.Value;
+            foreach (string path in Project.Includes)
+            {
+                string fullpath = Path.Combine(this.BaseDir, path);
+                XDocument document = XDocument.Load(fullpath, LoadOptions.SetLineInfo);
+                foreach (XElement element in document.Elements())
+                {
+                    switch (element.Name.LocalName)
+                    {
+                        case "Entities":
+                            LoadEntities(element);
+                            break;
+                    }
+                }
+            }
         }
 
-        private string GetNodeAttr(XElement parent, string nodename, string attrname)
+        private void LoadEntities(XElement entitiesNode)
         {
-            return GetNodeAttr(parent.Element(nodename), attrname);
-        }
-
-        private string GetNodeAttr(XElement node, string attrname)
-        {
-            if (node == null) return "";
-            var attr = node.Attribute(attrname);
-            if (attr == null) return "";
-            return attr.Value;
+            foreach (XElement entityNode in entitiesNode.Elements("Entity"))
+            {
+                var entity = new Entity(entityNode, this.BaseDir);
+                entities.Add(entity.Name, entity);
+            }
         }
 
         public StageDocument AddStage(string name, string tilesetPath)

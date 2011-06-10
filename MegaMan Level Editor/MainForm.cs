@@ -321,18 +321,22 @@ namespace MegaMan_Level_Editor
 
         private void OpenProject(string gamefile)
         {
+            ProjectEditor project;
             try
             {
-                var project = ProjectEditor.FromFile(gamefile);
-                projectForm.AddProject(project);
-                AddRecentFile(gamefile);
-                ActiveProject = project;
+                project = ProjectEditor.FromFile(gamefile);
             }
             catch
             {
                 MessageBox.Show("The selected file could not be loaded. Perhaps it was created with a different version of this editor.",
                     "CME Project Editor", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
             }
+
+            projectForm.AddProject(project);
+            entityForm.LoadEntities(project);
+            AddRecentFile(gamefile);
+            ActiveProject = project;
         }
 
         private void AssembleTool()
@@ -433,6 +437,7 @@ namespace MegaMan_Level_Editor
             {
                 projectForm.CloseProject();
                 tilestrip.ChangeTileset(null);
+                entityForm.Unload();
                 ActiveProject = null;
                 ActiveStage = null;
             }
