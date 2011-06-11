@@ -25,6 +25,7 @@ namespace MegaMan_Level_Editor
 
         public void ChangeTileset(Tileset tileset)
         {
+            Clear();
             Tileset = tileset;
             if (tileset == null) brushes = null;
             else if (brushSets.ContainsKey(tileset.FilePath))
@@ -38,9 +39,17 @@ namespace MegaMan_Level_Editor
                 LoadBrushes();
             }
 
+            if (brushes != null)
+            {
+                foreach (var brush in brushes) AddBrushPanel(brush);
+            }
+        }
+
+        public void Clear()
+        {
             brushPanels.Clear();
             brushPanel.Controls.Clear();
-            foreach (var brush in brushes) AddBrushPanel(brush);
+            Tileset = null;
         }
 
         public event BrushChangedHandler BrushChanged;

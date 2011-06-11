@@ -455,6 +455,7 @@ namespace MegaMan_Level_Editor
                 projectForm.CloseProject();
                 tilestrip.ChangeTileset(null);
                 entityForm.Unload();
+                brushForm.Clear();
                 ActiveProject = null;
                 ActiveStage = null;
             }
