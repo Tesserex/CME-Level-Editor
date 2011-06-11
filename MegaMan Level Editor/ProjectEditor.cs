@@ -140,6 +140,11 @@ namespace MegaMan_Level_Editor
             return null;
         }
 
+        public Entity EntityByName(string name)
+        {
+            return entities[name];
+        }
+
         private ProjectEditor()
         {
             Project = new Project();

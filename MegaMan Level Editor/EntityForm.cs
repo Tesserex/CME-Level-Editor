@@ -44,15 +44,6 @@ namespace MegaMan_Level_Editor
             container.Refresh();
         }
 
-        private void spritePict_Paint(PictureBox pict, Sprite sprite)
-        {
-            using (var g = Graphics.FromImage(pict.Image))
-            {
-                g.Clear(Color.Transparent);
-                sprite.Draw(g, sprite.HotSpot.X, sprite.HotSpot.Y);
-            }
-        }
-
         public void Unload()
         {
             container.Controls.Clear();
