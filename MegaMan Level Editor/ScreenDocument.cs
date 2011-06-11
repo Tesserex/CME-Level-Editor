@@ -16,13 +16,30 @@ namespace MegaMan_Level_Editor
         public event Action<int, int> Resized;
         public event Action TileChanged;
 
+        private bool dirty;
+        public bool Dirty
+        {
+            get
+            {
+                return dirty;
+            }
+            set
+            {
+                dirty = value;
+                Stage.Dirty = value;
+            }
+        }
+
         public string Name
         {
             get { return screen.Name; }
             set
             {
+                if (value == screen.Name) return;
+
                 string old = screen.Name;
                 screen.Name = value;
+                Dirty = true;
                 if (Renamed != null) Renamed(old, value);
             }
         }
@@ -52,6 +69,7 @@ namespace MegaMan_Level_Editor
         public void Resize(int width, int height)
         {
             screen.Resize(width, height);
+            Dirty = true;
             if (Resized != null) Resized(width, height);
         }
 
@@ -63,6 +81,7 @@ namespace MegaMan_Level_Editor
         public void ChangeTile(int tile_x, int tile_y, int tile_id)
         {
             screen.ChangeTile(tile_x, tile_y, tile_id);
+            Dirty = true;
             if (TileChanged != null) TileChanged();
         }
 
@@ -74,6 +93,18 @@ namespace MegaMan_Level_Editor
         public void AddEntity(Entity entity, Point location)
         {
             screen.AddEnemy(new EnemyCopyInfo
+                {
+                    enemy = entity.Name,
+                    screenX = location.X,
+                    screenY = location.Y,
+                }
+            );
+            Dirty = true;
+        }
+
+        public void RemoveEntity(Entity entity, Point location)
+        {
+            screen.EnemyInfo.Remove(new EnemyCopyInfo
                 {
                     enemy = entity.Name,
                     screenX = location.X,

@@ -90,7 +90,31 @@ namespace MegaMan_Level_Editor
 
         public HistoryAction Reverse()
         {
-            return null;
+            return new RemoveEntityAction(entity, surface, location);
+        }
+    }
+
+    public class RemoveEntityAction : HistoryAction
+    {
+        private Entity entity;
+        private ScreenDrawingSurface surface;
+        private Point location;
+
+        public RemoveEntityAction(Entity entity, ScreenDrawingSurface surface, Point location)
+        {
+            this.entity = entity;
+            this.surface = surface;
+            this.location = location;
+        }
+
+        public void Run()
+        {
+            surface.Screen.RemoveEntity(entity, location);
+        }
+
+        public HistoryAction Reverse()
+        {
+            return new AddEntityAction(entity, surface, location);
         }
     }
 }

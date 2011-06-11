@@ -66,17 +66,29 @@ namespace MegaMan_Level_Editor
             return null;
         }
 
-        #region Exposed Map Items
-
-        // this should be removed from the common lib, and implemented directly by me
+        private bool dirty;
         public bool Dirty
         {
-            get { return map.Dirty; }
-            set {
-                map.Dirty = value;
-                if (DirtyChanged != null) DirtyChanged(value);
+            get
+            {
+                if (dirty == true)
+                    return true;
+
+                foreach (ScreenDocument screen in Screens)
+                    if (screen.Dirty)
+                        return true;
+
+                return false;
+            }
+            set
+            {
+                if (dirty == value) return;
+                dirty = value;
+                if (DirtyChanged != null) DirtyChanged(dirty);
             }
         }
+
+        #region Exposed Map Items
 
         public string Name
         {
@@ -84,6 +96,7 @@ namespace MegaMan_Level_Editor
             set
             {
                 map.Name = value;
+                Dirty = true;
                 RefreshInfo();
             }
         }
@@ -91,7 +104,7 @@ namespace MegaMan_Level_Editor
         public FilePath Path
         {
             get { return map.StagePath; }
-            set { map.StagePath = value; }
+            set { map.StagePath = value; Dirty = true; }
         }
 
         public Tileset Tileset
