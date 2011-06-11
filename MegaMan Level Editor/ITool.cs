@@ -84,7 +84,7 @@ namespace MegaMan_Level_Editor
                 if (tiles[cell.x, cell.y] != cell.tile.Id)
                     changes.Add(new TileChange(tile_x + cell.x, tile_y + cell.y, cell.tile.Id, tiles[cell.x, cell.y], surface));
             }
-            surface.ReDrawAll();
+            surface.ReDrawTiles();
         }
     }
 
@@ -127,7 +127,11 @@ namespace MegaMan_Level_Editor
             Flood(surface, tile_x, tile_y, old.Id, 0, 0);
 
             // need to manually inform the screen surface that I messed with it
-            if (changes.Count > 0) surface.EditedWithAction(new DrawAction("Fill", changes, surface));
+            if (changes.Count > 0)
+            {
+                surface.EditedWithAction(new DrawAction("Fill", changes, surface));
+                surface.ReDrawTiles();
+            }
             changes.Clear();
         }
 

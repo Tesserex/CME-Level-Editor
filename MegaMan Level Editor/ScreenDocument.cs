@@ -113,9 +113,13 @@ namespace MegaMan_Level_Editor
             );
         }
 
-        public void DrawOn(System.Drawing.Graphics graphics)
+        public void DrawOn(Graphics graphics)
         {
             screen.Draw(graphics, 0, 0, screen.PixelWidth, screen.PixelHeight);
+        }
+
+        public void DrawEntities(Graphics graphics)
+        {
             foreach (var info in screen.EnemyInfo)
             {
                 Stage.Project.EntityByName(info.enemy).MainSprite.Draw(graphics, info.screenX, info.screenY);

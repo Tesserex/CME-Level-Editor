@@ -59,7 +59,7 @@ namespace MegaMan_Level_Editor
             {
                 surface.Screen.ChangeTile(change.Tile_X, change.Tile_Y, change.NewTileId);
             }
-            surface.ReDrawAll();
+            surface.ReDrawTiles();
         }
 
         public HistoryAction Reverse()
@@ -86,7 +86,7 @@ namespace MegaMan_Level_Editor
         public void Run()
         {
             surface.Screen.AddEntity(entity, location);
-            surface.ReDrawAll();
+            surface.ReDrawEntities();
         }
 
         public HistoryAction Reverse()
@@ -111,7 +111,7 @@ namespace MegaMan_Level_Editor
         public void Run()
         {
             surface.Screen.RemoveEntity(entity, location);
-            surface.ReDrawAll();
+            surface.ReDrawEntities();
         }
 
         public HistoryAction Reverse()

@@ -68,6 +68,8 @@ namespace MegaMan_Level_Editor
 
         public event EventHandler<ScreenEditEventArgs> Edited;
 
+        #region Constructors
+
         static ScreenDrawingSurface()
         {
             cursor = new Bitmap(Cursor.Current.Size.Width, Cursor.Current.Size.Height);
@@ -93,10 +95,11 @@ namespace MegaMan_Level_Editor
             MainForm.Instance.DrawOptionToggled += ReDrawMaster;
         }
 
+        #endregion
+
         public void EditedWithAction(HistoryAction action)
         {
             if (Edited != null) Edited(this, new ScreenEditEventArgs(action, this));
-            ReDrawAll();
         }
 
         void Program_FrameTick()
@@ -108,9 +111,7 @@ namespace MegaMan_Level_Editor
             }
         }
 
-        //*****************
-        // Event Handlers *
-        //*****************
+        #region Mouse Handlers
 
         protected override void OnMouseEnter(EventArgs e)
         {
@@ -185,6 +186,10 @@ namespace MegaMan_Level_Editor
             base.OnMouseMove(e);
         }
 
+        #endregion
+
+        #region Layer Drawing
+
         public void RedrawJoins()
         {
             if (joinLayer == null) return;
@@ -240,27 +245,33 @@ namespace MegaMan_Level_Editor
             }
         }
 
-        public void ReDrawAll()
+        private void ReDrawAll()
         {
             ReDrawTiles();
+            ReDrawEntities();
             ReDrawBlocking();
             ReDrawMaster();
             ReDrawGrid();
         }
 
-        private void ReDrawTiles()
+        public void ReDrawTiles()
         {
             using (Graphics g = Graphics.FromImage(tileLayer))
             {
                 Screen.DrawOn(g);
             }
             grayDirty = true;
+
+            ReDrawMaster();
         }
 
         private void DrawGray()
         {
+            if (!grayDirty) return;
+
             if (grayTiles != null) grayTiles.Dispose();
             grayTiles = ConvertToGrayscale(tileLayer);
+            grayDirty = false;
         }
 
         private Bitmap ConvertToGrayscale(Bitmap original)
@@ -285,6 +296,22 @@ namespace MegaMan_Level_Editor
             //dispose the Graphics object
             g.Dispose();
             return newBitmap;
+        }
+
+        public void ReDrawEntities()
+        {
+            using (Graphics g = Graphics.FromImage(entityLayer))
+            {
+                g.Clear(Color.Transparent);
+
+                Screen.DrawEntities(g);
+                if (this.Screen.Name == this.Screen.Stage.StartScreen)
+                {
+                    g.DrawImage(StartPositionTool.MegaMan, this.Screen.Stage.StartPoint.X - 4, this.Screen.Stage.StartPoint.Y - 12);
+                }
+            }
+
+            ReDrawMaster();
         }
 
         private void ReDrawBlocking()
@@ -347,20 +374,14 @@ namespace MegaMan_Level_Editor
                     else
                     {
                         if (grayDirty) DrawGray();
-                        grayDirty = false;
                         if (grayTiles != null) g.DrawImageUnscaled(grayTiles, 0, 0);
                     }
                 }
 
                 g.CompositingMode = System.Drawing.Drawing2D.CompositingMode.SourceOver;
 
-                if (MainForm.Instance.DrawEntities)
-                {
-                    if (this.Screen.Name == this.Screen.Stage.StartScreen)
-                    {
-                        g.DrawImage(StartPositionTool.MegaMan, this.Screen.Stage.StartPoint.X - 4, this.Screen.Stage.StartPoint.Y - 12);
-                    }
-                }
+                if (MainForm.Instance.DrawEntities && entityLayer != null)
+                    g.DrawImageUnscaled(entityLayer, 0, 0);
 
                 if (MainForm.Instance.DrawBlock && blockLayer != null)
                     g.DrawImageUnscaled(blockLayer, 0, 0);
@@ -379,6 +400,10 @@ namespace MegaMan_Level_Editor
             this.Height = masterImage.Height;
             this.Refresh();
         }
+
+#endregion
+
+        #region Layer Helpers
 
         private void InitLayer(ref Bitmap layer)
         {
@@ -416,5 +441,7 @@ namespace MegaMan_Level_Editor
             ResizeLayer(ref masterImage);
             ReDrawAll();
         }
+
+        #endregion
     }
 }
