@@ -23,8 +23,9 @@ namespace MegaMan_Level_Editor
 
         public void Click(ScreenDrawingSurface surface, System.Drawing.Point location)
         {
-            surface.Screen.AddEntity(entity, location);
-            surface.RaiseDrawnOn(new AddEntityAction(entity, surface, location));
+            var action = new AddEntityAction(entity, surface, location);
+            action.Run();
+            surface.EditedWithAction(action);
         }
 
         public void Move(ScreenDrawingSurface surface, System.Drawing.Point location)

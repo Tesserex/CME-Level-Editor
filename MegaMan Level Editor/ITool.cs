@@ -59,7 +59,7 @@ namespace MegaMan_Level_Editor
         public void Release(ScreenDrawingSurface surface, Point location)
         {
             held = false;
-            if (changes.Count > 0) surface.RaiseDrawnOn(new DrawAction("Brush", changes, surface));
+            if (changes.Count > 0) surface.EditedWithAction(new DrawAction("Brush", changes, surface));
             changes.Clear();
         }
 
@@ -127,7 +127,7 @@ namespace MegaMan_Level_Editor
             Flood(surface, tile_x, tile_y, old.Id, 0, 0);
 
             // need to manually inform the screen surface that I messed with it
-            if (changes.Count > 0) surface.RaiseDrawnOn(new DrawAction("Fill", changes, surface));
+            if (changes.Count > 0) surface.EditedWithAction(new DrawAction("Fill", changes, surface));
             changes.Clear();
         }
 

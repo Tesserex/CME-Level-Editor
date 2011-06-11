@@ -9,12 +9,12 @@ using System.Drawing.Imaging;
 
 namespace MegaMan_Level_Editor
 {
-    public class ScreenDrawEventArgs : EventArgs
+    public class ScreenEditEventArgs : EventArgs
     {
         public HistoryAction Action { get; private set; }
         public ScreenDrawingSurface Surface { get; private set; }
 
-        public ScreenDrawEventArgs(HistoryAction action, ScreenDrawingSurface surface)
+        public ScreenEditEventArgs(HistoryAction action, ScreenDrawingSurface surface)
         {
             Action = action;
             Surface = surface;
@@ -66,7 +66,7 @@ namespace MegaMan_Level_Editor
 
         public MegaMan.Join Nearest { get; set; }
 
-        public event EventHandler<ScreenDrawEventArgs> DrawnOn;
+        public event EventHandler<ScreenEditEventArgs> Edited;
 
         static ScreenDrawingSurface()
         {
@@ -93,10 +93,9 @@ namespace MegaMan_Level_Editor
             MainForm.Instance.DrawOptionToggled += ReDrawMaster;
         }
 
-        public void RaiseDrawnOn(HistoryAction action)
+        public void EditedWithAction(HistoryAction action)
         {
-            if (DrawnOn != null) DrawnOn(this, new ScreenDrawEventArgs(action, this));
-
+            if (Edited != null) Edited(this, new ScreenEditEventArgs(action, this));
             ReDrawAll();
         }
 

@@ -369,14 +369,14 @@ namespace MegaMan_Level_Editor
             surfaces.Add(screen.Name, surface);
             screen.Renamed += this.RenameSurface;
             screen.Resized += (w, h) => this.AlignScreenSurfaces();
-            surface.DrawnOn += new EventHandler<ScreenDrawEventArgs>(surface_DrawnOn);
+            surface.Edited += new EventHandler<ScreenEditEventArgs>(surface_Edited);
             
             this.Controls.Add(surface);
             joinOverlay.Add(surface);
             return surface;
         }
 
-        void surface_DrawnOn(object sender, ScreenDrawEventArgs e)
+        void surface_Edited(object sender, ScreenEditEventArgs e)
         {
             history.Push(e.Action);
         }
