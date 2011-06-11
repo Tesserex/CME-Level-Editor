@@ -16,10 +16,13 @@ namespace MegaMan_Level_Editor
         private Sprite sprite;
         private PictureBox spritePict;
 
+        public Entity Entity { get; private set; }
+
         public EntityButton(Entity entity)
         {
             InitializeComponent();
 
+            Entity = entity;
             sprite = entity.MainSprite;
 
             spritePict = new PictureBox();

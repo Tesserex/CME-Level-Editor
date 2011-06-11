@@ -10,6 +10,7 @@ namespace MegaMan_Level_Editor
     public interface ITool
     {
         Image Icon { get; }
+        bool IconSnap { get; }
         void Click(ScreenDrawingSurface surface, Point location);
         void Move(ScreenDrawingSurface surface, Point location);
         void Release(ScreenDrawingSurface surface, Point location);
@@ -25,6 +26,7 @@ namespace MegaMan_Level_Editor
 
         public Image Icon { get; private set; }
         public Point IconOffset { get { return Point.Empty; } }
+        public bool IconSnap { get { return true; } }
 
         public BrushTool(ITileBrush brush)
         {
@@ -95,6 +97,7 @@ namespace MegaMan_Level_Editor
 
         public Image Icon { get; private set; }
         public Point IconOffset { get { return Point.Empty; } }
+        public bool IconSnap { get { return true; } }
 
         public Bucket(ITileBrush brush)
         {
@@ -157,6 +160,7 @@ namespace MegaMan_Level_Editor
     {
         public Image Icon { get { return null; } }
         public Point IconOffset { get { return Point.Empty; } }
+        public bool IconSnap { get { return false; } }
 
         private MegaMan.Join NearestJoin(ScreenDrawingSurface surface, Point location)
         {
@@ -322,6 +326,7 @@ namespace MegaMan_Level_Editor
             }
         }
         public Point IconOffset { get { return new Point(-4, -8); } }
+        public bool IconSnap { get { return false; } }
 
         public void Click(ScreenDrawingSurface surface, Point location)
         {
@@ -359,6 +364,7 @@ namespace MegaMan_Level_Editor
         Brush,
         Bucket,
         Join,
-        Start
+        Start,
+        Entity
     }
 }

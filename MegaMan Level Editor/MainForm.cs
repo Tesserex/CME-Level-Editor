@@ -38,6 +38,7 @@ namespace MegaMan_Level_Editor
 
         public ITileBrush CurrentBrush { get; private set; }
         private ToolType currentToolType;
+        private Entity currentEntity;
 
         #endregion Private Members
 
@@ -213,6 +214,16 @@ namespace MegaMan_Level_Editor
                 entityForm.Hide();
                 entitiesToolStripMenuItem.Checked = false;
             };
+            entityForm.EntityChanged += new Action<Entity>(entityForm_EntityChanged);
+        }
+
+        private void entityForm_EntityChanged(Entity entity)
+        {
+            currentEntity = entity;
+            this.currentToolType = ToolType.Entity;
+            AssembleTool();
+            foreach (ToolStripButton item in toolBar.Items) { item.Checked = false; }
+            this.DrawJoins = false;
         }
 
         public void ShowStageForm(StageForm form)
@@ -360,7 +371,13 @@ namespace MegaMan_Level_Editor
                 case ToolType.Start:
                     this.CurrentTool = new StartPositionTool();
                     break;
+
+                case ToolType.Entity:
+                    this.CurrentTool = new EntityTool(currentEntity);
+                    break;
             }
+
+            if (currentToolType != ToolType.Entity) entityForm.Deselect();
             
             if (ToolChanged != null) ToolChanged(this, new ToolChangedEventArgs(CurrentTool));
         }

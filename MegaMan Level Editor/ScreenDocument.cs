@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using MegaMan;
+using System.Drawing;
 
 namespace MegaMan_Level_Editor
 {
@@ -68,6 +69,17 @@ namespace MegaMan_Level_Editor
         public void ChangeTile(int tile_x, int tile_y, Tile tile)
         {
             ChangeTile(tile_x, tile_y, tile.Id);
+        }
+
+        public void AddEntity(Entity entity, Point location)
+        {
+            screen.AddEnemy(new EnemyCopyInfo
+                {
+                    enemy = entity.Name,
+                    screenX = location.X,
+                    screenY = location.Y,
+                }
+            );
         }
 
         public void DrawOn(System.Drawing.Graphics graphics)

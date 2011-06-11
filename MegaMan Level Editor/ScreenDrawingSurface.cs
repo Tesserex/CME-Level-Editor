@@ -156,8 +156,14 @@ namespace MegaMan_Level_Editor
             {
                 if (MainForm.Instance.CurrentTool.Icon != null)
                 {
-                    int tx = (e.X / Screen.Tileset.TileSize) * Screen.Tileset.TileSize;
-                    int ty = (e.Y / Screen.Tileset.TileSize) * Screen.Tileset.TileSize;
+                    int tx = e.X;
+                    int ty = e.Y;
+
+                    if (MainForm.Instance.CurrentTool.IconSnap)
+                    {
+                        tx = (e.X / Screen.Tileset.TileSize) * Screen.Tileset.TileSize;
+                        ty = (e.Y / Screen.Tileset.TileSize) * Screen.Tileset.TileSize;
+                    }
 
                     Bitmap icon = (Bitmap)MainForm.Instance.CurrentTool.Icon;
                     if (icon == null) icon = cursor;

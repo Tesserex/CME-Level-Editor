@@ -13,6 +13,8 @@ namespace MegaMan_Level_Editor
 {
     public partial class EntityForm : WeifenLuo.WinFormsUI.Docking.DockContent
     {
+        public event Action<Entity> EntityChanged;
+
         public EntityForm()
         {
             InitializeComponent();
@@ -22,6 +24,11 @@ namespace MegaMan_Level_Editor
         private void Program_FrameTick()
         {
             container.Refresh();
+        }
+
+        public void Deselect()
+        {
+            foreach (Control c in container.Controls) c.BackColor = container.BackColor;
         }
 
         public void LoadEntities(ProjectEditor project)
@@ -34,8 +41,8 @@ namespace MegaMan_Level_Editor
 
                 button.Click += (snd, args) =>
                 {
-                    //ChangeBrush(brush);
-                    foreach (Control c in container.Controls) c.BackColor = container.BackColor;
+                    if (EntityChanged != null) EntityChanged(button.Entity);
+                    Deselect();
                     button.BackColor = Color.Orange;
                 };
 

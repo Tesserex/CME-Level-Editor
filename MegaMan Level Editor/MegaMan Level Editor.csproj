@@ -119,6 +119,7 @@
     <Compile Include="EntityForm.Designer.cs">
       <DependentUpon>EntityForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="EntityTool.cs" />
     <Compile Include="GraphicalOverlay.cs">
       <SubType>Component</SubType>
     </Compile>

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Drawing;
 
 namespace MegaMan_Level_Editor
 {
@@ -66,6 +67,30 @@ namespace MegaMan_Level_Editor
             List<TileChange> ch = new List<TileChange>(changes.Count);
             foreach (TileChange change in changes) ch.Add(change.Reverse());
             return new DrawAction(name, ch, surface);
+        }
+    }
+
+    public class AddEntityAction : HistoryAction
+    {
+        private Entity entity;
+        private ScreenDrawingSurface surface;
+        private Point location;
+
+        public AddEntityAction(Entity entity, ScreenDrawingSurface surface, Point location)
+        {
+            this.entity = entity;
+            this.surface = surface;
+            this.location = location;
+        }
+
+        public void Run()
+        {
+            surface.Screen.AddEntity(entity, location);
+        }
+
+        public HistoryAction Reverse()
+        {
+            return null;
         }
     }
 }
