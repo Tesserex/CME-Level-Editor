@@ -14,6 +14,7 @@ namespace MegaMan_Level_Editor
         void Click(ScreenDrawingSurface surface, Point location);
         void Move(ScreenDrawingSurface surface, Point location);
         void Release(ScreenDrawingSurface surface, Point location);
+        void RightClick(ScreenDrawingSurface surface, Point location);
         Point IconOffset { get; }
     }
 
@@ -86,6 +87,16 @@ namespace MegaMan_Level_Editor
             }
             surface.ReDrawTiles();
         }
+
+        // behaves as eyedropper
+        public void RightClick(ScreenDrawingSurface surface, Point location)
+        {
+            int tile_x = location.X / surface.Screen.Tileset.TileSize;
+            int tile_y = location.Y / surface.Screen.Tileset.TileSize;
+
+            var tile = surface.Screen.TileAt(tile_x, tile_y);
+            MainForm.Instance.TileStrip.SelectTile(tile);
+        }
     }
 
     public class Bucket : ITool
@@ -157,6 +168,16 @@ namespace MegaMan_Level_Editor
 
         public void Release(ScreenDrawingSurface surface, Point location)
         {
+        }
+
+        // behaves as eyedropper
+        public void RightClick(ScreenDrawingSurface surface, Point location)
+        {
+            int tile_x = location.X / surface.Screen.Tileset.TileSize;
+            int tile_y = location.Y / surface.Screen.Tileset.TileSize;
+
+            var tile = surface.Screen.TileAt(tile_x, tile_y);
+            MainForm.Instance.TileStrip.SelectTile(tile);
         }
     }
 
@@ -299,6 +320,11 @@ namespace MegaMan_Level_Editor
         {
             surface.Screen.Stage.RemoveJoin(join);
         }
+
+        public void RightClick(ScreenDrawingSurface surface, Point location)
+        {
+
+        }
     }
 
     public class StartPositionTool : ITool
@@ -349,6 +375,11 @@ namespace MegaMan_Level_Editor
         public void Release(ScreenDrawingSurface surface, Point location)
         {
             
+        }
+
+        public void RightClick(ScreenDrawingSurface surface, Point location)
+        {
+
         }
 
         #endregion

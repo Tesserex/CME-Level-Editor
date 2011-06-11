@@ -61,7 +61,7 @@ namespace MegaMan_Level_Editor
             }
             else
             {
-                selected.Tile = null;
+                selected.Tile = tileset[0];
             }
             selected.Invalidate();
 
@@ -79,14 +79,19 @@ namespace MegaMan_Level_Editor
             }
         }
 
-        private void button_Click(object sender, EventArgs e)
+        public void SelectTile(Tile tile)
         {
-            TileButton button = sender as TileButton;
-            selected.Tile = button.Tile;
-            selectedTiles[tileset] = button.Tile;
+            selected.Tile = tile;
+            selectedTiles[tileset] = tile;
             selected.Invalidate();
 
             if (TileChanged != null) TileChanged(selected.Tile);
+        }
+
+        private void button_Click(object sender, EventArgs e)
+        {
+            TileButton button = sender as TileButton;
+            SelectTile(button.Tile);
         }
     }
 }

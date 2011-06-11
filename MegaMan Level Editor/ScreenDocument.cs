@@ -104,13 +104,23 @@ namespace MegaMan_Level_Editor
 
         public void RemoveEntity(Entity entity, Point location)
         {
-            screen.EnemyInfo.Remove(new EnemyCopyInfo
-                {
-                    enemy = entity.Name,
-                    screenX = location.X,
-                    screenY = location.Y,
-                }
+            screen.EnemyInfo.RemoveAll(i =>
+                i.enemy == entity.Name && i.screenX == location.X && i.screenY == location.Y
             );
+        }
+
+        public EnemyCopyInfo FindEntityAt(Point location)
+        {
+            return screen.EnemyInfo.FirstOrDefault(e => EntityBounded(e, location));
+        }
+
+        private bool EntityBounded(EnemyCopyInfo entityInfo, Point location)
+        {
+            Entity entity = Stage.Project.EntityByName(entityInfo.enemy);
+            RectangleF bounds = entity.MainSprite.BoundBox;
+            bounds.Offset(-entity.MainSprite.HotSpot.X, -entity.MainSprite.HotSpot.Y);
+            bounds.Offset(entityInfo.screenX, entityInfo.screenY);
+            return bounds.Contains(location);
         }
 
         public void DrawOn(Graphics graphics)

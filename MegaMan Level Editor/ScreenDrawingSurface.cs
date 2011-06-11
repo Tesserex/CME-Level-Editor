@@ -137,14 +137,26 @@ namespace MegaMan_Level_Editor
         protected override void OnMouseDown(MouseEventArgs e)
         {
             if (MainForm.Instance.CurrentTool == null) return;
-            MainForm.Instance.CurrentTool.Click(this, e.Location);
+
+            if (e.Button == System.Windows.Forms.MouseButtons.Left)
+            {
+                MainForm.Instance.CurrentTool.Click(this, e.Location);
+            }
+            else if (e.Button == System.Windows.Forms.MouseButtons.Right)
+            {
+                MainForm.Instance.CurrentTool.RightClick(this, e.Location);
+            }
             base.OnMouseDown(e);
         }
 
         protected override void OnMouseUp(MouseEventArgs e)
         {
             if (MainForm.Instance.CurrentTool == null) return;
-            MainForm.Instance.CurrentTool.Release(this, e.Location);
+
+            if (e.Button == System.Windows.Forms.MouseButtons.Left)
+            {
+                MainForm.Instance.CurrentTool.Release(this, e.Location);
+            }
             base.OnMouseUp(e);
         }
 
@@ -180,7 +192,10 @@ namespace MegaMan_Level_Editor
 
                     ReDrawMaster();
                 }
-                MainForm.Instance.CurrentTool.Move(this, e.Location);
+                if (e.Button == System.Windows.Forms.MouseButtons.Left)
+                {
+                    MainForm.Instance.CurrentTool.Move(this, e.Location);
+                }
             }
 
             base.OnMouseMove(e);

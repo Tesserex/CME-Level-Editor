@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Drawing;
 
 namespace MegaMan_Level_Editor
 {
@@ -21,26 +22,39 @@ namespace MegaMan_Level_Editor
 
         public bool IconSnap { get { return false; } }
 
-        public void Click(ScreenDrawingSurface surface, System.Drawing.Point location)
+        public void Click(ScreenDrawingSurface surface, Point location)
         {
             var action = new AddEntityAction(entity, surface, location);
             action.Run();
             surface.EditedWithAction(action);
         }
 
-        public void Move(ScreenDrawingSurface surface, System.Drawing.Point location)
+        public void Move(ScreenDrawingSurface surface, Point location)
         {
             
         }
 
-        public void Release(ScreenDrawingSurface surface, System.Drawing.Point location)
+        public void Release(ScreenDrawingSurface surface, Point location)
         {
             
         }
 
-        public System.Drawing.Point IconOffset
+        public Point IconOffset
         {
             get { return new System.Drawing.Point(-entity.MainSprite.HotSpot.X, -entity.MainSprite.HotSpot.Y); }
+        }
+
+        public void RightClick(ScreenDrawingSurface surface, Point location)
+        {
+            // delete nearest entity
+            var info = surface.Screen.FindEntityAt(location);
+            if (info.enemy == null) return;
+            
+            var entity = surface.Screen.Stage.Project.EntityByName(info.enemy);
+
+            var action = new RemoveEntityAction(entity, surface, new Point((int)info.screenX, (int)info.screenY));
+            action.Run();
+            surface.EditedWithAction(action);
         }
     }
 }

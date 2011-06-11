@@ -67,6 +67,8 @@ namespace MegaMan_Level_Editor
             }
         }
 
+        public TilesetStrip TileStrip { get { return tilestrip; } }
+
         public bool DrawGrid
         {
             get { return drawGrid; }
