@@ -31,7 +31,7 @@ namespace MegaMan_Level_Editor
         private bool drawJoins;
         private bool drawEntities;
 
-        private string recentPath = Path.Combine(Application.StartupPath, "recent.ini");
+        private string recentPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "Mega Man", "Editor", "recent.ini");
         private List<string> recentFiles = new List<string>(10);
 
         private string configFile = Path.Combine(Path.GetDirectoryName(Application.ExecutablePath), "DockPanel.config");
@@ -296,7 +296,7 @@ namespace MegaMan_Level_Editor
 
         private void LoadRecentFiles()
         {
-            try
+            if (File.Exists(recentPath))
             {
                 string[] recent = File.ReadAllLines(recentPath);
                 int i = 1;
@@ -316,8 +316,9 @@ namespace MegaMan_Level_Editor
                     folderDialog.SelectedPath = path;
                 }
             }
-            catch (FileNotFoundException)
+            else
             {
+                Directory.CreateDirectory(Path.GetDirectoryName(recentPath));
                 File.Create(recentPath);
             }
         }
