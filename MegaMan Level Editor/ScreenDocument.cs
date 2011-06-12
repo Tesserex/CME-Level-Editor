@@ -16,16 +16,14 @@ namespace MegaMan_Level_Editor
         public event Action<int, int> Resized;
         public event Action TileChanged;
 
-        private bool dirty;
         public bool Dirty
         {
             get
             {
-                return dirty;
+                return Stage.Dirty;
             }
             set
             {
-                dirty = value;
                 Stage.Dirty = value;
             }
         }
@@ -107,6 +105,7 @@ namespace MegaMan_Level_Editor
             screen.EnemyInfo.RemoveAll(i =>
                 i.enemy == entity.Name && i.screenX == location.X && i.screenY == location.Y
             );
+            Dirty = true;
         }
 
         public EnemyCopyInfo FindEntityAt(Point location)

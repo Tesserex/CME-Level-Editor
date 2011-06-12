@@ -214,6 +214,7 @@ namespace MegaMan_Level_Editor
         public void Save()
         {
             Project.Save();
+            Dirty = false;
         }
 
         public bool Close()

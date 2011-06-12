@@ -71,14 +71,7 @@ namespace MegaMan_Level_Editor
         {
             get
             {
-                if (dirty == true)
-                    return true;
-
-                foreach (ScreenDocument screen in Screens)
-                    if (screen.Dirty)
-                        return true;
-
-                return false;
+                return dirty;
             }
             set
             {
