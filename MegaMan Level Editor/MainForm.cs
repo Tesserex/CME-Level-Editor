@@ -1,10 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Data;
 using System.Drawing;
 using System.Linq;
-using System.Text;
 using System.Windows.Forms;
 using System.IO;
 using MegaMan;
@@ -16,14 +14,14 @@ namespace MegaMan_Level_Editor
     {
         #region Private Members
 
-        private TilesetStrip tilestrip;
+        private readonly TilesetStrip tilestrip;
         private ProjectEditor activeProject;
         private StageDocument activeStage;
 
-        public BrushForm brushForm;
+        private BrushForm brushForm;
         public ProjectForm projectForm;
         public HistoryForm historyForm;
-        public EntityForm entityForm;
+        private EntityForm entityForm;
 
         private bool drawGrid;
         private bool drawTiles;
@@ -31,10 +29,10 @@ namespace MegaMan_Level_Editor
         private bool drawJoins;
         private bool drawEntities;
 
-        private string recentPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "Mega Man", "Editor", "recent.ini");
-        private List<string> recentFiles = new List<string>(10);
+        private readonly string recentPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "Mega Man", "Editor", "recent.ini");
+        private readonly List<string> recentFiles = new List<string>(10);
 
-        private string configFile = Path.Combine(Path.GetDirectoryName(Application.ExecutablePath), "DockPanel.config");
+        private readonly string configFile = Path.Combine(Path.GetDirectoryName(Application.ExecutablePath), "DockPanel.config");
 
         public ITileBrush CurrentBrush { get; private set; }
         private ToolType currentToolType;
@@ -43,7 +41,8 @@ namespace MegaMan_Level_Editor
         #endregion Private Members
 
         #region Properties
-        public ProjectEditor ActiveProject
+
+        private ProjectEditor ActiveProject
         {
             get { return activeProject; }
             set
@@ -58,7 +57,7 @@ namespace MegaMan_Level_Editor
             }
         }
 
-        public StageDocument ActiveStage
+        private StageDocument ActiveStage
         {
             get { return activeStage; }
             set
@@ -72,7 +71,7 @@ namespace MegaMan_Level_Editor
         public bool DrawGrid
         {
             get { return drawGrid; }
-            set
+            private set
             {
                 drawGrid = value;
                 showGridToolStripMenuItem.Checked = value;
@@ -83,7 +82,7 @@ namespace MegaMan_Level_Editor
         public bool DrawTiles
         {
             get { return drawTiles; }
-            set
+            private set
             {
                 drawTiles = value;
                 showBackgroundsToolStripMenuItem.Checked = value;
@@ -94,7 +93,7 @@ namespace MegaMan_Level_Editor
         public bool DrawBlock
         {
             get { return drawBlock; }
-            set
+            private set
             {
                 drawBlock = value;
                 showBlockingToolStripMenuItem.Checked = value;
@@ -105,7 +104,7 @@ namespace MegaMan_Level_Editor
         public bool DrawJoins
         {
             get { return drawJoins; }
-            set
+            private set
             {
                 drawJoins = value;
                 joinsToolStripMenuItem.Checked = value;
@@ -116,7 +115,7 @@ namespace MegaMan_Level_Editor
         public bool DrawEntities
         {
             get { return drawEntities; }
-            set
+            private set
             {
                 drawEntities = value;
                 showEnemiesToolStripMenuItem.Checked = value;
@@ -128,7 +127,6 @@ namespace MegaMan_Level_Editor
         #endregion
 
         public event Action DrawOptionToggled;
-        public event EventHandler<ToolChangedEventArgs> ToolChanged;
 
         public static MainForm Instance { get; private set; }
 
@@ -137,7 +135,7 @@ namespace MegaMan_Level_Editor
             InitializeComponent();
             
             tilestrip = new TilesetStrip();
-            this.Controls.Add(tilestrip);
+            Controls.Add(tilestrip);
             tilestrip.BringToFront();
             dockPanel1.BringToFront();
             tilestrip.TileChanged += TileChanged;
@@ -151,13 +149,13 @@ namespace MegaMan_Level_Editor
 
             if (File.Exists(configFile))
             {
-                dockPanel1.LoadFromXml(configFile, new DeserializeDockContent(GetContentFromPersistString));
+                dockPanel1.LoadFromXml(configFile, GetContentFromPersistString);
             }
 
-            if (!projectForm.Visible) projectForm.Show(this.dockPanel1, DockState.DockRight);
-            if (!historyForm.Visible) historyForm.Show(this.dockPanel1, DockState.DockRight);
-            if (!brushForm.Visible) brushForm.Show(this.dockPanel1, DockState.DockLeft);
-            if (!entityForm.Visible) entityForm.Show(this.dockPanel1, DockState.DockLeft);
+            if (!projectForm.Visible) projectForm.Show(dockPanel1, DockState.DockRight);
+            if (!historyForm.Visible) historyForm.Show(dockPanel1, DockState.DockRight);
+            if (!brushForm.Visible) brushForm.Show(dockPanel1, DockState.DockLeft);
+            if (!entityForm.Visible) entityForm.Show(dockPanel1, DockState.DockLeft);
 
             DrawGrid = false;
             DrawTiles = true;
@@ -172,7 +170,7 @@ namespace MegaMan_Level_Editor
         void CreateBrushForm()
         {
             brushForm = new BrushForm();
-            brushForm.BrushChanged += new BrushChangedHandler(brushForm_BrushChanged);
+            brushForm.BrushChanged += brushForm_BrushChanged;
             brushForm.Shown += (s, e) => brushesToolStripMenuItem.Checked = true;
             brushForm.FormClosing += (s, e) =>
             {
@@ -216,22 +214,22 @@ namespace MegaMan_Level_Editor
                 entityForm.Hide();
                 entitiesToolStripMenuItem.Checked = false;
             };
-            entityForm.EntityChanged += new Action<Entity>(entityForm_EntityChanged);
+            entityForm.EntityChanged += entityForm_EntityChanged;
         }
 
         private void entityForm_EntityChanged(Entity entity)
         {
             currentEntity = entity;
-            this.currentToolType = ToolType.Entity;
+            currentToolType = ToolType.Entity;
             AssembleTool();
             foreach (ToolStripButton item in toolBar.Items) { item.Checked = false; }
-            this.DrawJoins = false;
+            DrawJoins = false;
         }
 
         public void ShowStageForm(StageForm form)
         {
             form.DockAreas = DockAreas.Document;
-            form.Show(this.dockPanel1);
+            form.Show(dockPanel1);
         }
 
         public void FocusScreen(StageDocument stage)
@@ -255,8 +253,7 @@ namespace MegaMan_Level_Editor
 
         private void TileChanged(Tile tile)
         {
-            if (tile == null) this.CurrentBrush = null;
-            else this.CurrentBrush = new SingleTileBrush(tile);
+            this.CurrentBrush = tile == null ? null : new SingleTileBrush(tile);
             AssembleTool();
         }
 
@@ -304,8 +301,8 @@ namespace MegaMan_Level_Editor
                 {
                     recentFiles.Add(path);
                     ToolStripMenuItem r = new ToolStripMenuItem(path);
-                    r.Click += new EventHandler(RecentMenu_Click);
-                    Keys key = (Keys)Enum.Parse(typeof(Keys), ("D" + i.ToString()));
+                    r.Click += RecentMenu_Click;
+                    Keys key = (Keys)Enum.Parse(typeof(Keys), ("D" + i));
                     r.ShortcutKeys = Keys.Control | key;
                     recentMenuItem.DropDownItems.Add(r);
                     i++;
@@ -323,14 +320,6 @@ namespace MegaMan_Level_Editor
             }
         }
 
-        private void stage_Closed(StageDocument stagedoc)
-        {
-            // if the tile form is showing this map's tileset, remove it from the form
-            if (ActiveStage == stagedoc)
-            {
-                tilestrip.ChangeTileset(null);
-            }
-        }
         #endregion Private Methods
 
         private void OpenProject(string gamefile)
@@ -358,31 +347,29 @@ namespace MegaMan_Level_Editor
             switch (currentToolType)
             {
                 case ToolType.Brush:
-                    this.CurrentTool = null;
-                    if (CurrentBrush != null) this.CurrentTool = new BrushTool(CurrentBrush);
+                    CurrentTool = null;
+                    if (CurrentBrush != null) CurrentTool = new BrushTool(CurrentBrush);
                     break;
 
                 case ToolType.Bucket:
-                    this.CurrentTool = null;
-                    if (CurrentBrush != null) this.CurrentTool = new Bucket(CurrentBrush);
+                    CurrentTool = null;
+                    if (CurrentBrush != null) CurrentTool = new Bucket(CurrentBrush);
                     break;
 
                 case ToolType.Join:
-                    this.CurrentTool = new JoinTool();
+                    CurrentTool = new JoinTool();
                     break;
 
                 case ToolType.Start:
-                    this.CurrentTool = new StartPositionTool();
+                    CurrentTool = new StartPositionTool();
                     break;
 
                 case ToolType.Entity:
-                    this.CurrentTool = new EntityTool(currentEntity);
+                    CurrentTool = new EntityTool(currentEntity);
                     break;
             }
 
             if (currentToolType != ToolType.Entity) entityForm.Deselect();
-            
-            if (ToolChanged != null) ToolChanged(this, new ToolChangedEventArgs(CurrentTool));
         }
 
         //***********************
@@ -391,9 +378,11 @@ namespace MegaMan_Level_Editor
 
         private void openToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            var dialog = new OpenFileDialog();
-            dialog.Title = "Select a CME Game Project File";
-            dialog.Filter = "Game Project (XML)|*.xml";
+            var dialog = new OpenFileDialog
+            {
+                Title = "Select a CME Game Project File",
+                Filter = "Game Project (XML)|*.xml"
+            };
             var result = dialog.ShowDialog();
             if (result == DialogResult.OK)
             {
@@ -468,22 +457,21 @@ namespace MegaMan_Level_Editor
         // Undo/Redo Menu *
         //*****************
 
-        public void undoToolStripMenuItem_Click(object sender, EventArgs e)
+        private void undoToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            this.activeStage.Undo();
+            activeStage.Undo();
         }
 
         private void redoToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            this.activeStage.Redo();
+            activeStage.Redo();
         }
 
         private void newToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            var projectForm = new ProjectProperties();
-            projectForm.Owner = this;
-            projectForm.Location = new Point((this.Width - projectForm.Width) / 2, (this.Height - projectForm.Height) / 2);
-            projectForm.Show();
+            var projectProperties = new ProjectProperties {Owner = this};
+            projectProperties.Location = new Point((Width - projectProperties.Width) / 2, (Height - projectProperties.Height) / 2);
+            projectProperties.Show();
         }
 
         private void propertiesToolStripMenuItem_Click(object sender, EventArgs e)
@@ -499,7 +487,7 @@ namespace MegaMan_Level_Editor
 
         private void newScreenStripMenuItem_Click(object sender, EventArgs e)
         {
-            if (this.ActiveStage != null) ScreenProp.CreateScreen(this.ActiveStage);
+            if (ActiveStage != null) ScreenProp.CreateScreen(ActiveStage);
         }
 
         private void brushesToolStripMenuItem_Click(object sender, EventArgs e)
@@ -553,8 +541,8 @@ namespace MegaMan_Level_Editor
             AssembleTool();
             foreach (ToolStripButton item in toolBar.Items) { item.Checked = false; }
             brushToolButton.Checked = true;
-            this.DrawJoins = false;
-            this.DrawTiles = true;
+            DrawJoins = false;
+            DrawTiles = true;
         }
 
         private void bucketToolButton_Click(object sender, EventArgs e)
@@ -563,8 +551,8 @@ namespace MegaMan_Level_Editor
             AssembleTool();
             foreach (ToolStripButton item in toolBar.Items) { item.Checked = false; }
             bucketToolButton.Checked = true;
-            this.DrawJoins = false;
-            this.DrawTiles = true;
+            DrawJoins = false;
+            DrawTiles = true;
         }
 
         private void joinToolButton_Click(object sender, EventArgs e)
@@ -573,12 +561,12 @@ namespace MegaMan_Level_Editor
             AssembleTool();
             foreach (ToolStripButton item in toolBar.Items) { item.Checked = false; }
             joinToolButton.Checked = true;
-            this.DrawJoins = true;
+            DrawJoins = true;
         }
 
         private void stageSelectToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            if (this.ActiveProject != null) new StageSelectEdit(this.ActiveProject).Show();
+            if (ActiveProject != null) new StageSelectEdit(ActiveProject).Show();
         }
 
         private void startPosToolButton_Click(object sender, EventArgs e)
@@ -587,7 +575,7 @@ namespace MegaMan_Level_Editor
             AssembleTool();
             foreach (ToolStripButton item in toolBar.Items) { item.Checked = false; }
             startPosToolButton.Checked = true;
-            this.DrawJoins = false;
+            DrawJoins = false;
         }
     }
 }

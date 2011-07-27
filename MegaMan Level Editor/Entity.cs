@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using MegaMan;
+﻿using MegaMan;
 using System.Xml.Linq;
 using System.Drawing;
 
@@ -24,21 +20,21 @@ namespace MegaMan_Level_Editor
             if (spriteNode != null)
             {
                 // if it doesn't have a tilesheet, use the first for the entity
-                var sheetAttr = spriteNode.Attribute("tilesheet");
-                if (sheetAttr == null)
-                {
-                    var sheetNode = xmlNode.Element("Tilesheet");
-                    string sheetPath = System.IO.Path.Combine(basePath, sheetNode.Value);
-                    var sheet = Bitmap.FromFile(sheetPath);
-                    MainSprite = Sprite.FromXml(spriteNode, sheet);
-                }
-                else
+                var sheetNode = xmlNode.Element("Tilesheet");
+
+                if (sheetNode == null)
                 {
                     MainSprite = Sprite.FromXml(spriteNode, basePath);
                 }
+                else
+                {
+                    string sheetPath = System.IO.Path.Combine(basePath, sheetNode.Value);
+                    var sheet = Image.FromFile(sheetPath);
+                    MainSprite = Sprite.FromXml(spriteNode, sheet);
+                }
 
                 MainSprite.Play();
-                Program.FrameTick += new Action(Program_FrameTick);
+                Program.FrameTick += Program_FrameTick;
             }
         }
 

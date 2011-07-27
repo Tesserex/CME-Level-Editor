@@ -1,4 +1,4 @@
-﻿namespace CodeProject
+﻿namespace MegaMan_Level_Editor
 {
     partial class GraphicalOverlay
     {

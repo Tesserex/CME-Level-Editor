@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Windows.Forms;
 
 namespace MegaMan_Level_Editor {
@@ -17,9 +15,8 @@ namespace MegaMan_Level_Editor {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
 
-            timer = new Timer();
-            timer.Interval = (int)(1000 / Const.FPS);
-            timer.Tick += new EventHandler(timer_Tick);
+            timer = new Timer {Interval = (int) (1000/Const.FPS)};
+            timer.Tick += timer_Tick;
 
             Application.Run(new MainForm());
         }

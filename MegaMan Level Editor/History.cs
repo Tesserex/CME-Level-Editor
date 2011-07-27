@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 
 namespace MegaMan_Level_Editor
 {
@@ -8,13 +7,13 @@ namespace MegaMan_Level_Editor
     * */
     public class History
     {
-        public List<HistoryAction> stack;
+        public readonly List<HistoryAction> stack;
         public int currentAction;
 
         public History()
         {
-            this.currentAction = -1;
-            this.stack = new List<HistoryAction>();
+            currentAction = -1;
+            stack = new List<HistoryAction>();
         }
 
         /*
@@ -66,10 +65,8 @@ namespace MegaMan_Level_Editor
                 UpdateHistoryForm();
                 return action.Reverse();
             }
-            else
-            {
-                return null;
-            }
+            
+            return null;
         }
 
         public HistoryAction Redo()
@@ -81,13 +78,11 @@ namespace MegaMan_Level_Editor
                 UpdateHistoryForm();
                 return action;
             }
-            else
-            {
-                return null;
-            }
+            
+            return null;
         }
 
-        public void UpdateHistoryForm()
+        private void UpdateHistoryForm()
         {
             MainForm.Instance.historyForm.UpdateHistory(this);
         }

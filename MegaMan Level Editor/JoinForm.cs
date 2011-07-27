@@ -1,10 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
 using System.Windows.Forms;
 using MegaMan;
 
@@ -12,7 +7,7 @@ namespace MegaMan_Level_Editor
 {
     public partial class JoinForm : Form
     {
-        private Join join;
+        private readonly Join join;
         private JoinType type;
 
         private JoinType Type
@@ -86,13 +81,13 @@ namespace MegaMan_Level_Editor
                 screenTwo.Items.Add(s.Name);
             }
 
-            this.Direction = join.direction;
-            this.JoinWidth = join.Size;
-            this.ScreenOne = join.screenOne;
-            this.ScreenTwo = join.screenTwo;
-            this.OffsetOne = join.offsetOne;
-            this.OffsetTwo = join.offsetTwo;
-            this.Type = join.type;
+            Direction = join.direction;
+            JoinWidth = join.Size;
+            ScreenOne = join.screenOne;
+            ScreenTwo = join.screenTwo;
+            OffsetOne = join.offsetOne;
+            OffsetTwo = join.offsetTwo;
+            Type = join.type;
         }
 
         private void AdjustLabels()
@@ -115,20 +110,20 @@ namespace MegaMan_Level_Editor
 
         private void cancel_Click(object sender, EventArgs e)
         {
-            this.Close();
+            Close();
         }
 
         private void okButton_Click(object sender, EventArgs e)
         {
-            join.type = this.Type;
-            join.direction = this.Direction;
-            join.offsetOne = this.OffsetOne;
-            join.offsetTwo = this.OffsetTwo;
-            join.screenOne = this.ScreenOne;
-            join.screenTwo = this.ScreenTwo;
-            join.Size = this.JoinWidth;
+            join.type = Type;
+            join.direction = Direction;
+            join.offsetOne = OffsetOne;
+            join.offsetTwo = OffsetTwo;
+            join.screenOne = ScreenOne;
+            join.screenTwo = ScreenTwo;
+            join.Size = JoinWidth;
             if (OK != null) OK();
-            this.Close();
+            Close();
         }
 
         private void joinType_SelectedIndexChanged(object sender, EventArgs e)

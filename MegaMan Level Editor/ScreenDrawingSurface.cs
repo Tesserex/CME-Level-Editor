@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Drawing;
 using System.Windows.Forms;
 using MegaMan;
@@ -12,12 +9,10 @@ namespace MegaMan_Level_Editor
     public class ScreenEditEventArgs : EventArgs
     {
         public HistoryAction Action { get; private set; }
-        public ScreenDrawingSurface Surface { get; private set; }
 
-        public ScreenEditEventArgs(HistoryAction action, ScreenDrawingSurface surface)
+        public ScreenEditEventArgs(HistoryAction action)
         {
             Action = action;
-            Surface = surface;
         }
     }
 
@@ -27,27 +22,24 @@ namespace MegaMan_Level_Editor
      * */
     public class ScreenDrawingSurface : PictureBox
     {
-        private static Brush blockBrush = new SolidBrush(Color.FromArgb(160, Color.OrangeRed));
-        private static Brush ladderBrush = new SolidBrush(Color.FromArgb(160, Color.Yellow));
-        private static Pen highlightPen = new Pen(Color.Green, 2);
-        private static Pen passPen = new Pen(Color.Blue, 4);
-        private static Pen blockPen = new Pen(Color.Red, 4);
-        private static Pen passHighPen = new Pen(Color.FromArgb(96,128,255), 4);
-        private static Pen blockHighPen = new Pen(Color.FromArgb(255,128,96), 4);
-        private static Bitmap cursor;
+        private static readonly Brush blockBrush = new SolidBrush(Color.FromArgb(160, Color.OrangeRed));
+        private static readonly Brush ladderBrush = new SolidBrush(Color.FromArgb(160, Color.Yellow));
+        private static readonly Pen passPen = new Pen(Color.Blue, 4);
+        private static readonly Pen blockPen = new Pen(Color.Red, 4);
+        private static readonly Bitmap cursor;
 
-        private Bitmap tileLayer = null;
-        private Bitmap gridLayer = null;
-        private Bitmap blockLayer = null;
-        private Bitmap entityLayer = null;
-        private Bitmap mouseLayer = null;
-        private Bitmap joinLayer = null;
-        private Bitmap masterImage = null;
-        private Bitmap grayTiles = null;
+        private Bitmap tileLayer;
+        private Bitmap gridLayer;
+        private Bitmap blockLayer;
+        private Bitmap entityLayer;
+        private Bitmap mouseLayer;
+        private Bitmap joinLayer;
+        private Bitmap masterImage;
+        private Bitmap grayTiles;
 
-        private bool grayDirty = false;
+        private bool grayDirty;
 
-        private static ColorMatrix grayMatrix = new ColorMatrix(
+        private static readonly ColorMatrix grayMatrix = new ColorMatrix(
            new float[][] 
           {
              new float[] {.3f, .3f, .3f, 0, 0},
@@ -57,14 +49,10 @@ namespace MegaMan_Level_Editor
              new float[] {0, 0, 0, 0, 1}
           });
 
-        public bool Drawing { get; private set; }
-
-        private bool active = false;
+        private bool active;
         public bool Placed { get; set; }
 
         public ScreenDocument Screen { get; private set; }
-
-        public MegaMan.Join Nearest { get; set; }
 
         public event EventHandler<ScreenEditEventArgs> Edited;
 
@@ -78,16 +66,16 @@ namespace MegaMan_Level_Editor
 
         public ScreenDrawingSurface(ScreenDocument screen)
         {
-            this.Screen = screen;
+            Screen = screen;
 
-            this.BackColor = System.Drawing.SystemColors.Control;
-            this.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
+            BackColor = SystemColors.Control;
+            BackgroundImageLayout = ImageLayout.None;
 
             BuildLayers();
 
-            this.Screen.Resized += (w, h) => this.ResizeLayers();
+            Screen.Resized += (w, h) => ResizeLayers();
 
-            Program.FrameTick += new Action(Program_FrameTick);
+            Program.FrameTick += Program_FrameTick;
 
             RedrawJoins();
             ReDrawAll();
@@ -99,7 +87,7 @@ namespace MegaMan_Level_Editor
 
         public void EditedWithAction(HistoryAction action)
         {
-            if (Edited != null) Edited(this, new ScreenEditEventArgs(action, this));
+            if (Edited != null) Edited(this, new ScreenEditEventArgs(action));
         }
 
         void Program_FrameTick()
@@ -115,14 +103,14 @@ namespace MegaMan_Level_Editor
 
         protected override void OnMouseEnter(EventArgs e)
         {
-            this.active = true;
+            active = true;
             ReDrawMaster();
             base.OnMouseEnter(e);
         }
 
         protected override void OnMouseLeave(EventArgs e)
         {
-            this.active = false;
+            active = false;
             if (mouseLayer != null)
             {
                 using (Graphics g = Graphics.FromImage(mouseLayer))
@@ -138,11 +126,11 @@ namespace MegaMan_Level_Editor
         {
             if (MainForm.Instance.CurrentTool == null) return;
 
-            if (e.Button == System.Windows.Forms.MouseButtons.Left)
+            if (e.Button == MouseButtons.Left)
             {
                 MainForm.Instance.CurrentTool.Click(this, e.Location);
             }
-            else if (e.Button == System.Windows.Forms.MouseButtons.Right)
+            else if (e.Button == MouseButtons.Right)
             {
                 MainForm.Instance.CurrentTool.RightClick(this, e.Location);
             }
@@ -153,9 +141,9 @@ namespace MegaMan_Level_Editor
         {
             if (MainForm.Instance.CurrentTool == null) return;
 
-            if (e.Button == System.Windows.Forms.MouseButtons.Left)
+            if (e.Button == MouseButtons.Left)
             {
-                MainForm.Instance.CurrentTool.Release(this, e.Location);
+                MainForm.Instance.CurrentTool.Release(this);
             }
             base.OnMouseUp(e);
         }
@@ -178,7 +166,6 @@ namespace MegaMan_Level_Editor
                     }
 
                     Bitmap icon = (Bitmap)MainForm.Instance.CurrentTool.Icon;
-                    if (icon == null) icon = cursor;
 
                     Point offset = MainForm.Instance.CurrentTool.IconOffset;
 
@@ -192,7 +179,7 @@ namespace MegaMan_Level_Editor
 
                     ReDrawMaster();
                 }
-                if (e.Button == System.Windows.Forms.MouseButtons.Left)
+                if (e.Button == MouseButtons.Left)
                 {
                     MainForm.Instance.CurrentTool.Move(this, e.Location);
                 }
@@ -215,8 +202,8 @@ namespace MegaMan_Level_Editor
 
             foreach (Join join in Screen.Stage.Joins)
             {
-                if (join.screenOne == this.Screen.Name) DrawJoinEnd(join, true);
-                else if (join.screenTwo == this.Screen.Name) DrawJoinEnd(join, false);
+                if (join.screenOne == Screen.Name) DrawJoinEnd(join, true);
+                else if (join.screenTwo == Screen.Name) DrawJoinEnd(join, false);
             }
             ReDrawMaster();
         }
@@ -231,16 +218,10 @@ namespace MegaMan_Level_Editor
                 int end = start + (join.Size * Screen.Tileset.TileSize);
                 int edge;
                 Pen pen;
-                if (join == Nearest)
-                {
-                    if (one ? join.direction == JoinDirection.BackwardOnly : join.direction == JoinDirection.ForwardOnly) pen = blockHighPen;
-                    else pen = passHighPen;
-                }
-                else
-                {
-                    if (one ? join.direction == JoinDirection.BackwardOnly : join.direction == JoinDirection.ForwardOnly) pen = blockPen;
-                    else pen = passPen;
-                }
+
+                if (one ? join.direction == JoinDirection.BackwardOnly : join.direction == JoinDirection.ForwardOnly) pen = blockPen;
+                else pen = passPen;
+
                 if (join.type == JoinType.Horizontal)
                 {
                     edge = one ? Screen.PixelHeight - 2 : 2;
@@ -289,7 +270,7 @@ namespace MegaMan_Level_Editor
             grayDirty = false;
         }
 
-        private Bitmap ConvertToGrayscale(Bitmap original)
+        private static Bitmap ConvertToGrayscale(Bitmap original)
         {
             //create a blank bitmap the same size as original
             Bitmap newBitmap = new Bitmap(original.Width, original.Height);
@@ -320,9 +301,9 @@ namespace MegaMan_Level_Editor
                 g.Clear(Color.Transparent);
 
                 Screen.DrawEntities(g);
-                if (this.Screen.Name == this.Screen.Stage.StartScreen)
+                if (Screen.Name == Screen.Stage.StartScreen)
                 {
-                    g.DrawImage(StartPositionTool.MegaMan, this.Screen.Stage.StartPoint.X - 4, this.Screen.Stage.StartPoint.Y - 12);
+                    g.DrawImage(StartPositionTool.MegaMan, Screen.Stage.StartPoint.X - 4, Screen.Stage.StartPoint.Y - 12);
                 }
             }
 
@@ -410,10 +391,10 @@ namespace MegaMan_Level_Editor
                 if (active) g.DrawImageUnscaled(mouseLayer, 0, 0);
             }
 
-            this.Image = masterImage;
-            this.Width = masterImage.Width;
-            this.Height = masterImage.Height;
-            this.Refresh();
+            Image = masterImage;
+            Width = masterImage.Width;
+            Height = masterImage.Height;
+            Refresh();
         }
 
 #endregion

@@ -1,10 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Drawing;
-using System.Data;
-using System.Linq;
-using System.Text;
 using System.Windows.Forms;
 using MegaMan;
 
@@ -21,8 +15,7 @@ namespace MegaMan_Level_Editor
 
         public SoundInfo GetInfo(string basePath)
         {
-            SoundInfo info = new SoundInfo();
-            info.Type = this.type;
+            SoundInfo info = new SoundInfo {Type = type};
             if (type == AudioType.NSF)
             {
                 info.NsfTrack = (int)trackNumeric.Value;

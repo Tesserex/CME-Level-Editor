@@ -1,21 +1,17 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Drawing;
+﻿using System.Drawing;
 
 namespace MegaMan_Level_Editor
 {
     public class EntityTool : ITool
     {
-        private Entity entity;
+        private readonly Entity entity;
 
         public EntityTool(Entity entity)
         {
             this.entity = entity;
         }
 
-        public System.Drawing.Image Icon
+        public Image Icon
         {
             get { return entity.MainSprite[0].CutTile; }
         }
@@ -34,14 +30,14 @@ namespace MegaMan_Level_Editor
             
         }
 
-        public void Release(ScreenDrawingSurface surface, Point location)
+        public void Release(ScreenDrawingSurface surface)
         {
             
         }
 
         public Point IconOffset
         {
-            get { return new System.Drawing.Point(-entity.MainSprite.HotSpot.X, -entity.MainSprite.HotSpot.Y); }
+            get { return new Point(-entity.MainSprite.HotSpot.X, -entity.MainSprite.HotSpot.Y); }
         }
 
         public void RightClick(ScreenDrawingSurface surface, Point location)
@@ -50,9 +46,9 @@ namespace MegaMan_Level_Editor
             var info = surface.Screen.FindEntityAt(location);
             if (info.enemy == null) return;
             
-            var entity = surface.Screen.Stage.Project.EntityByName(info.enemy);
+            var nearest = surface.Screen.Stage.Project.EntityByName(info.enemy);
 
-            var action = new RemoveEntityAction(entity, surface, new Point((int)info.screenX, (int)info.screenY));
+            var action = new RemoveEntityAction(nearest, surface, new Point((int)info.screenX, (int)info.screenY));
             action.Run();
             surface.EditedWithAction(action);
         }

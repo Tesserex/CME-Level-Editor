@@ -1,13 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
 using System.Drawing;
-using System.Linq;
-using System.Text;
 using System.Windows.Forms;
-using System.IO;
-using MegaMan;
 
 namespace MegaMan_Level_Editor
 {
@@ -18,7 +11,7 @@ namespace MegaMan_Level_Editor
         public EntityForm()
         {
             InitializeComponent();
-            Program.FrameTick += new Action(Program_FrameTick);
+            Program.FrameTick += Program_FrameTick;
         }
 
         private void Program_FrameTick()

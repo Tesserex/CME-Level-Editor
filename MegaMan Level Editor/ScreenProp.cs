@@ -1,23 +1,14 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
 using System.Windows.Forms;
-using MegaMan;
 
 namespace MegaMan_Level_Editor
 {
     public partial class ScreenProp : Form
     {
-        private ScreenDocument screen;
-        private StageDocument stage;
+        private readonly ScreenDocument screen;
+        private readonly StageDocument stage;
 
-        private bool is_new = false;
-
-        public event Action<ScreenProp> OK;
+        private readonly bool is_new;
 
         public static void CreateScreen(StageDocument stage)
         {
@@ -34,7 +25,7 @@ namespace MegaMan_Level_Editor
         {
             InitializeComponent();
             is_new = true;
-            this.textName.Text = "";
+            textName.Text = "";
             this.stage = stage;
         }
 
@@ -44,33 +35,32 @@ namespace MegaMan_Level_Editor
             InitializeComponent();
 
             this.screen = screen;
-            this.stage = screen.Stage;
+            stage = screen.Stage;
 
-            this.textName.Text = screen.Name;
-            this.widthField.Value = screen.Width;
-            this.heightField.Value = screen.Height;
+            textName.Text = screen.Name;
+            widthField.Value = screen.Width;
+            heightField.Value = screen.Height;
         }
 
         private void buttonOK_Click(object sender, EventArgs e)
         {
-            if (this.textName.Text == "")
+            if (textName.Text == "")
             {
                 MessageBox.Show("Screen must have a name.", "CME Level Editor", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
             if (is_new)
             {
-                stage.AddScreen(this.textName.Text, (int)this.widthField.Value, (int)this.heightField.Value);
+                stage.AddScreen(textName.Text, (int)widthField.Value, (int)heightField.Value);
             }
             else
             {
                 // Rename the screen
-                screen.Name = this.textName.Text;
-                screen.Resize((int)this.widthField.Value, (int)this.heightField.Value);
+                screen.Name = textName.Text;
+                screen.Resize((int)widthField.Value, (int)heightField.Value);
             }
 
-            if (OK != null) OK(this);
-            this.Close();
+            Close();
         }
     }
 }

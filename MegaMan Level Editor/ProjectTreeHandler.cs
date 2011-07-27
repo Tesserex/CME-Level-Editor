@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Windows.Forms;
+﻿using System.Windows.Forms;
 
 namespace MegaMan_Level_Editor
 {
@@ -12,15 +8,14 @@ namespace MegaMan_Level_Editor
         protected TreeNode parentNode;
         public ProjectEditor Project { get; private set; }
 
-        public ProjectTreeHandler(ProjectEditor project, TreeNode node)
+        protected ProjectTreeHandler(ProjectEditor project, TreeNode node)
         {
-            this.Project = project;
-            this.parentNode = node;
+            Project = project;
+            parentNode = node;
         }
 
         public abstract void DoubleClick();
         public abstract void Properties();
-        public abstract void Delete();
     }
 
     public class ProjectNodeHandler : ProjectTreeHandler
@@ -29,10 +24,8 @@ namespace MegaMan_Level_Editor
 
         public override void Properties()
         {
-            new ProjectProperties(this.Project).Show();
+            new ProjectProperties(Project).Show();
         }
-
-        public override void Delete() { }
 
         public override void DoubleClick() { }
     }
@@ -40,41 +33,41 @@ namespace MegaMan_Level_Editor
     public class StageNodeHandler : ProjectTreeHandler
     {
         public StageDocument Stage { get; private set; }
-        private string stageName;
+        private readonly string stageName;
 
         public StageNodeHandler(ProjectEditor project, TreeNode node, string stageName) : base(project, node)
         {
-            this.Stage = null;
+            Stage = null;
             this.stageName = stageName;
         }
 
         public StageNodeHandler(ProjectEditor project, TreeNode node, StageDocument stage) : base(project, node)
         {
-            this.Stage = stage;
-            this.stageName = stage.Name;
+            Stage = stage;
+            stageName = stage.Name;
         }
 
         public override void DoubleClick()
         {
-            if (this.Stage == null)
+            if (Stage == null)
             {
-                this.Stage = this.Project.StageByName(stageName);
-                if (this.Stage == null) return;
+                Stage = Project.StageByName(stageName);
+                if (Stage == null) return;
 
                 parentNode.Nodes.Clear();
                 foreach (var screen in Stage.Screens)
                 {
                     var node = new TreeNode(screen.Name);
                     node.ImageIndex = node.SelectedImageIndex = 3;
-                    node.Tag = new ScreenNodeHandler(this.Project, node, screen);
+                    node.Tag = new ScreenNodeHandler(Project, node, screen);
                     parentNode.Nodes.Add(node);
                 }
 
-                Stage.ScreenAdded += (screen) =>
+                Stage.ScreenAdded += screen =>
                 {
                     var node = new TreeNode(screen.Name);
                     node.ImageIndex = node.SelectedImageIndex = 3;
-                    node.Tag = new ScreenNodeHandler(this.Project, node, screen);
+                    node.Tag = new ScreenNodeHandler(Project, node, screen);
                     parentNode.Nodes.Add(node);
                 };
             }
@@ -82,17 +75,15 @@ namespace MegaMan_Level_Editor
             Stage.ReFocus();
         }
 
-        public override void Delete() { }
-
         public override void Properties()
         {
-            if (this.Stage != null) StageProp.EditStage(this.Stage);
+            if (Stage != null) StageProp.EditStage(Stage);
         }
     }
 
     public class ScreenNodeHandler : ProjectTreeHandler
     {
-        private ScreenDocument screen;
+        private readonly ScreenDocument screen;
 
         public ScreenNodeHandler(ProjectEditor project, TreeNode node, ScreenDocument screen) : base(project, node)
         {
@@ -101,11 +92,9 @@ namespace MegaMan_Level_Editor
 
         public override void DoubleClick() { }
 
-        public override void Delete() { }
-
         public override void Properties()
         {
-            ScreenProp.EditScreen(this.screen);
+            ScreenProp.EditScreen(screen);
         }
     }
 }

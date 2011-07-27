@@ -1,6 +1,6 @@
 ﻿namespace MegaMan_Level_Editor
 {
-    partial class EntityButton
+    sealed partial class EntityButton
     {
         /// <summary>
         /// Required designer variable.

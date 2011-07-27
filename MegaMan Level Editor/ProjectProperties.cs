@@ -1,10 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
 using System.Windows.Forms;
 
 namespace MegaMan_Level_Editor
@@ -18,22 +12,22 @@ namespace MegaMan_Level_Editor
         {
             InitializeComponent();
 
-            this.textDir.Text = Environment.CurrentDirectory;
+            textDir.Text = Environment.CurrentDirectory;
         }
 
         public ProjectProperties(ProjectEditor project)
         {
             InitializeComponent();
 
-            this.editor = project;
-            this.Text = project.Name + " Properties";
-            this.textName.Text = project.Name;
-            this.textAuthor.Text = project.Author;
-            this.textWidth.Text = project.ScreenWidth.ToString();
-            this.textHeight.Text = project.ScreenHeight.ToString();
+            editor = project;
+            Text = project.Name + " Properties";
+            textName.Text = project.Name;
+            textAuthor.Text = project.Author;
+            textWidth.Text = project.ScreenWidth.ToString();
+            textHeight.Text = project.ScreenHeight.ToString();
 
-            this.panelLocation.Visible = false;
-            this.Height -= this.panelLocation.Height;
+            panelLocation.Visible = false;
+            Height -= panelLocation.Height;
         }
 
         private void text_KeyPress(object sender, KeyPressEventArgs e)
@@ -70,7 +64,7 @@ namespace MegaMan_Level_Editor
         private void buttonOK_Click(object sender, EventArgs e)
         {
             int width, height;
-            if (!int.TryParse(this.textWidth.Text, out width) || !int.TryParse(this.textHeight.Text, out height))
+            if (!int.TryParse(textWidth.Text, out width) || !int.TryParse(textHeight.Text, out height))
             {
                 MessageBox.Show("Positive integers are required for screen size.", "CME Project Editor", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
@@ -79,11 +73,11 @@ namespace MegaMan_Level_Editor
             bool gameNew = (editor == null);
             if (gameNew)
             {
-                string baseDir = System.IO.Path.Combine(this.textDir.Text, this.textName.Text);
+                string baseDir = System.IO.Path.Combine(textDir.Text, textName.Text);
                 if (System.IO.Directory.Exists(baseDir))
                 {
                     MessageBox.Show(
-                        String.Format("Could not create the project because a directory named {0} already exists at the specified location.", this.textName.Text),
+                        String.Format("Could not create the project because a directory named {0} already exists at the specified location.", textName.Text),
                         "CME Project Editor", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     return;
                 }
@@ -100,11 +94,11 @@ namespace MegaMan_Level_Editor
                     return;
                 }
 
-                editor = ProjectEditor.CreateNew(baseDir);
+                editor = ProjectEditor.CreateNew();
             }
 
-            editor.Name = (this.textName.Text == "")? "Untitled" : this.textName.Text;
-            editor.Author = this.textAuthor.Text;
+            editor.Name = (textName.Text == "")? "Untitled" : textName.Text;
+            editor.Author = textAuthor.Text;
             editor.ScreenWidth = lastWidth;
             editor.ScreenHeight = lastHeight;
 
@@ -118,17 +112,15 @@ namespace MegaMan_Level_Editor
 
         private void textDir_TextChanged(object sender, EventArgs e)
         {
-            this.buttonOK.Enabled = System.IO.Path.IsPathRooted(this.textDir.Text);
+            buttonOK.Enabled = System.IO.Path.IsPathRooted(textDir.Text);
         }
 
         private void buttonBrowse_Click(object sender, EventArgs e)
         {
-            var dialog = new FolderBrowserDialog();
-            dialog.SelectedPath = this.textDir.Text;
-            dialog.ShowNewFolderButton = true;
+            var dialog = new FolderBrowserDialog {SelectedPath = textDir.Text, ShowNewFolderButton = true};
             if (dialog.ShowDialog() == DialogResult.OK)
             {
-                this.textDir.Text = dialog.SelectedPath;
+                textDir.Text = dialog.SelectedPath;
             }
         }
     }

@@ -1,7 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Drawing;
 
 namespace MegaMan_Level_Editor
@@ -14,32 +12,37 @@ namespace MegaMan_Level_Editor
 
     public class TileChange
     {
-        public int Tile_X { get; private set; }
-        public int Tile_Y { get; private set; }
-        public int OldTileId { get; private set; }
-        public int NewTileId { get; private set; }
-        public ScreenDrawingSurface Surface { get; private set; }
+        private readonly int tileX;
+        private readonly int tileY;
+        private readonly int oldTileId;
+        private readonly int newTileId;
+        private readonly ScreenDrawingSurface Surface;
 
         public TileChange(int tx, int ty, int oldId, int newId, ScreenDrawingSurface surface)
         {
-            Tile_X = tx;
-            Tile_Y = ty;
-            OldTileId = oldId;
-            NewTileId = newId;
+            tileX = tx;
+            tileY = ty;
+            oldTileId = oldId;
+            newTileId = newId;
             Surface = surface;
         }
 
         public TileChange Reverse()
         {
-            return new TileChange(Tile_X, Tile_Y, NewTileId, OldTileId, Surface);
+            return new TileChange(tileX, tileY, newTileId, oldTileId, Surface);
+        }
+
+        public void ApplyToSurface(ScreenDrawingSurface surface)
+        {
+            surface.Screen.ChangeTile(tileX, tileY, newTileId);
         }
     }
 
     public class DrawAction : HistoryAction
     {
-        private List<TileChange> changes;
-        private ScreenDrawingSurface surface;
-        private string name;
+        private readonly List<TileChange> changes;
+        private readonly ScreenDrawingSurface surface;
+        private readonly string name;
 
         public DrawAction(string name, IEnumerable<TileChange> changes, ScreenDrawingSurface surface)
         {
@@ -57,7 +60,7 @@ namespace MegaMan_Level_Editor
         {
             foreach (TileChange change in changes)
             {
-                surface.Screen.ChangeTile(change.Tile_X, change.Tile_Y, change.NewTileId);
+                change.ApplyToSurface(surface);
             }
             surface.ReDrawTiles();
         }
@@ -65,16 +68,16 @@ namespace MegaMan_Level_Editor
         public HistoryAction Reverse()
         {
             List<TileChange> ch = new List<TileChange>(changes.Count);
-            foreach (TileChange change in changes) ch.Add(change.Reverse());
+            ch.AddRange(changes.Select(change => change.Reverse()));
             return new DrawAction(name, ch, surface);
         }
     }
 
     public class AddEntityAction : HistoryAction
     {
-        private Entity entity;
-        private ScreenDrawingSurface surface;
-        private Point location;
+        private readonly Entity entity;
+        private readonly ScreenDrawingSurface surface;
+        private readonly Point location;
 
         public AddEntityAction(Entity entity, ScreenDrawingSurface surface, Point location)
         {
@@ -97,9 +100,9 @@ namespace MegaMan_Level_Editor
 
     public class RemoveEntityAction : HistoryAction
     {
-        private Entity entity;
-        private ScreenDrawingSurface surface;
-        private Point location;
+        private readonly Entity entity;
+        private readonly ScreenDrawingSurface surface;
+        private readonly Point location;
 
         public RemoveEntityAction(Entity entity, ScreenDrawingSurface surface, Point location)
         {

@@ -1,20 +1,15 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Diagnostics;
-using System.Linq;
-using System.Text;
 using System.Windows.Forms;
 using System.Drawing;
 using MegaMan;
 
 namespace MegaMan_Level_Editor
 {
-    public partial class EntityButton : Panel
+    public sealed partial class EntityButton : Panel
     {
         private int lastFrame = -1;
-        private Sprite sprite;
-        private PictureBox spritePict;
+        private readonly Sprite sprite;
+        private readonly PictureBox spritePict;
 
         public Entity Entity { get; private set; }
 
@@ -25,9 +20,7 @@ namespace MegaMan_Level_Editor
             Entity = entity;
             sprite = entity.MainSprite;
 
-            spritePict = new PictureBox();
-            spritePict.Height = sprite.Height;
-            spritePict.Width = sprite.Width;
+            spritePict = new PictureBox {Height = sprite.Height, Width = sprite.Width};
 
             BackColor = Color.Transparent;
             Width = spritePict.Width + 8;
@@ -39,13 +32,13 @@ namespace MegaMan_Level_Editor
             spritePict.Image = sprite[0].CutTile;
             spritePict.Refresh();
 
-            Program.FrameTick += new Action(Program_FrameTick);
-            spritePict.Click += new EventHandler(spritePict_Click);
+            Program.FrameTick += Program_FrameTick;
+            spritePict.Click += spritePict_Click;
         }
 
         void spritePict_Click(object sender, EventArgs e)
         {
-            this.InvokeOnClick(this, e);
+            InvokeOnClick(this, e);
         }
 
         private void Program_FrameTick()

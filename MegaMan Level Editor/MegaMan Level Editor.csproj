@@ -99,6 +99,8 @@
     <Compile Include="BrushForm.Designer.cs">
       <DependentUpon>BrushForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="BrushTool.cs" />
+    <Compile Include="Bucket.cs" />
     <Compile Include="Const.cs" />
     <Compile Include="EditBrushForm.cs">
       <SubType>Form</SubType>
@@ -141,6 +143,7 @@
     <Compile Include="JoinOverlay.cs">
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="JoinTool.cs" />
     <Compile Include="SoundControl.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -277,6 +280,7 @@
     <Compile Include="StageSelectEdit.Designer.cs">
       <DependentUpon>StageSelectEdit.cs</DependentUpon>
     </Compile>
+    <Compile Include="StartPositionTool.cs" />
     <Compile Include="TileBrush.cs" />
     <Compile Include="TileButton.cs">
       <SubType>Component</SubType>
@@ -284,7 +288,6 @@
     <Compile Include="TilesetStrip.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="UndoRedo.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\NewButton.bmp" />

@@ -1,10 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
 using System.Drawing;
-using System.Linq;
-using System.Text;
 using System.Windows.Forms;
 using MegaMan;
 
@@ -12,11 +8,11 @@ namespace MegaMan_Level_Editor
 {
     public partial class BrushForm : WeifenLuo.WinFormsUI.Docking.DockContent
     {
-        private Dictionary<string, List<ITileBrush>> brushSets = new Dictionary<string, List<ITileBrush>>();
+        private readonly Dictionary<string, List<ITileBrush>> brushSets = new Dictionary<string, List<ITileBrush>>();
         private List<ITileBrush> brushes;
         private Tileset Tileset;
         private ITileBrush currentBrush;
-        private Dictionary<ITileBrush, Panel> brushPanels = new Dictionary<ITileBrush, Panel>();
+        private readonly Dictionary<ITileBrush, Panel> brushPanels = new Dictionary<ITileBrush, Panel>();
 
         public BrushForm()
         {
@@ -62,7 +58,7 @@ namespace MegaMan_Level_Editor
 
             using (var stream = new System.IO.StreamWriter(path, false))
             {
-                foreach (var brush in this.brushes)
+                foreach (var brush in brushes)
                 {
                     stream.Write(brush.Width);
                     stream.Write(' ');
@@ -91,6 +87,7 @@ namespace MegaMan_Level_Editor
                 while (!stream.EndOfStream)
                 {
                     string line = stream.ReadLine();
+                    if (line == null) break;
 
                     string[] info = line.Split(' ');
 
@@ -146,10 +143,13 @@ namespace MegaMan_Level_Editor
                 }
             }
 
-            Panel border = new Panel();
-            border.BackColor = brushPanel.BackColor;
-            border.Width = brushPict.Width + 8;
-            border.Height = brushPict.Height + 8;
+            Panel border = new Panel
+            {
+                BackColor = brushPanel.BackColor,
+                Width = brushPict.Width + 8,
+                Height = brushPict.Height + 8
+            };
+
             border.Controls.Add(brushPict);
             brushPict.Top = 4;
             brushPict.Left = 4;

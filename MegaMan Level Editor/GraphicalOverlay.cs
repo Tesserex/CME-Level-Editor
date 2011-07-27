@@ -1,21 +1,20 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Drawing;
 using System.Windows.Forms;
 
-namespace CodeProject
+namespace MegaMan_Level_Editor
 {
     public partial class GraphicalOverlay : Component
     {
         public event EventHandler<PaintEventArgs> Paint;
         private Form form;
-        private List<Control> controlList = null;
+        private List<Control> controlList;
 
         private bool visible;
         public bool Visible
         {
-            get { return visible; }
+            private get { return visible; }
             set
             {
                 visible = value;
@@ -23,19 +22,12 @@ namespace CodeProject
             }
         }
 
-        public GraphicalOverlay()
+        protected GraphicalOverlay()
         {
             InitializeComponent();
         }
 
-        public GraphicalOverlay(IContainer container)
-        {
-            container.Add(this);
-
-            InitializeComponent();
-        }
-
-        private List<Control> ControlList
+        private IEnumerable<Control> ControlList
         {
             get
             {
@@ -61,19 +53,19 @@ namespace CodeProject
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public Form Owner
         {
-            get { return form; }
+            protected get { return form; }
             set 
             {
                 if (form != null)
-                    form.Resize -= new EventHandler(Form_Resize);
+                    form.Resize -= Form_Resize;
 
                 form = value;
-                form.Resize += new EventHandler(Form_Resize);
+                form.Resize += Form_Resize;
 
-                form.ControlAdded += new ControlEventHandler(form_ControlAdded);
+                form.ControlAdded += form_ControlAdded;
 
                 foreach (Control control in ControlList)
-                    control.Paint += new PaintEventHandler(Control_Paint);
+                    control.Paint += Control_Paint;
             }
         }
 
@@ -96,7 +88,7 @@ namespace CodeProject
         public void Add(Control control)
         {
             controlList.Add(control);
-            control.Paint += new PaintEventHandler(Control_Paint);
+            control.Paint += Control_Paint;
         }
 
         private void Control_Paint(object sender, PaintEventArgs e)
@@ -111,35 +103,3 @@ namespace CodeProject
         }
     }
 }
-
-//namespace System.Windows.Forms
-//{
-//    public static class Extensions
-//    {
-//        public static Rectangle Coordinates(this Control control)
-//        {
-//            Rectangle coordinates;
-//            Form form = (Form)control.TopLevelControl;
-
-//            if (control == form)
-//                coordinates = form.ClientRectangle;
-//            else
-//                coordinates = form.RectangleToClient(control.Parent.RectangleToScreen(control.Bounds));
-
-//            return coordinates;
-//        }
-
-//        public static IEnumerable<Control> ControlList(this Form form)
-//        {
-//            Control control = form.GetNextControl(form, true);
-
-//            while(control != null)
-//            {
-//                yield return control;
-//                control = form.GetNextControl(control, true);
-//            }
-
-//            yield return form;
-//        }
-//    }
-//}

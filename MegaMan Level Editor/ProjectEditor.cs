@@ -1,12 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using MegaMan;
 using System.IO;
 using System.Xml.Linq;
-using System.Xml;
-using System.Drawing;
 using System.Windows.Forms;
 
 namespace MegaMan_Level_Editor
@@ -21,22 +18,20 @@ namespace MegaMan_Level_Editor
             get { return dirty; }
             set
             {
-                bool old = dirty;
                 dirty = value;
-                if (old != value && DirtyChanged != null) DirtyChanged(value);
             }
         }
 
         #region Game XML File Stuff
 
-        private Dictionary<string, Entity> entities = new Dictionary<string,Entity>();
+        private readonly Dictionary<string, Entity> entities = new Dictionary<string,Entity>();
 
         public IEnumerable<Entity> Entities
         {
             get { return entities.Values; }
         }
 
-        public string BaseDir
+        private string BaseDir
         {
             get { return Project.BaseDir; }
         }
@@ -88,22 +83,21 @@ namespace MegaMan_Level_Editor
 
         #region GUI Editor Stuff
 
-        private Dictionary<string, StageDocument> openStages = new Dictionary<string,StageDocument>();
+        private readonly Dictionary<string, StageDocument> openStages = new Dictionary<string,StageDocument>();
 
         public IEnumerable<string> StageNames
         {
             get
             {
-                foreach (var info in Project.Stages) yield return info.Name;
+                return Project.Stages.Select(info => info.Name);
             }
         }
 
         #endregion
 
-        public event Action<bool> DirtyChanged;
         public event Action<StageDocument> StageAdded;
 
-        public static ProjectEditor CreateNew(string baseDirectory)
+        public static ProjectEditor CreateNew()
         {
             var p = new ProjectEditor();
             return p;
@@ -126,7 +120,7 @@ namespace MegaMan_Level_Editor
                 {
                     try
                     {
-                        StageDocument stage = new StageDocument(this, this.BaseDir, info.StagePath.Absolute);
+                        StageDocument stage = new StageDocument(this, BaseDir, info.StagePath.Absolute);
                         openStages.Add(name, stage);
                         return stage;
                     }
@@ -154,7 +148,7 @@ namespace MegaMan_Level_Editor
         {
             foreach (string path in Project.Includes)
             {
-                string fullpath = Path.Combine(this.BaseDir, path);
+                string fullpath = Path.Combine(BaseDir, path);
                 XDocument document = XDocument.Load(fullpath, LoadOptions.SetLineInfo);
                 foreach (XElement element in document.Elements())
                 {
@@ -172,14 +166,14 @@ namespace MegaMan_Level_Editor
         {
             foreach (XElement entityNode in entitiesNode.Elements("Entity"))
             {
-                var entity = new Entity(entityNode, this.BaseDir);
+                var entity = new Entity(entityNode, BaseDir);
                 entities.Add(entity.Name, entity);
             }
         }
 
         public StageDocument AddStage(string name, string tilesetPath)
         {
-            string stageDir = Path.Combine(this.BaseDir, "stages");
+            string stageDir = Path.Combine(BaseDir, "stages");
             if (!Directory.Exists(stageDir))
             {
                 Directory.CreateDirectory(stageDir);
@@ -190,21 +184,21 @@ namespace MegaMan_Level_Editor
                 Directory.CreateDirectory(stagePath);
             }
 
-            var stage = new StageDocument(this);
-            stage.Path = FilePath.FromAbsolute(stagePath, this.BaseDir); // must be set before tileset
-            stage.Name = name;
+            var stage = new StageDocument(this)
+            {
+                Path = FilePath.FromAbsolute(stagePath, this.BaseDir),
+                Name = name
+            };
             stage.ChangeTileset(tilesetPath);
 
             stage.Save();
             
             openStages.Add(name, stage);
 
-            var info = new StageInfo();
-            info.Name = name;
-            info.StagePath = FilePath.FromAbsolute(stagePath, this.BaseDir);
+            var info = new StageInfo {Name = name, StagePath = FilePath.FromAbsolute(stagePath, BaseDir)};
             Project.AddStage(info);
 
-            this.Save(); // need to save the reference to the new stage
+            Save(); // need to save the reference to the new stage
 
             if (StageAdded != null) StageAdded(stage);
 
@@ -219,9 +213,9 @@ namespace MegaMan_Level_Editor
 
         public bool Close()
         {
-            foreach (StageDocument stage in this.openStages.Values)
+            if (openStages.Values.Any(stage => !stage.Close()))
             {
-                if (!stage.Close()) return false;
+                return false;
             }
 
             if (!ConfirmSave()) return false;
@@ -229,12 +223,12 @@ namespace MegaMan_Level_Editor
             return true;
         }
 
-        public bool ConfirmSave()
+        private bool ConfirmSave()
         {
             if (Dirty)
             {
-                DialogResult result = MessageBox.Show("Do you want to save changes to " + this.Name + " before closing?", "Save Changes", MessageBoxButtons.YesNoCancel);
-                if (result == DialogResult.Yes) this.Save();
+                DialogResult result = MessageBox.Show("Do you want to save changes to " + Name + " before closing?", "Save Changes", MessageBoxButtons.YesNoCancel);
+                if (result == DialogResult.Yes) Save();
                 else if (result == DialogResult.Cancel) return false;
             }
             return true;

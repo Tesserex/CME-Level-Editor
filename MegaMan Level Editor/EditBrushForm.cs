@@ -1,24 +1,20 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
 using System.Drawing;
-using System.Linq;
-using System.Text;
 using System.Windows.Forms;
 using MegaMan;
 
 namespace MegaMan_Level_Editor {
-    public partial class EditBrushForm : Form {
-        public TileBrush Brush { get; private set; }
-        private Tileset Tileset;
+    public partial class EditBrushForm : Form
+    {
+        private TileBrush Brush;
+        private readonly Tileset Tileset;
 
         public EditBrushForm(TileBrush brush, Tileset tileset) {
             InitializeComponent();
-            this.Tileset = tileset;
-            this.Brush = brush;
+            Tileset = tileset;
+            Brush = brush;
 
-            this.brushPict.MouseDown += new MouseEventHandler(brushPict_MouseDown);
+            brushPict.MouseDown += brushPict_MouseDown;
 
             Reset(2, 2);
         }
@@ -56,9 +52,9 @@ namespace MegaMan_Level_Editor {
 
         private void Reset(int width, int height)
         {
-            this.Brush.Reset(width, height);
+            Brush.Reset(width, height);
 
-            if (this.brushPict.Image != null) this.brushPict.Image.Dispose();
+            if (brushPict.Image != null) brushPict.Image.Dispose();
 
             brushPict.Image = new Bitmap(width * Tileset.TileSize, height * Tileset.TileSize);
             brushPict.Size = brushPict.Image.Size;

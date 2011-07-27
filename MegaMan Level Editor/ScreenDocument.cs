@@ -1,7 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using MegaMan;
 using System.Drawing;
 
@@ -9,19 +7,15 @@ namespace MegaMan_Level_Editor
 {
     public class ScreenDocument
     {
-        private Screen screen;
+        private readonly Screen screen;
 
         public StageDocument Stage { get; private set; }
 
         public event Action<int, int> Resized;
         public event Action TileChanged;
 
-        public bool Dirty
+        private bool Dirty
         {
-            get
-            {
-                return Stage.Dirty;
-            }
             set
             {
                 Stage.Dirty = value;
@@ -58,9 +52,9 @@ namespace MegaMan_Level_Editor
 
         public event Action<string, string> Renamed;
 
-        public ScreenDocument(MegaMan.Screen screen, StageDocument stage)
+        public ScreenDocument(Screen screen, StageDocument stage)
         {
-            this.Stage = stage;
+            Stage = stage;
             this.screen = screen;
         }
 
@@ -81,11 +75,6 @@ namespace MegaMan_Level_Editor
             screen.ChangeTile(tile_x, tile_y, tile_id);
             Dirty = true;
             if (TileChanged != null) TileChanged();
-        }
-
-        public void ChangeTile(int tile_x, int tile_y, Tile tile)
-        {
-            ChangeTile(tile_x, tile_y, tile.Id);
         }
 
         public void AddEntity(Entity entity, Point location)

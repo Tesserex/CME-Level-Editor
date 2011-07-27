@@ -1,10 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using MegaMan;
 using System.Windows.Forms;
-using System.IO;
 using System.Drawing;
 
 namespace MegaMan_Level_Editor
@@ -17,11 +15,11 @@ namespace MegaMan_Level_Editor
 
     public class StageDocument
     {
-        private Map map;
+        private readonly Map map;
 
         private StageForm stageForm;
 
-        private Dictionary<string, ScreenDocument> screens = new Dictionary<string,ScreenDocument>();
+        private readonly Dictionary<string, ScreenDocument> screens = new Dictionary<string,ScreenDocument>();
 
         public ProjectEditor Project { get; private set; }
 
@@ -35,35 +33,27 @@ namespace MegaMan_Level_Editor
             }
         }
 
-        public event Action<StageDocument> Closed;
         public event Action<ScreenDocument> ScreenAdded;
         public event Action<Join> JoinChanged;
         public event Action<bool> DirtyChanged;
 
         public StageDocument(ProjectEditor project)
         {
-            this.Project = project;
-            this.map = new Map();
+            Project = project;
+            map = new Map();
         }
 
         public StageDocument(ProjectEditor project, string basepath, string filepath)
         {
-            this.Project = project;
-            this.map = new Map(FilePath.FromAbsolute(filepath, basepath));
+            Project = project;
+            map = new Map(FilePath.FromAbsolute(filepath, basepath));
 
             // wrap all map screens in screendocuments
             // this should be the only time MegaMan.Screen's are touched directly
-            foreach (var pair in this.map.Screens)
+            foreach (var pair in map.Screens)
             {
                 WrapScreen(pair.Value);
             }
-        }
-
-        // this is going to get encapsulated further, so that even Screens are inaccessible
-        public ScreenDocument GetScreen(string name)
-        {
-            if (screens.ContainsKey(name)) return screens[name];
-            return null;
         }
 
         private bool dirty;
@@ -129,18 +119,14 @@ namespace MegaMan_Level_Editor
             set { map.StartScreen = value; Dirty = true; }
         }
 
-        public int ScreenCount { get { return map.Screens.Count; } }
-
         public IEnumerable<ScreenDocument> Screens
         {
-            get { foreach (var screen in screens.Values) yield return screen; }
+            get { return screens.Values; }
         }
 
-        public int JoinCount { get { return map.Joins.Count; } }
-
-        public IEnumerable<MegaMan.Join> Joins
+        public IEnumerable<Join> Joins
         {
-            get { foreach (var join in map.Joins) yield return join; }
+            get { return map.Joins; }
         }
 
         public void Save()
@@ -149,44 +135,37 @@ namespace MegaMan_Level_Editor
             Dirty = false;
         }
 
-        public void Save(string directory)
-        {
-            map.Save(directory);
-            Dirty = false;
-        }
-
         #endregion
 
         public void AddScreen(string name, int tile_width, int tile_height)
         {
-            var screen = new MegaMan.Screen(tile_width, tile_height, this.map);
-            screen.Name = name;
+            var screen = new MegaMan.Screen(tile_width, tile_height, map) {Name = name};
 
-            this.map.Screens.Add(name, screen);
+            map.Screens.Add(name, screen);
 
-            if (this.StartScreen == null) this.StartScreen = this.map.Screens.Keys.First();
+            if (StartScreen == null) StartScreen = map.Screens.Keys.First();
 
             ScreenDocument doc = WrapScreen(screen);
             
-            screen.Save(System.IO.Path.Combine(this.Path.Absolute, name + ".scn"));
+            screen.Save(System.IO.Path.Combine(Path.Absolute, name + ".scn"));
 
             // now I can do things like fire an event... how useful!
             if (ScreenAdded != null) ScreenAdded(doc);
 
-            this.Save();
+            Save();
         }
 
         public void AddJoin(Join join)
         {
             map.Joins.Add(join);
-            this.Dirty = true;
+            Dirty = true;
             if (JoinChanged != null) JoinChanged(join);
         }
 
         public void RemoveJoin(Join join)
         {
             map.Joins.Remove(join);
-            this.Dirty = true;
+            Dirty = true;
             if (JoinChanged != null) JoinChanged(join);
         }
 
@@ -198,7 +177,7 @@ namespace MegaMan_Level_Editor
 
         private void RefreshInfo()
         {
-            if (this.stageForm != null) stageForm.SetText();
+            if (stageForm != null) stageForm.SetText();
         }
 
         public void ReFocus()
@@ -206,16 +185,16 @@ namespace MegaMan_Level_Editor
             ShowStage();
         }
 
-        public void ShowStage()
+        private void ShowStage()
         {
-            if (this.stageForm == null)
+            if (stageForm == null)
             {
-                this.stageForm = new StageForm(this);
-                stageForm.GotFocus += new EventHandler(StageForm_GotFocus);
-                stageForm.FormClosing += new FormClosingEventHandler(StageForm_FormClosing);
+                stageForm = new StageForm(this);
+                stageForm.GotFocus += StageForm_GotFocus;
+                stageForm.FormClosing += StageForm_FormClosing;
             }
 
-            MainForm.Instance.ShowStageForm(this.stageForm);
+            MainForm.Instance.ShowStageForm(stageForm);
             stageForm.Focus();
         }
 
@@ -225,11 +204,11 @@ namespace MegaMan_Level_Editor
 
             stageForm.FormClosing -= StageForm_FormClosing;
             stageForm.Close();
-            if (Closed != null) Closed(this);
+
             return true;
         }
 
-        public bool ConfirmSave()
+        private bool ConfirmSave()
         {
             if (Dirty)
             {
@@ -256,7 +235,6 @@ namespace MegaMan_Level_Editor
             if (!ConfirmSave()) return;
 
             stageForm.Hide();
-            if (Closed != null) Closed(this);
         }
 
         private void StageForm_GotFocus(object sender, EventArgs e)
@@ -267,25 +245,25 @@ namespace MegaMan_Level_Editor
         private ScreenDocument WrapScreen(MegaMan.Screen screen)
         {
             ScreenDocument doc = new ScreenDocument(screen, this);
-            this.screens.Add(screen.Name, doc);
+            screens.Add(screen.Name, doc);
             doc.Renamed += ScreenRenamed;
-            doc.TileChanged += () => this.Dirty = true;
+            doc.TileChanged += () => Dirty = true;
             return doc;
         }
 
         private void ScreenRenamed(string oldName, string newName)
         {
-            if (!this.screens.ContainsKey(oldName)) return;
-            ScreenDocument doc = this.screens[oldName];
-            this.screens.Remove(oldName);
-            this.screens.Add(newName, doc);
-            if (this.map.StartScreen == oldName) this.map.StartScreen = newName;
-            foreach (var join in this.Joins)
+            if (!screens.ContainsKey(oldName)) return;
+            ScreenDocument doc = screens[oldName];
+            screens.Remove(oldName);
+            screens.Add(newName, doc);
+            if (map.StartScreen == oldName) map.StartScreen = newName;
+            foreach (var join in Joins)
             {
                 if (join.screenOne == oldName) join.screenOne = newName;
                 if (join.screenTwo == oldName) join.screenTwo = newName;
             }
-            this.Dirty = true;
+            Dirty = true;
         }
     }
 }

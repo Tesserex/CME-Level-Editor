@@ -63,11 +63,6 @@ namespace MegaMan_Level_Editor
             base.OnScroll(se);
         }
 
-        protected override void OnMouseMove(MouseEventArgs e)
-        {
-            base.OnMouseMove(e);
-        }
-
         private void SetBackgroundGrid()
         {
             // just need a tiny tile image

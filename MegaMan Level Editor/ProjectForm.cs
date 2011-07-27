@@ -1,12 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
 using System.Drawing;
-using System.Linq;
-using System.Text;
 using System.Windows.Forms;
-using System.IO;
 
 namespace MegaMan_Level_Editor
 {
@@ -15,16 +9,15 @@ namespace MegaMan_Level_Editor
         public ProjectForm()
         {
             InitializeComponent();
-            projectView.NodeMouseDoubleClick += new TreeNodeMouseClickEventHandler(projectView_NodeMouseDoubleClick);
-            var imagelist = new ImageList();
-            imagelist.ColorDepth = ColorDepth.Depth32Bit;
+            projectView.NodeMouseDoubleClick += projectView_NodeMouseDoubleClick;
+            var imagelist = new ImageList {ColorDepth = ColorDepth.Depth32Bit};
             imagelist.Images.Add(Properties.Resources.Folder_16x16);
             imagelist.Images.Add(Properties.Resources.FolderOpen_16x16_72);
             imagelist.Images.Add(Properties.Resources.stage);
             imagelist.Images.Add(Properties.Resources.screen);
             projectView.ImageList = imagelist;
-            projectView.BeforeCollapse += new TreeViewCancelEventHandler(projectView_BeforeCollapse);
-            projectView.BeforeExpand += new TreeViewCancelEventHandler(projectView_BeforeExpand);
+            projectView.BeforeCollapse += projectView_BeforeCollapse;
+            projectView.BeforeExpand += projectView_BeforeExpand;
         }
 
         void projectView_BeforeExpand(object sender, TreeViewCancelEventArgs e)
@@ -45,7 +38,7 @@ namespace MegaMan_Level_Editor
 
         public void AddProject(ProjectEditor project)
         {
-            var projectNode = this.projectView.Nodes.Add(project.Name);
+            var projectNode = projectView.Nodes.Add(project.Name);
             projectNode.NodeFont = new Font(FontFamily.GenericSansSerif, 8, FontStyle.Bold);
             projectNode.Tag = new ProjectNodeHandler(project, projectNode);
 
@@ -58,7 +51,7 @@ namespace MegaMan_Level_Editor
                 stagenode.Tag = new StageNodeHandler(project, stagenode, stage);
             }
 
-            project.StageAdded += (stage) =>
+            project.StageAdded += stage =>
             {
                 var stagenode = stagesNode.Nodes.Add(stage.Name);
                 stagenode.ImageIndex = stagenode.SelectedImageIndex = 2;
@@ -68,7 +61,7 @@ namespace MegaMan_Level_Editor
 
         public void CloseProject()
         {
-            this.projectView.Nodes.Clear();
+            projectView.Nodes.Clear();
         }
 
         private void buttonNewStage_Click(object sender, EventArgs e)

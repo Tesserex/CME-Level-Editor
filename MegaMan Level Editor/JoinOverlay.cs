@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Windows.Forms;
 using System.Drawing;
 using System.Drawing.Drawing2D;
@@ -9,16 +7,14 @@ using MegaMan;
 
 namespace MegaMan_Level_Editor
 {
-    public class JoinOverlay : CodeProject.GraphicalOverlay
+    public class JoinOverlay : GraphicalOverlay
     {
-        private static Pen passPen = new Pen(Color.Blue, 4);
-        private static Pen blockPen = new Pen(Color.Red, 4);
-        private static Pen joinPen = new Pen(Color.Green, 4);
+        private static readonly Pen joinPen = new Pen(Color.Green, 4);
         private Bitmap image;
 
         public JoinOverlay()
         {
-            this.Paint += new EventHandler<PaintEventArgs>(JoinOverlay_Paint);
+            Paint += JoinOverlay_Paint;
         }
 
         void JoinOverlay_Paint(object sender, PaintEventArgs e)
@@ -84,12 +80,12 @@ namespace MegaMan_Level_Editor
             Invalidate();
         }
 
-        private void DrawJoinPath(Graphics g, int x1, int x2, int y1, int y2, bool transpose)
+        private static void DrawJoinPath(Graphics g, int x1, int x2, int y1, int y2, bool transpose)
         {
-            Point start, end, midpoint, c1, c2;
+            Point midpoint, c1, c2;
 
-            start = new Point(x1, y1);
-            end = new Point(x2, y2);
+            Point start = new Point(x1, y1);
+            Point end = new Point(x2, y2);
 
             int skew = y2 - y1;
             if (skew > 32)

@@ -1,10 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Drawing;
+using System.Linq;
 using MegaMan;
-using System.Windows.Forms;
 
 namespace MegaMan_Level_Editor
 {
@@ -34,7 +32,7 @@ namespace MegaMan_Level_Editor
 
     public class SingleTileBrush : ITileBrush
     {
-        protected Tile tile;
+        private readonly Tile tile;
 
         public int Height { get { return 1; } }
         public int Width { get { return 1; } }
@@ -56,21 +54,24 @@ namespace MegaMan_Level_Editor
             var old = screen.TileAt(tile_x, tile_y);
             
             if (old == null)
+            {
                 return null;
-
-            if (old.Id == this.tile.Id) {
-                return null;
-            } else {
-                screen.ChangeTile(tile_x, tile_y, tile.Id);
-                return new SingleTileBrush(old);
             }
+
+            if (old.Id == tile.Id)
+            {
+                return null;
+            }
+
+            screen.ChangeTile(tile_x, tile_y, tile.Id);
+            return new SingleTileBrush(old);
         }
 
         public override String ToString() {
-            return "Tile Id: (" + this.tile + ")";
+            return "Tile Id: (" + tile + ")";
         }
 
-        public IEnumerable<TileBrushCell> Cells() { yield return new TileBrushCell(0, 0, this.tile); }
+        public IEnumerable<TileBrushCell> Cells() { yield return new TileBrushCell(0, 0, tile); }
     }
 
     public class TileBrush : ITileBrush
@@ -109,10 +110,7 @@ namespace MegaMan_Level_Editor
 
         public void AddTile(Tile tile, int x, int y)
         {
-            TileBrushCell cell = new TileBrushCell();
-            cell.x = x;
-            cell.y = y;
-            cell.tile = tile;
+            TileBrushCell cell = new TileBrushCell {x = x, y = y, tile = tile};
             cells[x][y] = cell;
             CellSize = (int)tile.Width;
         }
@@ -157,7 +155,7 @@ namespace MegaMan_Level_Editor
 
         public IEnumerable<TileBrushCell> Cells()
         {
-            foreach (TileBrushCell[] col in cells) foreach (TileBrushCell cell in col) yield return cell;
+            return cells.SelectMany(col => col);
         }
 
         #endregion
