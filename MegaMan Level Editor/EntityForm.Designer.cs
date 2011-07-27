@@ -1,4 +1,4 @@
-﻿namespace MegaMan_Level_Editor
+﻿namespace MegaMan.LevelEditor
 {
     partial class EntityForm
     {

@@ -2,7 +2,7 @@
 using System.Linq;
 using System.Drawing;
 
-namespace MegaMan_Level_Editor
+namespace MegaMan.LevelEditor
 {
     public interface HistoryAction
     {

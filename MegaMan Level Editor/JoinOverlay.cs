@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Windows.Forms;
 using System.Drawing;
 using System.Drawing.Drawing2D;
-using MegaMan;
+using MegaMan.Common;
 
-namespace MegaMan_Level_Editor
+namespace MegaMan.LevelEditor
 {
     public class JoinOverlay : GraphicalOverlay
     {

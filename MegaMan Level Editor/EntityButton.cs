@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Windows.Forms;
 using System.Drawing;
-using MegaMan;
+using MegaMan.Common;
 
-namespace MegaMan_Level_Editor
+namespace MegaMan.LevelEditor
 {
     public sealed partial class EntityButton : Panel
     {

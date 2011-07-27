@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Linq;
-using MegaMan;
+using MegaMan.Common;
 using System.Drawing;
 
-namespace MegaMan_Level_Editor
+namespace MegaMan.LevelEditor
 {
     public class ScreenDocument
     {

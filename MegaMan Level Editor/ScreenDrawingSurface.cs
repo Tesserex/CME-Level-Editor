@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Drawing;
 using System.Windows.Forms;
-using MegaMan;
+using MegaMan.Common;
 using System.Drawing.Imaging;
 
-namespace MegaMan_Level_Editor
+namespace MegaMan.LevelEditor
 {
     public class ScreenEditEventArgs : EventArgs
     {

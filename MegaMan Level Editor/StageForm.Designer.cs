@@ -1,7 +1,7 @@
 ﻿using System.Windows.Forms;
 using System.Drawing;
 
-namespace MegaMan_Level_Editor {
+namespace MegaMan.LevelEditor {
     partial class StageForm {
         /// <summary>
         /// Required designer variable.

@@ -5,10 +5,10 @@ using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
 using System.IO;
-using MegaMan;
+using MegaMan.Common;
 using WeifenLuo.WinFormsUI.Docking;
 
-namespace MegaMan_Level_Editor
+namespace MegaMan.LevelEditor
 {
     public partial class MainForm : Form
     {

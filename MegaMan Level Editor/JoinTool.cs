@@ -1,7 +1,8 @@
 ﻿using System.Drawing;
 using System.Windows.Forms;
+using MegaMan.Common;
 
-namespace MegaMan_Level_Editor
+namespace MegaMan.LevelEditor
 {
     public class JoinTool : ITool
     {
@@ -9,9 +10,9 @@ namespace MegaMan_Level_Editor
         public Point IconOffset { get { return Point.Empty; } }
         public bool IconSnap { get { return false; } }
 
-        private static MegaMan.Join NearestJoin(ScreenDrawingSurface surface, Point location)
+        private static Join NearestJoin(ScreenDrawingSurface surface, Point location)
         {
-            MegaMan.Join nearest = null;
+            Join nearest = null;
 
             foreach (var join in surface.Screen.Stage.Joins)
             {
@@ -19,7 +20,7 @@ namespace MegaMan_Level_Editor
                 {
                     int begin = join.offsetOne * surface.Screen.Tileset.TileSize;
                     int end = (join.offsetOne + join.Size) * surface.Screen.Tileset.TileSize;
-                    if (join.type == MegaMan.JoinType.Vertical)
+                    if (join.type == JoinType.Vertical)
                     {
                         if (location.X > surface.Width - surface.Screen.Tileset.TileSize && location.Y >= begin && location.Y <= end)
                         {
@@ -38,7 +39,7 @@ namespace MegaMan_Level_Editor
                 {
                     int begin = join.offsetTwo * surface.Screen.Tileset.TileSize;
                     int end = (join.offsetTwo + join.Size) * surface.Screen.Tileset.TileSize;
-                    if (join.type == MegaMan.JoinType.Vertical)
+                    if (join.type == JoinType.Vertical)
                     {
                         if (location.X < surface.Screen.Tileset.TileSize && location.Y >= begin && location.Y <= end)
                         {
@@ -66,7 +67,7 @@ namespace MegaMan_Level_Editor
 
             if (nearest != null)
             {
-                string typeText = (nearest.type == MegaMan.JoinType.Vertical)? "Left-Right" : "Up-Down";
+                string typeText = (nearest.type == JoinType.Vertical)? "Left-Right" : "Up-Down";
 
                 menu.MenuItems.Add("Modify " + typeText + " Join from " + nearest.screenOne + " to " + nearest.screenTwo, (s, e) => EditJoin(surface, nearest));
 
@@ -77,22 +78,22 @@ namespace MegaMan_Level_Editor
                 if (location.X > surface.Width - surface.Screen.Tileset.TileSize)
                 {
                     menu.MenuItems.Add(new MenuItem("New Rightward Join from " + surface.Screen.Name,
-                                                    (s, e) => NewJoin(surface, surface.Screen.Name, "", MegaMan.JoinType.Vertical, location.Y / surface.Screen.Tileset.TileSize)));
+                                                    (s, e) => NewJoin(surface, surface.Screen.Name, "", JoinType.Vertical, location.Y / surface.Screen.Tileset.TileSize)));
                 }
                 if (location.X < surface.Screen.Tileset.TileSize)
                 {
                     menu.MenuItems.Add(new MenuItem("New Leftward Join from " + surface.Screen.Name,
-                                                    (s, e) => NewJoin(surface, "", surface.Screen.Name, MegaMan.JoinType.Vertical, location.Y / surface.Screen.Tileset.TileSize)));
+                                                    (s, e) => NewJoin(surface, "", surface.Screen.Name, JoinType.Vertical, location.Y / surface.Screen.Tileset.TileSize)));
                 }
                 if (location.Y > surface.Height - surface.Screen.Tileset.TileSize)
                 {
                     menu.MenuItems.Add(new MenuItem("New Downward Join from " + surface.Screen.Name,
-                                                    (s, e) => NewJoin(surface, surface.Screen.Name, "", MegaMan.JoinType.Horizontal, location.X / surface.Screen.Tileset.TileSize)));
+                                                    (s, e) => NewJoin(surface, surface.Screen.Name, "", JoinType.Horizontal, location.X / surface.Screen.Tileset.TileSize)));
                 }
                 if (location.Y < surface.Screen.Tileset.TileSize)
                 {
                     menu.MenuItems.Add(new MenuItem("New Upward Join from " + surface.Screen.Name,
-                                                    (s, e) => NewJoin(surface, "", surface.Screen.Name, MegaMan.JoinType.Horizontal, location.X / surface.Screen.Tileset.TileSize)));
+                                                    (s, e) => NewJoin(surface, "", surface.Screen.Name, JoinType.Horizontal, location.X / surface.Screen.Tileset.TileSize)));
                 }
             }
             menu.Show(surface, location);
@@ -106,23 +107,23 @@ namespace MegaMan_Level_Editor
         {
         }
 
-        private static void NewJoin(ScreenDrawingSurface surface, string s1, string s2, MegaMan.JoinType type, int offset)
+        private static void NewJoin(ScreenDrawingSurface surface, string s1, string s2, JoinType type, int offset)
         {
-            MegaMan.Join newjoin = new MegaMan.Join {screenTwo = s2, screenOne = s1, type = type, Size = 1};
+            Join newjoin = new Join {screenTwo = s2, screenOne = s1, type = type, Size = 1};
             newjoin.offsetOne = newjoin.offsetTwo = offset;
             JoinForm form = new JoinForm(newjoin, surface.Screen.Stage.Screens);
             form.OK += () => surface.Screen.Stage.AddJoin(newjoin);
             form.Show();
         }
 
-        private static void EditJoin(ScreenDrawingSurface surface, MegaMan.Join join)
+        private static void EditJoin(ScreenDrawingSurface surface, Join join)
         {
             JoinForm form = new JoinForm(join, surface.Screen.Stage.Screens);
             form.OK += () => surface.Screen.Stage.RaiseJoinChange(join);
             form.Show();
         }
 
-        private static void DeleteJoin(ScreenDrawingSurface surface, MegaMan.Join join)
+        private static void DeleteJoin(ScreenDrawingSurface surface, Join join)
         {
             surface.Screen.Stage.RemoveJoin(join);
         }

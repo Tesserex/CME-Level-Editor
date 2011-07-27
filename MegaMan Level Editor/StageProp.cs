@@ -6,9 +6,9 @@ using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
-using MegaMan;
+using MegaMan.Common;
 
-namespace MegaMan_Level_Editor
+namespace MegaMan.LevelEditor
 {
     public partial class StageProp : Form
     {

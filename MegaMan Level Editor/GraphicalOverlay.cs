@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Windows.Forms;
 
-namespace MegaMan_Level_Editor
+namespace MegaMan.LevelEditor
 {
     public partial class GraphicalOverlay : Component
     {

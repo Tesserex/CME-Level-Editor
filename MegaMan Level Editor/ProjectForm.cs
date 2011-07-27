@@ -2,7 +2,7 @@
 using System.Drawing;
 using System.Windows.Forms;
 
-namespace MegaMan_Level_Editor
+namespace MegaMan.LevelEditor
 {
     public partial class ProjectForm : WeifenLuo.WinFormsUI.Docking.DockContent
     {

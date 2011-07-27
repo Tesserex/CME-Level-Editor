@@ -1,4 +1,4 @@
-﻿namespace MegaMan_Level_Editor {
+﻿namespace MegaMan.LevelEditor {
     partial class ProjectForm {
         /// <summary>
         /// Required designer variable.
@@ -64,7 +64,7 @@
             // buttonNewStage
             // 
             this.buttonNewStage.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.buttonNewStage.Image = global::MegaMan_Level_Editor.Properties.Resources.newstage;
+            this.buttonNewStage.Image = global::MegaMan.LevelEditor.Properties.Resources.newstage;
             this.buttonNewStage.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.buttonNewStage.Name = "buttonNewStage";
             this.buttonNewStage.Size = new System.Drawing.Size(23, 22);
@@ -74,7 +74,7 @@
             // buttonNewScreen
             // 
             this.buttonNewScreen.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.buttonNewScreen.Image = global::MegaMan_Level_Editor.Properties.Resources.newscreen;
+            this.buttonNewScreen.Image = global::MegaMan.LevelEditor.Properties.Resources.newscreen;
             this.buttonNewScreen.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.buttonNewScreen.Name = "buttonNewScreen";
             this.buttonNewScreen.Size = new System.Drawing.Size(23, 22);
@@ -84,7 +84,7 @@
             // buttonProperties
             // 
             this.buttonProperties.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.buttonProperties.Image = global::MegaMan_Level_Editor.Properties.Resources.Settings;
+            this.buttonProperties.Image = global::MegaMan.LevelEditor.Properties.Resources.Settings;
             this.buttonProperties.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.buttonProperties.Name = "buttonProperties";
             this.buttonProperties.Size = new System.Drawing.Size(23, 22);
@@ -94,7 +94,7 @@
             // buttonDelete
             // 
             this.buttonDelete.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.buttonDelete.Image = global::MegaMan_Level_Editor.Properties.Resources.Remove;
+            this.buttonDelete.Image = global::MegaMan.LevelEditor.Properties.Resources.Remove;
             this.buttonDelete.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.buttonDelete.Name = "buttonDelete";
             this.buttonDelete.Size = new System.Drawing.Size(23, 22);

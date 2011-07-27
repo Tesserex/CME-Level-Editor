@@ -1,8 +1,8 @@
-﻿using MegaMan;
+﻿using MegaMan.Common;
 using System.Xml.Linq;
 using System.Drawing;
 
-namespace MegaMan_Level_Editor
+namespace MegaMan.LevelEditor
 {
     public class Entity
     {

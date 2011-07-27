@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Windows.Forms;
-using MegaMan;
+using MegaMan.Common;
 
-namespace MegaMan_Level_Editor
+namespace MegaMan.LevelEditor
 {
     public partial class SoundControl : UserControl
     {

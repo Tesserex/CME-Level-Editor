@@ -1,4 +1,4 @@
-﻿namespace MegaMan_Level_Editor
+﻿namespace MegaMan.LevelEditor
 {
     partial class StageSelectEdit
     {
@@ -56,7 +56,7 @@
             this.label7 = new System.Windows.Forms.Label();
             this.comboSlot = new System.Windows.Forms.ComboBox();
             this.preview = new System.Windows.Forms.PictureBox();
-            this.musicSoundControl1 = new MegaMan_Level_Editor.SoundControl();
+            this.musicSoundControl1 = new MegaMan.LevelEditor.SoundControl();
             this.groupBox1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.bossOffset)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.bossY)).BeginInit();

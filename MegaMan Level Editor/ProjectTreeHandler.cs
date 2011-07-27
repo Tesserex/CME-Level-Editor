@@ -1,6 +1,6 @@
 ﻿using System.Windows.Forms;
 
-namespace MegaMan_Level_Editor
+namespace MegaMan.LevelEditor
 {
     // all nodes in the project tree should have one of these as its tag
     public abstract class ProjectTreeHandler

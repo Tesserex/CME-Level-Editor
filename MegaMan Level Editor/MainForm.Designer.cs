@@ -1,4 +1,4 @@
-﻿namespace MegaMan_Level_Editor {
+﻿namespace MegaMan.LevelEditor {
     partial class MainForm {
         /// <summary>
         /// Required designer variable.
@@ -128,7 +128,7 @@
             // 
             // newToolStripMenuItem
             // 
-            this.newToolStripMenuItem.Image = global::MegaMan_Level_Editor.Properties.Resources.NewDocumentHS;
+            this.newToolStripMenuItem.Image = global::MegaMan.LevelEditor.Properties.Resources.NewDocumentHS;
             this.newToolStripMenuItem.Name = "newToolStripMenuItem";
             this.newToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.N)));
             this.newToolStripMenuItem.Size = new System.Drawing.Size(148, 22);
@@ -137,7 +137,7 @@
             // 
             // openToolStripMenuItem
             // 
-            this.openToolStripMenuItem.Image = global::MegaMan_Level_Editor.Properties.Resources.openHS;
+            this.openToolStripMenuItem.Image = global::MegaMan.LevelEditor.Properties.Resources.openHS;
             this.openToolStripMenuItem.Name = "openToolStripMenuItem";
             this.openToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.O)));
             this.openToolStripMenuItem.Size = new System.Drawing.Size(148, 22);
@@ -157,7 +157,7 @@
             // 
             // saveToolStripMenuItem
             // 
-            this.saveToolStripMenuItem.Image = global::MegaMan_Level_Editor.Properties.Resources.saveHS;
+            this.saveToolStripMenuItem.Image = global::MegaMan.LevelEditor.Properties.Resources.saveHS;
             this.saveToolStripMenuItem.Name = "saveToolStripMenuItem";
             this.saveToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.S)));
             this.saveToolStripMenuItem.Size = new System.Drawing.Size(148, 22);
@@ -202,7 +202,7 @@
             // 
             // undoToolStripMenuItem
             // 
-            this.undoToolStripMenuItem.Image = global::MegaMan_Level_Editor.Properties.Resources.Undo;
+            this.undoToolStripMenuItem.Image = global::MegaMan.LevelEditor.Properties.Resources.Undo;
             this.undoToolStripMenuItem.Name = "undoToolStripMenuItem";
             this.undoToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Z)));
             this.undoToolStripMenuItem.Size = new System.Drawing.Size(249, 22);
@@ -211,7 +211,7 @@
             // 
             // redoToolStripMenuItem
             // 
-            this.redoToolStripMenuItem.Image = global::MegaMan_Level_Editor.Properties.Resources.Redo;
+            this.redoToolStripMenuItem.Image = global::MegaMan.LevelEditor.Properties.Resources.Redo;
             this.redoToolStripMenuItem.Name = "redoToolStripMenuItem";
             this.redoToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Y)));
             this.redoToolStripMenuItem.Size = new System.Drawing.Size(249, 22);
@@ -225,7 +225,7 @@
             // 
             // copyToolStripMenuItem
             // 
-            this.copyToolStripMenuItem.Image = global::MegaMan_Level_Editor.Properties.Resources.CopyHS;
+            this.copyToolStripMenuItem.Image = global::MegaMan.LevelEditor.Properties.Resources.CopyHS;
             this.copyToolStripMenuItem.Name = "copyToolStripMenuItem";
             this.copyToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.C)));
             this.copyToolStripMenuItem.Size = new System.Drawing.Size(249, 22);
@@ -233,7 +233,7 @@
             // 
             // pasteToolStripMenuItem
             // 
-            this.pasteToolStripMenuItem.Image = global::MegaMan_Level_Editor.Properties.Resources.PasteHS;
+            this.pasteToolStripMenuItem.Image = global::MegaMan.LevelEditor.Properties.Resources.PasteHS;
             this.pasteToolStripMenuItem.Name = "pasteToolStripMenuItem";
             this.pasteToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.V)));
             this.pasteToolStripMenuItem.Size = new System.Drawing.Size(249, 22);
@@ -379,7 +379,7 @@
             // 
             // addEnemyToolStripMenuItem
             // 
-            this.addEnemyToolStripMenuItem.Image = global::MegaMan_Level_Editor.Properties.Resources.AddEntity;
+            this.addEnemyToolStripMenuItem.Image = global::MegaMan.LevelEditor.Properties.Resources.AddEntity;
             this.addEnemyToolStripMenuItem.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
             this.addEnemyToolStripMenuItem.Name = "addEnemyToolStripMenuItem";
             this.addEnemyToolStripMenuItem.Size = new System.Drawing.Size(160, 22);
@@ -487,7 +487,7 @@
             // brushToolButton
             // 
             this.brushToolButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.brushToolButton.Image = global::MegaMan_Level_Editor.Properties.Resources.brush;
+            this.brushToolButton.Image = global::MegaMan.LevelEditor.Properties.Resources.brush;
             this.brushToolButton.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.brushToolButton.Name = "brushToolButton";
             this.brushToolButton.Size = new System.Drawing.Size(23, 22);
@@ -497,7 +497,7 @@
             // bucketToolButton
             // 
             this.bucketToolButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.bucketToolButton.Image = global::MegaMan_Level_Editor.Properties.Resources.bucket;
+            this.bucketToolButton.Image = global::MegaMan.LevelEditor.Properties.Resources.bucket;
             this.bucketToolButton.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.bucketToolButton.Name = "bucketToolButton";
             this.bucketToolButton.Size = new System.Drawing.Size(23, 22);
@@ -507,7 +507,7 @@
             // joinToolButton
             // 
             this.joinToolButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.joinToolButton.Image = global::MegaMan_Level_Editor.Properties.Resources.joins;
+            this.joinToolButton.Image = global::MegaMan.LevelEditor.Properties.Resources.joins;
             this.joinToolButton.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.joinToolButton.Name = "joinToolButton";
             this.joinToolButton.Size = new System.Drawing.Size(23, 22);
@@ -517,7 +517,7 @@
             // startPosToolButton
             // 
             this.startPosToolButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.startPosToolButton.Image = global::MegaMan_Level_Editor.Properties.Resources.megaman_icon;
+            this.startPosToolButton.Image = global::MegaMan.LevelEditor.Properties.Resources.megaman_icon;
             this.startPosToolButton.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.startPosToolButton.Name = "startPosToolButton";
             this.startPosToolButton.Size = new System.Drawing.Size(23, 22);

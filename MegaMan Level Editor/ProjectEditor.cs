@@ -1,12 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using MegaMan;
+using MegaMan.Common;
 using System.IO;
 using System.Xml.Linq;
 using System.Windows.Forms;
 
-namespace MegaMan_Level_Editor
+namespace MegaMan.LevelEditor
 {
     public class ProjectEditor
     {

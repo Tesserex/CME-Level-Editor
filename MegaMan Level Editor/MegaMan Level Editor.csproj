@@ -8,7 +8,7 @@
     <ProjectGuid>{86E97D52-F819-4048-B9D6-B4E5AD02C66A}</ProjectGuid>
     <OutputType>WinExe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>MegaMan_Level_Editor</RootNamespace>
+    <RootNamespace>MegaMan.LevelEditor</RootNamespace>
     <AssemblyName>MegaMan Level Editor</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>

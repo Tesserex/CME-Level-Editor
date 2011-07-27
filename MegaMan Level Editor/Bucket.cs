@@ -1,11 +1,12 @@
 ﻿using System.Collections.Generic;
 using System.Drawing;
+using MegaMan.Common;
 
-namespace MegaMan_Level_Editor
+namespace MegaMan.LevelEditor
 {
     public class Bucket : ITool
     {
-        private readonly MegaMan.Tile[,] cells;
+        private readonly Tile[,] cells;
         private readonly int width;
         private readonly int height;
         private readonly List<TileChange> changes;
@@ -18,7 +19,7 @@ namespace MegaMan_Level_Editor
         {
             width = brush.Width;
             height = brush.Height;
-            cells = new MegaMan.Tile[width, height];
+            cells = new Tile[width, height];
             foreach (TileBrushCell cell in brush.Cells())
             {
                 cells[cell.x, cell.y] = cell.tile;

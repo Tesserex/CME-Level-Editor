@@ -1,4 +1,4 @@
-﻿namespace MegaMan_Level_Editor
+﻿namespace MegaMan.LevelEditor
 {
     partial class BrushForm
     {
@@ -58,7 +58,7 @@
             // buttonNewBrush
             // 
             this.buttonNewBrush.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.buttonNewBrush.Image = global::MegaMan_Level_Editor.Properties.Resources.add_brush;
+            this.buttonNewBrush.Image = global::MegaMan.LevelEditor.Properties.Resources.add_brush;
             this.buttonNewBrush.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.buttonNewBrush.Name = "buttonNewBrush";
             this.buttonNewBrush.Size = new System.Drawing.Size(23, 22);
@@ -69,7 +69,7 @@
             // deleteButton
             // 
             this.deleteButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.deleteButton.Image = global::MegaMan_Level_Editor.Properties.Resources.Remove;
+            this.deleteButton.Image = global::MegaMan.LevelEditor.Properties.Resources.Remove;
             this.deleteButton.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.deleteButton.Name = "deleteButton";
             this.deleteButton.Size = new System.Drawing.Size(23, 22);

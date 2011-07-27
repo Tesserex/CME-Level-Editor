@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Drawing;
 
-namespace MegaMan_Level_Editor
+namespace MegaMan.LevelEditor
 {
     public interface ITool
     {

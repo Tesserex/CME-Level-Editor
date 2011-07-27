@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using MegaMan;
+using MegaMan.Common;
 using System.Windows.Forms;
 using System.Drawing;
 
-namespace MegaMan_Level_Editor
+namespace MegaMan.LevelEditor
 {
     // ========= What this IS, and IS NOT ===============
     // This class controls a single stage. NOT the whole damn project!
@@ -139,7 +139,7 @@ namespace MegaMan_Level_Editor
 
         public void AddScreen(string name, int tile_width, int tile_height)
         {
-            var screen = new MegaMan.Screen(tile_width, tile_height, map) {Name = name};
+            var screen = new MegaMan.Common.Screen(tile_width, tile_height, map) {Name = name};
 
             map.Screens.Add(name, screen);
 
@@ -242,7 +242,7 @@ namespace MegaMan_Level_Editor
             MainForm.Instance.FocusScreen(this);
         }
 
-        private ScreenDocument WrapScreen(MegaMan.Screen screen)
+        private ScreenDocument WrapScreen(MegaMan.Common.Screen screen)
         {
             ScreenDocument doc = new ScreenDocument(screen, this);
             screens.Add(screen.Name, doc);
