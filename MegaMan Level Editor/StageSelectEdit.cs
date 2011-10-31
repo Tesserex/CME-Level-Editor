@@ -167,15 +167,19 @@ namespace MegaMan.LevelEditor
 
             textBossName.Text = info.Name;
 
-            if (info.Stage == null) comboStages.SelectedIndex = -1;
-            else comboStages.SelectedIndex = comboStages.Items.IndexOf(info.Stage);
+            if (info.NextHandler == null) comboStages.SelectedIndex = -1;
+            else comboStages.SelectedIndex = comboStages.Items.IndexOf(info.NextHandler.Name);
         }
 
         private void comboStages_SelectedIndexChanged(object sender, EventArgs e)
         {
             if (comboStages.SelectedItem != null)
             {
-                BossAtSlot(comboSlot.SelectedIndex).Stage = comboStages.SelectedItem.ToString();
+                BossAtSlot(comboSlot.SelectedIndex).NextHandler = new HandlerTransfer
+                    {
+                        Type = HandlerType.Stage,
+                        Name = comboStages.SelectedItem.ToString()
+                    };
             }
         }
 
