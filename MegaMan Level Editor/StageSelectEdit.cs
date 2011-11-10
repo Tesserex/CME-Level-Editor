@@ -21,7 +21,7 @@ namespace MegaMan.LevelEditor
             project = editor.Project;
 
             InitializeComponent();
-            this.stageSelect = project.StageSelect;
+            this.stageSelect = project.StageSelects.FirstOrDefault();
             this.preview.Image = new Bitmap(project.ScreenWidth, project.ScreenHeight);
 
             bossX.Value = stageSelect.BossSpacingHorizontal;
