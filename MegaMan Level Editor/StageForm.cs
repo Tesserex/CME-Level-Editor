@@ -139,122 +139,38 @@ namespace MegaMan.LevelEditor
         {
             if (surfaces.Count == 0) return;
 
+            var placeable = new HashSet<string>();
+            var orphans = new List<string>();
+
             int oldscroll = this.VerticalScroll.Value;
             this.VerticalScroll.Value = 0;
 
             int minX = 0, minY = 0, maxX = 0, maxY = 0;
 
-            foreach (var pair in surfaces)
+            foreach (var surface in surfaces.Values)
             {
-                if (stage.StartScreen == pair.Key)
-                {
-                    minX = pair.Value.Location.X;
-                    minY = pair.Value.Location.Y;
-                    pair.Value.Placed = true;
-                }
-                else
-                {
-                    pair.Value.Placed = false;
-                }
+                surface.Placed = false;
             }
 
-            List<ScreenDrawingSurface> placedScreens = new List<ScreenDrawingSurface>();
-            List<SurfaceCollision> collideScreens = new List<SurfaceCollision>();
-
-            // account for screens that aren't placed - need to find them
-            var placeable = new HashSet<string>(); // enforces uniqueness
-            foreach (var join in stage.Joins)
-            {
-                if (surfaces.ContainsKey(join.screenOne)) placeable.Add(join.screenOne);
-                if (surfaces.ContainsKey(join.screenTwo)) placeable.Add(join.screenTwo);
-            }
-
-            var orphans = new List<string>();
-            foreach (var screen in surfaces.Keys)
-            {
-                if (!placeable.Contains(screen)) orphans.Add(screen);
-            }
-
+            var startScreen = surfaces.Values.First();
             if (surfaces.ContainsKey(stage.StartScreen))
             {
-                placeable.Remove(stage.StartScreen);
-                orphans.Remove(stage.StartScreen);
-                placedScreens.Add(surfaces[stage.StartScreen]);
-                surfaces[stage.StartScreen].Placed = true;
-            }
-            else if (placeable.Count > 0)
-            {
-                string screen = placeable.First();
-                placedScreens.Add(surfaces[screen]);
-                placeable.Remove(screen);
-                surfaces[screen].Placed = true;
+                startScreen = surfaces[stage.StartScreen];
             }
 
-            while (placeable.Count > 0)
+            // lay the screens out like a deep graph traversal
+            LayoutFromScreen(startScreen, new Point(0, 0));
+
+            // any remaining disconnected screens
+            foreach (var surface in surfaces.Values.Where(s => !s.Placed))
             {
-                foreach (var join in stage.Joins)
-                {
-                    ScreenDrawingSurface placed = AlignScreenSurfaceUsingJoin(surfaces[join.screenOne], surfaces[join.screenTwo], join);
-                    if (placed != null)
-                    {
-                        // check for collisions
-                        Rectangle collision = SurfaceCollides(placedScreens, placed);
-                        if (collision.Width > 0 && collision.Height > 0)
-                        {
-                            // set it aside to be dealt with later. We want as many to fit
-                            // as possible before dealing with these ones.
-                            collideScreens.Add(new SurfaceCollision(placed, collision));
-                        }
-                        else
-                        {
-                            minX = Math.Min(minX, placed.Location.X);
-                            minY = Math.Min(minY, placed.Location.Y);
-                        }
-                        // either way, this one is done with handling (at least for now).
-                        placeable.Remove(placed.Screen.Name);
-                        // it needs to be considered placed, even if it collides,
-                        // so that screens joining it can be placed
-                        placedScreens.Add(placed);
-                    }
-                }
+                LayoutFromScreen(surface, new Point(0, 0));
             }
-
-            // remove collisions from placed screens
-            foreach (var surface in collideScreens)
+            
+            foreach (var surface in surfaces.Values)
             {
-                placedScreens.Remove(surface.Surface);
-            }
-
-            // now place the collided screens wherever they fit
-            foreach (var surface in collideScreens)
-            {
-                do
-                {
-                    TryToFixCollision(placedScreens, surface);
-                    surface.Collision = SurfaceCollides(placedScreens, surface.Surface);
-                } while (surface.Collision != Rectangle.Empty);
-
-                placedScreens.Add(surface.Surface);
-                minX = Math.Min(minX, surface.Surface.Location.X);
-                minY = Math.Min(minY, surface.Surface.Location.Y);
-            }
-
-            // now place the orphaned screens wherever
-            foreach (var screen in orphans)
-            {
-                surfaces[screen].Location = new Point(0, 0);
-                Rectangle coll = SurfaceCollides(placedScreens, surfaces[screen]);
-                SurfaceCollision collision = new SurfaceCollision(surfaces[screen], coll);
-
-                while (coll != Rectangle.Empty)
-                {
-                    TryToFixCollision(placedScreens, collision);
-                    coll = SurfaceCollides(placedScreens, collision.Surface);
-                }
-
-                placedScreens.Add(collision.Surface);
-                minX = Math.Min(minX, collision.Surface.Location.X);
-                minY = Math.Min(minY, collision.Surface.Location.Y);
+                minX = Math.Min(minX, surface.Location.X);
+                minY = Math.Min(minY, surface.Location.Y);
             }
 
             if (minX < -this.HorizontalScroll.Value || minY < -this.VerticalScroll.Value)
@@ -278,46 +194,57 @@ namespace MegaMan.LevelEditor
             this.VerticalScroll.Value = oldscroll;
         }
 
-        private ScreenDrawingSurface AlignScreenSurfaceUsingJoin(ScreenDrawingSurface surface, ScreenDrawingSurface secondSurface, Join join)
+        private void LayoutFromScreen(ScreenDrawingSurface surface, Point location)
         {
-            var offset = (join.offsetTwo - join.offsetOne) * surface.Screen.Tileset.TileSize;
+            surface.Location = location;
+            surface.Placed = true;
 
-            if (surface.Placed && !secondSurface.Placed)
+            var myJoins = stage.Joins.Where(j => j.screenOne == surface.Screen.Name || j.screenTwo == surface.Screen.Name);
+            var joinedScreens = surfaces.Values.Where(s => myJoins.Any(j => j.screenOne == s.Screen.Name || j.screenTwo == s.Screen.Name));
+
+            var placed = surfaces.Values.Where(s => s.Placed && s != surface && !joinedScreens.Contains(s));
+            var collision = SurfaceCollides(placed, surface);
+            while (collision != Rectangle.Empty)
             {
-                // TODO: WTF? Why does horizontal mean vertical and vertical mean horizontal?
-                if (join.type == JoinType.Horizontal)
-                {
-                    // Place image below
-                    var p = new Point(surface.Location.X - offset, surface.Location.Y + surface.Screen.PixelHeight);
-                    secondSurface.Location = p;
-                }
-                else
-                {
-                    // Place image to the right
-                    var p = new Point(surface.Location.X + surface.Screen.PixelWidth, surface.Location.Y - offset);
-                    secondSurface.Location = p;
-                }
-                secondSurface.Placed = true;
-                return secondSurface;
+                TryToFixCollision(surface, collision);
+                collision = SurfaceCollides(placed, surface);
             }
-            else if (secondSurface.Placed && !surface.Placed)
+
+            foreach (var join in stage.Joins.Where(j => j.screenOne == surface.Screen.Name))
             {
-                if (join.type == JoinType.Horizontal)
-                {
-                    // Place image above
-                    var p = new Point(secondSurface.Location.X + offset, secondSurface.Location.Y - surface.Screen.PixelHeight);
-                    surface.Location = p;
-                }
-                else
-                {
-                    // Place image to the left
-                    var p = new Point(secondSurface.Location.X - surface.Screen.PixelWidth, secondSurface.Location.Y + offset);
-                    surface.Location = p;
-                }
-                surface.Placed = true;
-                return surface;
+                var nextScreen = surfaces[join.screenTwo];
+                if (nextScreen.Placed) continue;
+
+                LayoutNextScreen(nextScreen, surface.Location, join, true);
             }
-            return null;
+
+            foreach (var join in stage.Joins.Where(j => j.screenTwo == surface.Screen.Name))
+            {
+                var nextScreen = surfaces[join.screenOne];
+                if (nextScreen.Placed) continue;
+
+                LayoutNextScreen(nextScreen, surface.Location, join, false);
+            }
+        }
+
+        private void LayoutNextScreen(ScreenDrawingSurface surface, Point location, Join join, bool one)
+        {
+            int offsetX = location.X;
+            int offsetY = location.Y;
+            int mag = one ? 1 : -1;
+
+            if (join.type == JoinType.Horizontal)
+            {
+                offsetX += (join.offsetOne - join.offsetTwo) * stage.Tileset.TileSize * mag;
+                offsetY += surfaces[join.screenOne].Screen.PixelHeight * mag;
+            }
+            else
+            {
+                offsetX += surfaces[join.screenOne].Screen.PixelWidth * mag;
+                offsetY += (join.offsetOne - join.offsetTwo) * stage.Tileset.TileSize * mag;
+            }
+
+            LayoutFromScreen(surface, new Point(offsetX, offsetY));
         }
 
         private Rectangle SurfaceCollides(IEnumerable<ScreenDrawingSurface> placedAlready, ScreenDrawingSurface next)
@@ -336,25 +263,23 @@ namespace MegaMan.LevelEditor
             return collisions;
         }
 
-        private void TryToFixCollision(IEnumerable<ScreenDrawingSurface> placedAlready, SurfaceCollision collision)
+        private void TryToFixCollision(ScreenDrawingSurface surface, Rectangle collision)
         {
-            Point collCenter = collision.Collision.Location;
-            collCenter.Offset(collision.Collision.Width / 2, collision.Collision.Height / 2);
+            Point collCenter = collision.Location;
+            collCenter.Offset(collision.Width / 2, collision.Height / 2);
 
-            Point surfCenter = collision.Surface.Location;
-            surfCenter.Offset(collision.Surface.Width / 2, collision.Surface.Height / 2);
+            Point surfCenter = surface.Location;
+            surfCenter.Offset(surface.Width / 2, surface.Height / 2);
 
             int off_y = surfCenter.Y - collCenter.Y;
             int off_x = surfCenter.X - collCenter.X;
             if (Math.Abs(off_y) > Math.Abs(off_x))
             {
-                if (off_y > 0) collision.Surface.Location = new Point(collision.Surface.Location.X, collision.Surface.Location.Y + collision.Surface.Screen.Tileset.TileSize);
-                else collision.Surface.Location = new Point(collision.Surface.Location.X, collision.Surface.Location.Y - collision.Surface.Screen.Tileset.TileSize);
+                surface.Location = new Point(surface.Location.X, surface.Location.Y + surface.Screen.Tileset.TileSize);
             }
             else
             {
-                if (off_x > 0) collision.Surface.Location = new Point(collision.Surface.Location.X + collision.Surface.Screen.Tileset.TileSize, collision.Surface.Location.Y);
-                else collision.Surface.Location = new Point(collision.Surface.Location.X - collision.Surface.Screen.Tileset.TileSize, collision.Surface.Location.Y);
+                surface.Location = new Point(surface.Location.X + surface.Screen.Tileset.TileSize, surface.Location.Y);
             }
         }
 
