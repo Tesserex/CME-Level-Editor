@@ -30,7 +30,7 @@ namespace MegaMan.LevelEditor
                 return icon;
             }
         }
-        public Point IconOffset { get { return new Point(-4, -8); } }
+        public Point IconOffset { get { return new Point(-12, -16); } }
         public bool IconSnap { get { return false; } }
 
         public void Click(ScreenDrawingSurface surface, Point location)
@@ -40,6 +40,7 @@ namespace MegaMan.LevelEditor
 
             surface.Screen.Stage.StartScreen = surface.Screen.Name;
             surface.Screen.Stage.StartPoint = new Point(px, py);
+            surface.ReDrawEntities();
         }
 
         public void Move(ScreenDrawingSurface surface, Point location)

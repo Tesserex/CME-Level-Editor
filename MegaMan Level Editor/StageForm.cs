@@ -254,7 +254,7 @@ namespace MegaMan.LevelEditor
             foreach (ScreenDrawingSurface surface in placedAlready)
             {
                 Rectangle inter = Rectangle.Intersect(new Rectangle(surface.Location, surface.Size), nextRect);
-                if (inter.Width > 0 || inter.Height > 0)
+                if (inter.Width > 0 && inter.Height > 0)
                 {
                     if (collisions.Height > 0 && collisions.Width > 0) collisions = Rectangle.Union(collisions, inter);
                     else collisions = inter;
