@@ -27,6 +27,7 @@ namespace MegaMan.LevelEditor
         Bucket,
         Join,
         Start,
-        Entity
+        Entity,
+        Zoom
     }
 }

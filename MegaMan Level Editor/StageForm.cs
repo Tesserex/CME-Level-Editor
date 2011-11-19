@@ -18,8 +18,11 @@ namespace MegaMan.LevelEditor
         private History history;
         
         private Dictionary<string, ScreenDrawingSurface> surfaces;
+        private Dictionary<string, Point> surfaceLocations;
 
         private JoinOverlay joinOverlay;
+
+        private double zoomFactor = 1;
 
         public void Undo()
         {
@@ -41,9 +44,45 @@ namespace MegaMan.LevelEditor
             }
         }
 
+        public void ZoomIn(Point center)
+        {
+            if (zoomFactor >= 2) return;
+
+            zoomFactor *= 2;
+            RedrawZoom(center);
+        }
+
+        public void ZoomOut(Point center)
+        {
+            if (zoomFactor <= 0.25) return;
+
+            zoomFactor /= 2;
+            RedrawZoom(center);
+        }
+
+        private void RedrawZoom(Point center)
+        {
+            var cx = (HorizontalScroll.Value + center.X) / (double)(HorizontalScroll.Maximum - HorizontalScroll.LargeChange + Width);
+            var cy = (VerticalScroll.Value + center.Y) / (double)(VerticalScroll.Maximum - VerticalScroll.LargeChange + Height);
+
+            foreach (var surface in surfaces)
+            {
+                var p = new Point();
+                p.X = (int)(surfaceLocations[surface.Key].X * zoomFactor) - HorizontalScroll.Value;
+                p.Y = (int)(surfaceLocations[surface.Key].Y * zoomFactor) - VerticalScroll.Value;
+                surface.Value.Location = p;
+                surface.Value.Zoom(zoomFactor);
+            }
+
+            AutoScrollPosition = new Point(
+                (int)(cx * (HorizontalScroll.Maximum - HorizontalScroll.LargeChange)),
+                (int)(cy * (VerticalScroll.Maximum - VerticalScroll.LargeChange)));
+        }
+
         public StageForm(StageDocument stage)
         {
             InitializeComponent();
+
             joinOverlay = new JoinOverlay();
             joinOverlay.Owner = this;
 
@@ -51,6 +90,7 @@ namespace MegaMan.LevelEditor
 
             history = new History();
             surfaces = new Dictionary<String, ScreenDrawingSurface>();
+            surfaceLocations = new Dictionary<string, Point>();
 
             SetStage(stage);
 
@@ -142,7 +182,9 @@ namespace MegaMan.LevelEditor
             var placeable = new HashSet<string>();
             var orphans = new List<string>();
 
-            int oldscroll = this.VerticalScroll.Value;
+            int oldHorizScroll = this.HorizontalScroll.Value;
+            int oldVertScroll = this.VerticalScroll.Value;
+            this.HorizontalScroll.Value = 0;
             this.VerticalScroll.Value = 0;
 
             int minX = 0, minY = 0, maxX = 0, maxY = 0;
@@ -191,7 +233,15 @@ namespace MegaMan.LevelEditor
             joinOverlay.Refresh(maxX + 20, maxY + 20, stage.Joins, surfaces);
             joinOverlay.Visible = MainForm.Instance.DrawJoins;
 
-            this.VerticalScroll.Value = oldscroll;
+            this.HorizontalScroll.Value = oldHorizScroll;
+            this.VerticalScroll.Value = oldVertScroll;
+
+            foreach (var surfacePair in surfaces)
+            {
+                surfaceLocations[surfacePair.Key] = surfacePair.Value.Location;
+            }
+
+
         }
 
         private void LayoutFromScreen(ScreenDrawingSurface surface, Point location)

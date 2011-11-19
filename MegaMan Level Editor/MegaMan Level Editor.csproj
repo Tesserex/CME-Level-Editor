@@ -183,6 +183,7 @@
     </Compile>
     <Compile Include="ProjectTreeHandler.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Zoom.cs" />
     <EmbeddedResource Include="BrushForm.resx">
       <DependentUpon>BrushForm.cs</DependentUpon>
       <SubType>Designer</SubType>
@@ -337,9 +338,6 @@
     <None Include="Resources\joins.png" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Resources\Folder_Closed.png" />
-  </ItemGroup>
-  <ItemGroup>
     <None Include="Resources\Folder_16x16.png" />
   </ItemGroup>
   <ItemGroup>
@@ -391,6 +389,9 @@
       <ProductName>Windows Installer 3.1</ProductName>
       <Install>true</Install>
     </BootstrapperPackage>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Resources\ZoomHS.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

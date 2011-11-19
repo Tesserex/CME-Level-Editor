@@ -367,6 +367,10 @@ namespace MegaMan.LevelEditor
                 case ToolType.Entity:
                     CurrentTool = new EntityTool(currentEntity);
                     break;
+
+                case ToolType.Zoom:
+                    CurrentTool = new Zoom();
+                    break;
             }
 
             if (currentToolType != ToolType.Entity) entityForm.Deselect();
@@ -575,6 +579,15 @@ namespace MegaMan.LevelEditor
             AssembleTool();
             foreach (ToolStripButton item in toolBar.Items) { item.Checked = false; }
             startPosToolButton.Checked = true;
+            DrawJoins = false;
+        }
+
+        private void zoomToolButton_Click(object sender, EventArgs e)
+        {
+            currentToolType = ToolType.Zoom;
+            AssembleTool();
+            foreach (ToolStripButton item in toolBar.Items) { item.Checked = false; }
+            zoomToolButton.Checked = true;
             DrawJoins = false;
         }
     }
