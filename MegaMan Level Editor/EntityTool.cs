@@ -16,6 +16,8 @@ namespace MegaMan.LevelEditor
             get { return entity.MainSprite[0].CutTile; }
         }
 
+        public bool IsIconCursor { get { return false; } }
+
         public bool IconSnap { get { return false; } }
 
         public void Click(ScreenDrawingSurface surface, Point location)

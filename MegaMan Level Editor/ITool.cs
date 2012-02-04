@@ -7,6 +7,7 @@ namespace MegaMan.LevelEditor
     {
         Image Icon { get; }
         bool IconSnap { get; }
+        bool IsIconCursor { get; }
         void Click(ScreenDrawingSurface surface, Point location);
         void Move(ScreenDrawingSurface surface, Point location);
         void Release(ScreenDrawingSurface surface);

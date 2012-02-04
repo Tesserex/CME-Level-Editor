@@ -14,6 +14,7 @@ namespace MegaMan.LevelEditor
         public Image Icon { get; private set; }
         public Point IconOffset { get { return Point.Empty; } }
         public bool IconSnap { get { return true; } }
+        public bool IsIconCursor { get { return false; } }
 
         public Bucket(ITileBrush brush)
         {

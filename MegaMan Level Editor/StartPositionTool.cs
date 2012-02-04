@@ -33,6 +33,8 @@ namespace MegaMan.LevelEditor
         public Point IconOffset { get { return new Point(-12, -16); } }
         public bool IconSnap { get { return false; } }
 
+        public bool IsIconCursor { get { return false; } }
+
         public void Click(ScreenDrawingSurface surface, Point location)
         {
             int px = (location.X / surface.Screen.Tileset.TileSize) * surface.Screen.Tileset.TileSize;

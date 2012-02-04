@@ -3,6 +3,7 @@ using System.Drawing;
 using System.Windows.Forms;
 using MegaMan.Common;
 using System.Drawing.Imaging;
+using System.Runtime.InteropServices;
 
 namespace MegaMan.LevelEditor
 {
@@ -26,7 +27,6 @@ namespace MegaMan.LevelEditor
         private static readonly Brush ladderBrush = new SolidBrush(Color.FromArgb(160, Color.Yellow));
         private static readonly Pen passPen = new Pen(Color.Blue, 4);
         private static readonly Pen blockPen = new Pen(Color.Red, 4);
-        private static readonly Bitmap cursor;
 
         private Bitmap tileLayer;
         private Bitmap gridLayer;
@@ -59,12 +59,6 @@ namespace MegaMan.LevelEditor
         public event EventHandler<ScreenEditEventArgs> Edited;
 
         #region Constructors
-
-        static ScreenDrawingSurface()
-        {
-            cursor = new Bitmap(Cursor.Current.Size.Width, Cursor.Current.Size.Height);
-            using (Graphics g = Graphics.FromImage(cursor)) Cursor.Current.Draw(g, new Rectangle(0,0,cursor.Width,cursor.Height));
-        }
 
         public ScreenDrawingSurface(ScreenDocument screen)
         {
@@ -107,6 +101,18 @@ namespace MegaMan.LevelEditor
         protected override void OnMouseEnter(EventArgs e)
         {
             active = true;
+            if (MainForm.Instance.CurrentTool != null)
+            {
+                var tool = MainForm.Instance.CurrentTool;
+                if (tool.IsIconCursor)
+                {
+                    Cursor = CreateCursor((Bitmap)tool.Icon, tool.IconOffset.X, tool.IconOffset.Y);
+                }
+                else
+                {
+                    Cursor.Hide();
+                }
+            }
             ReDrawMaster();
             base.OnMouseEnter(e);
         }
@@ -114,6 +120,17 @@ namespace MegaMan.LevelEditor
         protected override void OnMouseLeave(EventArgs e)
         {
             active = false;
+
+            Cursor = Cursors.Default;
+            if (MainForm.Instance.CurrentTool != null)
+            {
+                var tool = MainForm.Instance.CurrentTool;
+                if (!tool.IsIconCursor)
+                {
+                    Cursor.Show();
+                }
+            }
+
             if (mouseLayer != null)
             {
                 using (Graphics g = Graphics.FromImage(mouseLayer))
@@ -157,7 +174,7 @@ namespace MegaMan.LevelEditor
 
             if (MainForm.Instance.CurrentTool != null)
             {
-                if (MainForm.Instance.CurrentTool.Icon != null)
+                if (MainForm.Instance.CurrentTool.Icon != null && !MainForm.Instance.CurrentTool.IsIconCursor)
                 {
                     int tx = e.X;
                     int ty = e.Y;
@@ -187,6 +204,7 @@ namespace MegaMan.LevelEditor
 
                     ReDrawMaster();
                 }
+
                 if (e.Button == MouseButtons.Left)
                 {
                     MainForm.Instance.CurrentTool.Move(this, new Point((int)(e.Location.X / zoomFactor), (int)(e.Location.Y / zoomFactor)));
@@ -471,5 +489,33 @@ namespace MegaMan.LevelEditor
         }
 
         #endregion
+
+        [DllImport("user32.dll")]
+        [return: MarshalAs(UnmanagedType.Bool)]
+        public static extern bool GetIconInfo(IntPtr hIcon, ref IconInfo pIconInfo);
+
+        [DllImport("user32.dll")]
+        public static extern IntPtr CreateIconIndirect(ref IconInfo icon);
+
+        public static Cursor CreateCursor(Bitmap bmp, int xHotSpot, int yHotSpot)
+        {
+            IntPtr ptr = bmp.GetHicon();
+            IconInfo tmp = new IconInfo();
+            GetIconInfo(ptr, ref tmp);
+            tmp.xHotspot = xHotSpot;
+            tmp.yHotspot = yHotSpot;
+            tmp.fIcon = false;
+            ptr = CreateIconIndirect(ref tmp);
+            return new Cursor(ptr);
+        }
+    }
+
+    public struct IconInfo
+    {
+        public bool fIcon;
+        public int xHotspot;
+        public int yHotspot;
+        public IntPtr hbmMask;
+        public IntPtr hbmColor;
     }
 }

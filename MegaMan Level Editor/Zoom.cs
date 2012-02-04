@@ -18,6 +18,11 @@ namespace MegaMan.LevelEditor
             get { return false; }
         }
 
+        public bool IsIconCursor
+        {
+            get { return true; }
+        }
+
         public void Click(ScreenDrawingSurface surface, System.Drawing.Point location)
         {
             var zoomPoint = new Point(surface.Location.X + location.X, surface.Location.Y + location.Y);

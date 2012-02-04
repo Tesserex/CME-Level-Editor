@@ -6,9 +6,10 @@ namespace MegaMan.LevelEditor
 {
     public class JoinTool : ITool
     {
-        public Image Icon { get { return null; } }
+        public Image Icon { get { return Properties.Resources.joins; } }
         public Point IconOffset { get { return Point.Empty; } }
         public bool IconSnap { get { return false; } }
+        public bool IsIconCursor { get { return true; } }
 
         private static Join NearestJoin(ScreenDrawingSurface surface, Point location)
         {
