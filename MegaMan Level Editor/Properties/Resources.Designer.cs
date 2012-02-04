@@ -67,13 +67,6 @@ namespace MegaMan.LevelEditor.Properties {
             }
         }
         
-        internal static System.Drawing.Bitmap AddEntity {
-            get {
-                object obj = ResourceManager.GetObject("AddEntity", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
         internal static System.Drawing.Bitmap brush {
             get {
                 object obj = ResourceManager.GetObject("brush", resourceCulture);
@@ -84,6 +77,20 @@ namespace MegaMan.LevelEditor.Properties {
         internal static System.Drawing.Bitmap bucket {
             get {
                 object obj = ResourceManager.GetObject("bucket", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        internal static System.Drawing.Bitmap continue_full {
+            get {
+                object obj = ResourceManager.GetObject("continue_full", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        internal static System.Drawing.Bitmap continue_icon {
+            get {
+                object obj = ResourceManager.GetObject("continue_icon", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -126,20 +133,6 @@ namespace MegaMan.LevelEditor.Properties {
         internal static System.Drawing.Bitmap joins {
             get {
                 object obj = ResourceManager.GetObject("joins", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        internal static System.Drawing.Bitmap megaman {
-            get {
-                object obj = ResourceManager.GetObject("megaman", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        internal static System.Drawing.Bitmap megaman_icon {
-            get {
-                object obj = ResourceManager.GetObject("megaman_icon", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -231,6 +224,20 @@ namespace MegaMan.LevelEditor.Properties {
         internal static System.Drawing.Bitmap stage {
             get {
                 object obj = ResourceManager.GetObject("stage", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        internal static System.Drawing.Bitmap start_full {
+            get {
+                object obj = ResourceManager.GetObject("start_full", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        internal static System.Drawing.Bitmap start_icon {
+            get {
+                object obj = ResourceManager.GetObject("start_icon", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }

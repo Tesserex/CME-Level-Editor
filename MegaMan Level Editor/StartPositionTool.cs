@@ -12,7 +12,7 @@ namespace MegaMan.LevelEditor
             icon.SetResolution(96, 96);
             using (Graphics g = Graphics.FromImage(icon))
             {
-                g.DrawImage(Properties.Resources.megaman, 0, 0, 21, 24);
+                g.DrawImage(Properties.Resources.start_full, 0, 0, 21, 24);
             }
         }
 

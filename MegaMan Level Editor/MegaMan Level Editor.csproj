@@ -325,9 +325,6 @@
     <None Include="Resources\Redo.png" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Resources\AddEntity.png" />
-  </ItemGroup>
-  <ItemGroup>
     <None Include="Resources\brush.png" />
   </ItemGroup>
   <ItemGroup>
@@ -362,12 +359,6 @@
     <None Include="Resources\Remove.png" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Resources\megaman_icon.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\megaman.png" />
-  </ItemGroup>
-  <ItemGroup>
     <None Include="Resources\add_brush.png" />
   </ItemGroup>
   <ItemGroup>
@@ -391,6 +382,10 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Resources\continue_full.png" />
+    <Content Include="Resources\continue_icon.png" />
+    <Content Include="Resources\start_full.png" />
+    <Content Include="Resources\start_icon.png" />
     <Content Include="Resources\ZoomHS.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

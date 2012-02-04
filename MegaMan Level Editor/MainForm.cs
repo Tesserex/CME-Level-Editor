@@ -51,8 +51,8 @@ namespace MegaMan.LevelEditor
                 saveToolStripMenuItem.Enabled =
                     closeToolStripMenuItem.Enabled = propertiesToolStripMenuItem.Enabled =
                     newScreenMenuItem.Enabled =
-                    manageEnemiesToolStripMenuItem.Enabled = mergeScreenToolStripMenuItem.Enabled =
-                    splitScreenToolStripMenuItem.Enabled = addEnemyToolStripMenuItem.Enabled =
+                    mergeScreenToolStripMenuItem.Enabled =
+                    splitScreenToolStripMenuItem.Enabled =
                     stageSelectToolStripMenuItem.Enabled = (value != null);
             }
         }
