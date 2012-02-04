@@ -30,14 +30,14 @@ namespace MegaMan.LevelEditor
                 return icon;
             }
         }
-        public Point IconOffset { get { return new Point(-12, -16); } }
-        public bool IconSnap { get { return false; } }
+        public Point IconOffset { get { return new Point(0, -8); } }
+        public bool IconSnap { get { return true; } }
 
         public bool IsIconCursor { get { return false; } }
 
         public void Click(ScreenDrawingSurface surface, Point location)
         {
-            int px = (location.X / surface.Screen.Tileset.TileSize) * surface.Screen.Tileset.TileSize;
+            int px = (location.X / surface.Screen.Tileset.TileSize) * surface.Screen.Tileset.TileSize + 4;
             int py = (location.Y / surface.Screen.Tileset.TileSize) * surface.Screen.Tileset.TileSize + 4;
 
             surface.Screen.Stage.StartScreen = surface.Screen.Name;

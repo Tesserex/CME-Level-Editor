@@ -146,13 +146,14 @@ namespace MegaMan.LevelEditor
         {
             if (MainForm.Instance.CurrentTool == null) return;
 
+
             if (e.Button == MouseButtons.Left)
             {
-                MainForm.Instance.CurrentTool.Click(this, new Point((int)(e.Location.X / zoomFactor), (int)(e.Location.Y / zoomFactor)));
+                MainForm.Instance.CurrentTool.Click(this, MouseLocation(e));
             }
             else if (e.Button == MouseButtons.Right)
             {
-                MainForm.Instance.CurrentTool.RightClick(this, new Point((int)(e.Location.X / zoomFactor), (int)(e.Location.Y / zoomFactor)));
+                MainForm.Instance.CurrentTool.RightClick(this, MouseLocation(e));
             }
             base.OnMouseDown(e);
         }
@@ -176,30 +177,16 @@ namespace MegaMan.LevelEditor
             {
                 if (MainForm.Instance.CurrentTool.Icon != null && !MainForm.Instance.CurrentTool.IsIconCursor)
                 {
-                    int tx = e.X;
-                    int ty = e.Y;
-
-                    if (MainForm.Instance.CurrentTool.IconSnap)
-                    {
-                        tx = (e.X / Screen.Tileset.TileSize) * Screen.Tileset.TileSize;
-                        ty = (e.Y / Screen.Tileset.TileSize) * Screen.Tileset.TileSize;
-                    }
+                    var mouse = IconLocation(e);
 
                     Bitmap icon = (Bitmap)MainForm.Instance.CurrentTool.Icon;
-
-                    Point offset = MainForm.Instance.CurrentTool.IconOffset;
-
-                    tx += offset.X;
-                    ty += offset.Y;
-                    tx = (int)(tx / zoomFactor);
-                    ty = (int)(ty / zoomFactor);
 
                     icon.SetResolution(mouseLayer.HorizontalResolution, mouseLayer.VerticalResolution);
 
                     using (Graphics g = Graphics.FromImage(mouseLayer))
                     {
                         g.Clear(Color.Transparent);
-                        g.DrawImageUnscaled(icon, tx, ty, icon.Width, icon.Height);
+                        g.DrawImageUnscaled(icon, mouse.X, mouse.Y, icon.Width, icon.Height);
                     }
 
                     ReDrawMaster();
@@ -212,6 +199,34 @@ namespace MegaMan.LevelEditor
             }
 
             base.OnMouseMove(e);
+        }
+
+        private Point IconLocation(MouseEventArgs e)
+        {
+            var mouse = MouseLocation(e);
+
+            Point offset = MainForm.Instance.CurrentTool.IconOffset;
+
+            return new Point(mouse.X + offset.X, mouse.Y + offset.Y);
+        }
+
+        private Point MouseLocation(MouseEventArgs e)
+        {
+            int tx = e.X;
+            int ty = e.Y;
+
+            Bitmap icon = (Bitmap)MainForm.Instance.CurrentTool.Icon;
+
+            tx = (int)(tx / zoomFactor);
+            ty = (int)(ty / zoomFactor);
+
+            if (MainForm.Instance.CurrentTool.IconSnap)
+            {
+                tx = (tx / Screen.Tileset.TileSize) * Screen.Tileset.TileSize;
+                ty = (ty / Screen.Tileset.TileSize) * Screen.Tileset.TileSize;
+            }
+
+            return new Point(tx, ty);
         }
 
         #endregion
