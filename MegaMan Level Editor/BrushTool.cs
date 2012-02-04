@@ -1,5 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Drawing;
+using System.Windows.Forms;
+using System;
 
 namespace MegaMan.LevelEditor
 {
@@ -29,9 +31,40 @@ namespace MegaMan.LevelEditor
 
         public void Click(ScreenDrawingSurface surface, Point location)
         {
-            Draw(surface, location);
-            held = true;
-            currentTilePos = new Point(location.X / surface.Screen.Tileset.TileSize, location.Y / surface.Screen.Tileset.TileSize);
+            Point tilePos = new Point(location.X / surface.Screen.Tileset.TileSize, location.Y / surface.Screen.Tileset.TileSize);
+
+            // check for line drawing
+            if ((Control.ModifierKeys & Keys.Shift) != Keys.None)
+            {
+                var xdist = Math.Abs(tilePos.X - currentTilePos.X);
+                var ydist = Math.Abs(tilePos.Y - currentTilePos.Y);
+
+                if (xdist >= ydist)
+                {
+                    var min = Math.Min(currentTilePos.X, tilePos.X);
+                    var max = Math.Max(currentTilePos.X, tilePos.X);
+                    for (int i = min; i <= max; i++)
+                    {
+                        Draw(surface, i, currentTilePos.Y);
+                    }
+                }
+                else
+                {
+                    var min = Math.Min(currentTilePos.Y, tilePos.Y);
+                    var max = Math.Max(currentTilePos.Y, tilePos.Y);
+                    for (int i = min; i <= max; i++)
+                    {
+                        Draw(surface, currentTilePos.X, i);
+                    }
+                }
+            }
+            else
+            {
+                Draw(surface, tilePos.X, tilePos.Y);
+                held = true;
+            }
+
+            currentTilePos = tilePos;
         }
 
         public void Move(ScreenDrawingSurface surface, Point location)
@@ -40,7 +73,7 @@ namespace MegaMan.LevelEditor
             Point pos = new Point(location.X / surface.Screen.Tileset.TileSize, location.Y / surface.Screen.Tileset.TileSize);
             if (pos == currentTilePos) return; // don't keep drawing on the same spot
 
-            Draw(surface, location);
+            Draw(surface, pos.X, pos.Y);
         }
 
         public void Release(ScreenDrawingSurface surface)
@@ -50,11 +83,8 @@ namespace MegaMan.LevelEditor
             changes.Clear();
         }
 
-        private void Draw(ScreenDrawingSurface surface, Point location)
+        private void Draw(ScreenDrawingSurface surface, int tile_x, int tile_y)
         {
-            int tile_x = location.X / surface.Screen.Tileset.TileSize;
-            int tile_y = location.Y / surface.Screen.Tileset.TileSize;
-
             ITileBrush reverse = brush.DrawOn(surface.Screen, tile_x, tile_y);
             if (reverse == null) return;
 

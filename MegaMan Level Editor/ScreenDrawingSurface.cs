@@ -146,7 +146,6 @@ namespace MegaMan.LevelEditor
         {
             if (MainForm.Instance.CurrentTool == null) return;
 
-
             if (e.Button == MouseButtons.Left)
             {
                 MainForm.Instance.CurrentTool.Click(this, MouseLocation(e));
