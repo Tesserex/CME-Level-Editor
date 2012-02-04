@@ -288,7 +288,7 @@ namespace MegaMan.LevelEditor
                 recentFiles.Remove(path);
             }
             recentFiles.Add(path);
-            if (recentFiles.Count > 10) recentFiles.RemoveRange(0, recentFiles.Count - 10);
+            if (recentFiles.Count > 9) recentFiles.RemoveRange(0, recentFiles.Count - 9);
         }
 
         private void LoadRecentFiles()
@@ -296,10 +296,12 @@ namespace MegaMan.LevelEditor
             if (File.Exists(recentPath))
             {
                 string[] recent = File.ReadAllLines(recentPath);
+                recentFiles.Clear();
+                recentFiles.AddRange(recent.Reverse().Take(9).ToList());
+
                 int i = 1;
-                foreach (string path in recent.Take(9).Reverse())
+                foreach (string path in recentFiles)
                 {
-                    recentFiles.Add(path);
                     ToolStripMenuItem r = new ToolStripMenuItem(path);
                     r.Click += RecentMenu_Click;
                     Keys key = (Keys)Enum.Parse(typeof(Keys), ("D" + i));
