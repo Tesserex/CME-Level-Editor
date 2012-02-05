@@ -12,7 +12,6 @@ namespace MegaMan.LevelEditor
         private Point currentTilePos;
         private int?[,] startTiles;
         private int?[,] endTiles;
-        private readonly List<TileChange> changes;
 
         public Image Icon { get; private set; }
         public Point IconOffset { get { return Point.Empty; } }
@@ -28,7 +27,6 @@ namespace MegaMan.LevelEditor
             {
                 brush.DrawOn(g, 0, 0);
             }
-            changes = new List<TileChange>();
         }
 
         public void Click(ScreenDrawingSurface surface, Point location)
@@ -84,6 +82,7 @@ namespace MegaMan.LevelEditor
         public void Release(ScreenDrawingSurface surface)
         {
             held = false;
+            var changes = new List<TileChange>();
 
             for (int y = 0; y < surface.Screen.Height; y++)
             {
@@ -107,6 +106,8 @@ namespace MegaMan.LevelEditor
             {
                 int tx = cell.x + tile_x;
                 int ty = cell.y + tile_y;
+
+                if (tx < 0 || tx >= surface.Screen.Width || ty < 0 || ty >= surface.Screen.Height) continue;
 
                 if (startTiles[tx, ty] == null) // don't overwrite existing data
                 {

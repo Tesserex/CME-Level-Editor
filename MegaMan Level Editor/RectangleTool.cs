@@ -10,13 +10,13 @@ namespace MegaMan.LevelEditor
         private readonly ITileBrush brush;
         private int tx1, ty1, tx2, ty2;
         private bool held;
-        private readonly List<TileChange> changes;
+        private int?[,] startTiles;
+        private int?[,] endTiles;
 
         public RectangleTool(ITileBrush brush)
         {
             this.brush = brush;
             held = false;
-            changes = new List<TileChange>();
         }
 
         public Image Icon
@@ -57,11 +57,27 @@ namespace MegaMan.LevelEditor
             int y_start = Math.Min(ty1, ty2);
             int y_end = Math.Max(ty1, ty2) - 1;
 
-            for (int y = y_start; y <= y_end; y++)
+            startTiles = new int?[surface.Screen.Width, surface.Screen.Height];
+            endTiles = new int?[surface.Screen.Width, surface.Screen.Height];
+
+            for (int y = y_start; y <= y_end; y += brush.Height)
             {
-                for (int x = x_start; x <= x_end; x++)
+                for (int x = x_start; x <= x_end; x += brush.Width)
                 {
                     Draw(surface, x, y);
+                }
+            }
+
+            var changes = new List<TileChange>();
+
+            for (int y = 0; y < surface.Screen.Height; y++)
+            {
+                for (int x = 0; x < surface.Screen.Width; x++)
+                {
+                    if (startTiles[x, y].HasValue && endTiles[x, y].HasValue && startTiles[x, y].Value != endTiles[x, y].Value)
+                    {
+                        changes.Add(new TileChange(x, y, startTiles[x, y].Value, endTiles[x, y].Value, surface));
+                    }
                 }
             }
 
@@ -70,22 +86,24 @@ namespace MegaMan.LevelEditor
 
         private void Draw(ScreenDrawingSurface surface, int tile_x, int tile_y)
         {
-            ITileBrush reverse = brush.DrawOn(surface.Screen, tile_x, tile_y);
-            if (reverse == null) return;
-
-            int[,] tiles = new int[brush.Width, brush.Height];
+            // first track the changes i'm going to make for undo purposes
             foreach (TileBrushCell cell in brush.Cells())
             {
-                tiles[cell.x, cell.y] = cell.tile.Id;
+                int tx = cell.x + tile_x;
+                int ty = cell.y + tile_y;
+
+                if (tx < 0 || tx >= surface.Screen.Width || ty < 0 || ty >= surface.Screen.Height) continue;
+
+                if (startTiles[tx, ty] == null) // don't overwrite existing data
+                {
+                    startTiles[tx, ty] = surface.Screen.TileAt(tx, ty).Id;
+                }
+
+                endTiles[tx, ty] = cell.tile.Id;
             }
-            foreach (TileBrushCell cell in reverse.Cells())
-            {
-                if (cell.tile == null) continue;
-                // this will NOT work properly for multi-cell brushes - if you paint over a place you just painted,
-                // the cell will change, but reversing the changes in an undo will be wrong.
-                if (tiles[cell.x, cell.y] != cell.tile.Id)
-                    changes.Add(new TileChange(tile_x + cell.x, tile_y + cell.y, cell.tile.Id, tiles[cell.x, cell.y], surface));
-            }
+
+            brush.DrawOn(surface.Screen, tile_x, tile_y);
+
             surface.ReDrawTiles();
         }
 
