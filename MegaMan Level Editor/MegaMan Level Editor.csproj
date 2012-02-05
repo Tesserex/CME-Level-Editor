@@ -142,6 +142,7 @@
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="JoinTool.cs" />
+    <Compile Include="RectangleTool.cs" />
     <Compile Include="SoundControl.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -384,6 +385,9 @@
   <ItemGroup>
     <Content Include="Resources\continue_full.png" />
     <Content Include="Resources\continue_icon.png" />
+    <Content Include="Resources\cross.png" />
+    <Content Include="Resources\rectangle.png" />
+    <Content Include="Resources\selection.png" />
     <Content Include="Resources\start_full.png" />
     <Content Include="Resources\start_icon.png" />
     <Content Include="Resources\ZoomHS.png" />

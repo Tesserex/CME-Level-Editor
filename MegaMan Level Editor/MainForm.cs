@@ -373,6 +373,11 @@ namespace MegaMan.LevelEditor
                 case ToolType.Zoom:
                     CurrentTool = new Zoom();
                     break;
+
+                case ToolType.Rectangle:
+                    CurrentTool = null;
+                    if (CurrentBrush != null) CurrentTool = new RectangleTool(CurrentBrush);
+                    break;
             }
 
             if (currentToolType != ToolType.Entity) entityForm.Deselect();
@@ -590,6 +595,15 @@ namespace MegaMan.LevelEditor
             AssembleTool();
             foreach (ToolStripButton item in toolBar.Items) { item.Checked = false; }
             zoomToolButton.Checked = true;
+            DrawJoins = false;
+        }
+
+        private void rectToolButton_Click(object sender, EventArgs e)
+        {
+            currentToolType = ToolType.Rectangle;
+            AssembleTool();
+            foreach (ToolStripButton item in toolBar.Items) { item.Checked = false; }
+            rectToolButton.Checked = true;
             DrawJoins = false;
         }
     }

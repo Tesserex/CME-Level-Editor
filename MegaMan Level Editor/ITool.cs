@@ -29,6 +29,7 @@ namespace MegaMan.LevelEditor
         Join,
         Start,
         Entity,
-        Zoom
+        Zoom,
+        Rectangle
     }
 }

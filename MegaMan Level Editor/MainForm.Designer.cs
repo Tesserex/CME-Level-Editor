@@ -42,17 +42,12 @@
             WeifenLuo.WinFormsUI.Docking.TabGradient tabGradient7 = new WeifenLuo.WinFormsUI.Docking.TabGradient();
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.newToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.openToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.recentMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator4 = new System.Windows.Forms.ToolStripSeparator();
-            this.saveToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator5 = new System.Windows.Forms.ToolStripSeparator();
             this.closeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.quitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.editToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.undoToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.redoToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.viewToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.showBackgroundsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.showBlockingToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -76,12 +71,18 @@
             this.entitiesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.folderDialog = new System.Windows.Forms.FolderBrowserDialog();
             this.toolBar = new System.Windows.Forms.ToolStrip();
+            this.dockPanel1 = new WeifenLuo.WinFormsUI.Docking.DockPanel();
             this.brushToolButton = new System.Windows.Forms.ToolStripButton();
             this.bucketToolButton = new System.Windows.Forms.ToolStripButton();
             this.joinToolButton = new System.Windows.Forms.ToolStripButton();
             this.startPosToolButton = new System.Windows.Forms.ToolStripButton();
             this.zoomToolButton = new System.Windows.Forms.ToolStripButton();
-            this.dockPanel1 = new WeifenLuo.WinFormsUI.Docking.DockPanel();
+            this.rectToolButton = new System.Windows.Forms.ToolStripButton();
+            this.newToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.openToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.saveToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.undoToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.redoToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
             this.toolBar.SuspendLayout();
             this.SuspendLayout();
@@ -116,24 +117,6 @@
             this.fileToolStripMenuItem.Size = new System.Drawing.Size(37, 20);
             this.fileToolStripMenuItem.Text = "&File";
             // 
-            // newToolStripMenuItem
-            // 
-            this.newToolStripMenuItem.Image = global::MegaMan.LevelEditor.Properties.Resources.NewDocumentHS;
-            this.newToolStripMenuItem.Name = "newToolStripMenuItem";
-            this.newToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.N)));
-            this.newToolStripMenuItem.Size = new System.Drawing.Size(148, 22);
-            this.newToolStripMenuItem.Text = "New";
-            this.newToolStripMenuItem.Click += new System.EventHandler(this.newToolStripMenuItem_Click);
-            // 
-            // openToolStripMenuItem
-            // 
-            this.openToolStripMenuItem.Image = global::MegaMan.LevelEditor.Properties.Resources.openHS;
-            this.openToolStripMenuItem.Name = "openToolStripMenuItem";
-            this.openToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.O)));
-            this.openToolStripMenuItem.Size = new System.Drawing.Size(148, 22);
-            this.openToolStripMenuItem.Text = "Open";
-            this.openToolStripMenuItem.Click += new System.EventHandler(this.openToolStripMenuItem_Click);
-            // 
             // recentMenuItem
             // 
             this.recentMenuItem.Name = "recentMenuItem";
@@ -144,15 +127,6 @@
             // 
             this.toolStripSeparator4.Name = "toolStripSeparator4";
             this.toolStripSeparator4.Size = new System.Drawing.Size(145, 6);
-            // 
-            // saveToolStripMenuItem
-            // 
-            this.saveToolStripMenuItem.Image = global::MegaMan.LevelEditor.Properties.Resources.saveHS;
-            this.saveToolStripMenuItem.Name = "saveToolStripMenuItem";
-            this.saveToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.S)));
-            this.saveToolStripMenuItem.Size = new System.Drawing.Size(148, 22);
-            this.saveToolStripMenuItem.Text = "Save";
-            this.saveToolStripMenuItem.Click += new System.EventHandler(this.saveToolStripMenuItem_Click);
             // 
             // toolStripSeparator5
             // 
@@ -183,24 +157,6 @@
             this.editToolStripMenuItem.Name = "editToolStripMenuItem";
             this.editToolStripMenuItem.Size = new System.Drawing.Size(39, 20);
             this.editToolStripMenuItem.Text = "&Edit";
-            // 
-            // undoToolStripMenuItem
-            // 
-            this.undoToolStripMenuItem.Image = global::MegaMan.LevelEditor.Properties.Resources.Undo;
-            this.undoToolStripMenuItem.Name = "undoToolStripMenuItem";
-            this.undoToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Z)));
-            this.undoToolStripMenuItem.Size = new System.Drawing.Size(144, 22);
-            this.undoToolStripMenuItem.Text = "Undo";
-            this.undoToolStripMenuItem.Click += new System.EventHandler(this.undoToolStripMenuItem_Click);
-            // 
-            // redoToolStripMenuItem
-            // 
-            this.redoToolStripMenuItem.Image = global::MegaMan.LevelEditor.Properties.Resources.Redo;
-            this.redoToolStripMenuItem.Name = "redoToolStripMenuItem";
-            this.redoToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Y)));
-            this.redoToolStripMenuItem.Size = new System.Drawing.Size(144, 22);
-            this.redoToolStripMenuItem.Text = "Redo";
-            this.redoToolStripMenuItem.Click += new System.EventHandler(this.redoToolStripMenuItem_Click);
             // 
             // viewToolStripMenuItem
             // 
@@ -279,7 +235,7 @@
             // newScreenMenuItem
             // 
             this.newScreenMenuItem.Name = "newScreenMenuItem";
-            this.newScreenMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.newScreenMenuItem.Size = new System.Drawing.Size(146, 22);
             this.newScreenMenuItem.Text = "New Screen";
             this.newScreenMenuItem.Click += new System.EventHandler(this.newScreenStripMenuItem_Click);
             // 
@@ -287,14 +243,14 @@
             // 
             this.propertiesToolStripMenuItem.Name = "propertiesToolStripMenuItem";
             this.propertiesToolStripMenuItem.ShortcutKeys = System.Windows.Forms.Keys.F3;
-            this.propertiesToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.propertiesToolStripMenuItem.Size = new System.Drawing.Size(146, 22);
             this.propertiesToolStripMenuItem.Text = "&Properties";
             this.propertiesToolStripMenuItem.Click += new System.EventHandler(this.propertiesToolStripMenuItem_Click);
             // 
             // stageSelectToolStripMenuItem
             // 
             this.stageSelectToolStripMenuItem.Name = "stageSelectToolStripMenuItem";
-            this.stageSelectToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.stageSelectToolStripMenuItem.Size = new System.Drawing.Size(146, 22);
             this.stageSelectToolStripMenuItem.Text = "&Stage Select...";
             this.stageSelectToolStripMenuItem.Click += new System.EventHandler(this.stageSelectToolStripMenuItem_Click);
             // 
@@ -385,64 +341,13 @@
             this.bucketToolButton,
             this.joinToolButton,
             this.startPosToolButton,
-            this.zoomToolButton});
+            this.zoomToolButton,
+            this.rectToolButton});
             this.toolBar.Location = new System.Drawing.Point(0, 24);
             this.toolBar.Name = "toolBar";
             this.toolBar.Size = new System.Drawing.Size(572, 25);
             this.toolBar.TabIndex = 3;
             this.toolBar.Text = "toolStrip1";
-            // 
-            // brushToolButton
-            // 
-            this.brushToolButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.brushToolButton.Image = global::MegaMan.LevelEditor.Properties.Resources.brush;
-            this.brushToolButton.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.brushToolButton.Name = "brushToolButton";
-            this.brushToolButton.Size = new System.Drawing.Size(23, 22);
-            this.brushToolButton.Text = "Tile Brush";
-            this.brushToolButton.Click += new System.EventHandler(this.brushToolButton_Click);
-            // 
-            // bucketToolButton
-            // 
-            this.bucketToolButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.bucketToolButton.Image = global::MegaMan.LevelEditor.Properties.Resources.bucket;
-            this.bucketToolButton.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.bucketToolButton.Name = "bucketToolButton";
-            this.bucketToolButton.Size = new System.Drawing.Size(23, 22);
-            this.bucketToolButton.Text = "Fill Tiles";
-            this.bucketToolButton.Click += new System.EventHandler(this.bucketToolButton_Click);
-            // 
-            // joinToolButton
-            // 
-            this.joinToolButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.joinToolButton.Image = global::MegaMan.LevelEditor.Properties.Resources.joins;
-            this.joinToolButton.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.joinToolButton.Name = "joinToolButton";
-            this.joinToolButton.Size = new System.Drawing.Size(23, 22);
-            this.joinToolButton.Text = "Modify Joins";
-            this.joinToolButton.Click += new System.EventHandler(this.joinToolButton_Click);
-            // 
-            // startPosToolButton
-            // 
-            this.startPosToolButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.startPosToolButton.Image = global::MegaMan.LevelEditor.Properties.Resources.start_icon;
-            this.startPosToolButton.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.startPosToolButton.Name = "startPosToolButton";
-            this.startPosToolButton.Size = new System.Drawing.Size(23, 22);
-            this.startPosToolButton.Text = "toolStripButton1";
-            this.startPosToolButton.ToolTipText = "Starting Position";
-            this.startPosToolButton.Click += new System.EventHandler(this.startPosToolButton_Click);
-            // 
-            // zoomToolButton
-            // 
-            this.zoomToolButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.zoomToolButton.Image = global::MegaMan.LevelEditor.Properties.Resources.ZoomHS;
-            this.zoomToolButton.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.zoomToolButton.Name = "zoomToolButton";
-            this.zoomToolButton.Size = new System.Drawing.Size(23, 22);
-            this.zoomToolButton.Text = "toolStripButton1";
-            this.zoomToolButton.ToolTipText = "Zoom";
-            this.zoomToolButton.Click += new System.EventHandler(this.zoomToolButton_Click);
             // 
             // dockPanel1
             // 
@@ -497,6 +402,113 @@
             dockPanelSkin1.DockPaneStripSkin = dockPaneStripSkin1;
             this.dockPanel1.Skin = dockPanelSkin1;
             this.dockPanel1.TabIndex = 5;
+            // 
+            // brushToolButton
+            // 
+            this.brushToolButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.brushToolButton.Image = global::MegaMan.LevelEditor.Properties.Resources.brush;
+            this.brushToolButton.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.brushToolButton.Name = "brushToolButton";
+            this.brushToolButton.Size = new System.Drawing.Size(23, 22);
+            this.brushToolButton.Text = "Tile Brush";
+            this.brushToolButton.Click += new System.EventHandler(this.brushToolButton_Click);
+            // 
+            // bucketToolButton
+            // 
+            this.bucketToolButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.bucketToolButton.Image = global::MegaMan.LevelEditor.Properties.Resources.bucket;
+            this.bucketToolButton.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.bucketToolButton.Name = "bucketToolButton";
+            this.bucketToolButton.Size = new System.Drawing.Size(23, 22);
+            this.bucketToolButton.Text = "Fill Tiles";
+            this.bucketToolButton.Click += new System.EventHandler(this.bucketToolButton_Click);
+            // 
+            // joinToolButton
+            // 
+            this.joinToolButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.joinToolButton.Image = global::MegaMan.LevelEditor.Properties.Resources.joins;
+            this.joinToolButton.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.joinToolButton.Name = "joinToolButton";
+            this.joinToolButton.Size = new System.Drawing.Size(23, 22);
+            this.joinToolButton.Text = "Modify Joins";
+            this.joinToolButton.Click += new System.EventHandler(this.joinToolButton_Click);
+            // 
+            // startPosToolButton
+            // 
+            this.startPosToolButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.startPosToolButton.Image = global::MegaMan.LevelEditor.Properties.Resources.start_icon;
+            this.startPosToolButton.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.startPosToolButton.Name = "startPosToolButton";
+            this.startPosToolButton.Size = new System.Drawing.Size(23, 22);
+            this.startPosToolButton.Text = "toolStripButton1";
+            this.startPosToolButton.ToolTipText = "Starting Position";
+            this.startPosToolButton.Click += new System.EventHandler(this.startPosToolButton_Click);
+            // 
+            // zoomToolButton
+            // 
+            this.zoomToolButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.zoomToolButton.Image = global::MegaMan.LevelEditor.Properties.Resources.ZoomHS;
+            this.zoomToolButton.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.zoomToolButton.Name = "zoomToolButton";
+            this.zoomToolButton.Size = new System.Drawing.Size(23, 22);
+            this.zoomToolButton.Text = "toolStripButton1";
+            this.zoomToolButton.ToolTipText = "Zoom";
+            this.zoomToolButton.Click += new System.EventHandler(this.zoomToolButton_Click);
+            // 
+            // rectToolButton
+            // 
+            this.rectToolButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.rectToolButton.Image = global::MegaMan.LevelEditor.Properties.Resources.rectangle;
+            this.rectToolButton.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.rectToolButton.Name = "rectToolButton";
+            this.rectToolButton.Size = new System.Drawing.Size(23, 22);
+            this.rectToolButton.ToolTipText = "Rectangle";
+            this.rectToolButton.Click += new System.EventHandler(this.rectToolButton_Click);
+            // 
+            // newToolStripMenuItem
+            // 
+            this.newToolStripMenuItem.Image = global::MegaMan.LevelEditor.Properties.Resources.NewDocumentHS;
+            this.newToolStripMenuItem.Name = "newToolStripMenuItem";
+            this.newToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.N)));
+            this.newToolStripMenuItem.Size = new System.Drawing.Size(148, 22);
+            this.newToolStripMenuItem.Text = "New";
+            this.newToolStripMenuItem.Click += new System.EventHandler(this.newToolStripMenuItem_Click);
+            // 
+            // openToolStripMenuItem
+            // 
+            this.openToolStripMenuItem.Image = global::MegaMan.LevelEditor.Properties.Resources.openHS;
+            this.openToolStripMenuItem.Name = "openToolStripMenuItem";
+            this.openToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.O)));
+            this.openToolStripMenuItem.Size = new System.Drawing.Size(148, 22);
+            this.openToolStripMenuItem.Text = "Open";
+            this.openToolStripMenuItem.Click += new System.EventHandler(this.openToolStripMenuItem_Click);
+            // 
+            // saveToolStripMenuItem
+            // 
+            this.saveToolStripMenuItem.Image = global::MegaMan.LevelEditor.Properties.Resources.saveHS;
+            this.saveToolStripMenuItem.Name = "saveToolStripMenuItem";
+            this.saveToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.S)));
+            this.saveToolStripMenuItem.Size = new System.Drawing.Size(148, 22);
+            this.saveToolStripMenuItem.Text = "Save";
+            this.saveToolStripMenuItem.Click += new System.EventHandler(this.saveToolStripMenuItem_Click);
+            // 
+            // undoToolStripMenuItem
+            // 
+            this.undoToolStripMenuItem.Image = global::MegaMan.LevelEditor.Properties.Resources.Undo;
+            this.undoToolStripMenuItem.Name = "undoToolStripMenuItem";
+            this.undoToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Z)));
+            this.undoToolStripMenuItem.Size = new System.Drawing.Size(144, 22);
+            this.undoToolStripMenuItem.Text = "Undo";
+            this.undoToolStripMenuItem.Click += new System.EventHandler(this.undoToolStripMenuItem_Click);
+            // 
+            // redoToolStripMenuItem
+            // 
+            this.redoToolStripMenuItem.Image = global::MegaMan.LevelEditor.Properties.Resources.Redo;
+            this.redoToolStripMenuItem.Name = "redoToolStripMenuItem";
+            this.redoToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Y)));
+            this.redoToolStripMenuItem.Size = new System.Drawing.Size(144, 22);
+            this.redoToolStripMenuItem.Text = "Redo";
+            this.redoToolStripMenuItem.Click += new System.EventHandler(this.redoToolStripMenuItem_Click);
             // 
             // MainForm
             // 
@@ -564,6 +576,7 @@
         private System.Windows.Forms.ToolStripButton startPosToolButton;
         private System.Windows.Forms.ToolStripMenuItem entitiesToolStripMenuItem;
         private System.Windows.Forms.ToolStripButton zoomToolButton;
+        private System.Windows.Forms.ToolStripButton rectToolButton;
     }
 }
 
