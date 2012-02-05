@@ -12,11 +12,13 @@ namespace MegaMan.LevelEditor
         private List<ITileBrush> brushes;
         private Tileset Tileset;
         private ITileBrush currentBrush;
+        private TileBrush creatingBrush;
         private readonly Dictionary<ITileBrush, Panel> brushPanels = new Dictionary<ITileBrush, Panel>();
 
         public BrushForm()
         {
             InitializeComponent();
+            splitter.Panel1Collapsed = true;
         }
 
         public void ChangeTileset(Tileset tileset)
@@ -116,17 +118,73 @@ namespace MegaMan.LevelEditor
         {
             if (Tileset == null || brushes == null) return;
 
-            TileBrush brush = new TileBrush(2, 2);
-            EditBrushForm brushForm = new EditBrushForm(brush, Tileset);
-            brushForm.Show();
+            creatingBrush = new TileBrush(2, 2);
 
-            brushForm.FormClosed += (s, ev) =>
+            splitter.Panel1Collapsed = false;
+
+            ResetNewBrush(2, 2);
+        }
+
+        private void SaveNewBrush(object sender, EventArgs e)
+        {
+            brushes.Add(creatingBrush);
+            AddBrushPanel(creatingBrush);
+            creatingBrush = null;
+            splitter.Panel1Collapsed = true;
+
+            SaveBrushes();
+        }
+
+        private void CancelNewBrush(object sender, EventArgs e)
+        {
+            creatingBrush = null;
+            splitter.Panel1Collapsed = true;
+        }
+
+        private void brushPict_MouseDown(object sender, MouseEventArgs e)
+        {
+            if (MainForm.Instance.CurrentBrush == null) return;
+
+            int tx = e.X / Tileset.TileSize;
+            int ty = e.Y / Tileset.TileSize;
+
+            foreach (TileBrushCell cell in MainForm.Instance.CurrentBrush.Cells())
             {
-                brushes.Add(brush);
-                AddBrushPanel(brush);
+                creatingBrush.AddTile(cell.tile, cell.x + tx, cell.y + ty);
+            }
 
-                SaveBrushes();
-            };
+            ReDraw();
+        }
+
+        private void ReDraw()
+        {
+            using (Graphics g = Graphics.FromImage(brushPict.Image))
+            {
+                g.Clear(Color.Black);
+                creatingBrush.DrawOn(g, 0, 0);
+            }
+            brushPict.Refresh();
+        }
+
+        private void resetButton_Click(object sender, EventArgs e)
+        {
+            int width;
+            int height;
+            if (!int.TryParse(widthBox.Text, out width)) return;
+            if (!int.TryParse(heightBox.Text, out height)) return;
+
+            ResetNewBrush(width, height);
+        }
+
+        private void ResetNewBrush(int width, int height)
+        {
+            creatingBrush.Reset(width, height);
+
+            if (brushPict.Image != null) brushPict.Image.Dispose();
+
+            brushPict.Image = new Bitmap(width * Tileset.TileSize, height * Tileset.TileSize);
+            brushPict.Size = brushPict.Image.Size;
+            ReDraw();
         }
 
         private void AddBrushPanel(ITileBrush brush)
