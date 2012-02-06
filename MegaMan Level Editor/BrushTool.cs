@@ -46,7 +46,7 @@ namespace MegaMan.LevelEditor
                 {
                     var min = Math.Min(currentTilePos.X, tilePos.X);
                     var max = Math.Max(currentTilePos.X, tilePos.X);
-                    for (int i = min; i <= max; i++)
+                    for (int i = min; i <= max; i += brush.Width)
                     {
                         Draw(surface, i, currentTilePos.Y);
                     }
@@ -55,7 +55,7 @@ namespace MegaMan.LevelEditor
                 {
                     var min = Math.Min(currentTilePos.Y, tilePos.Y);
                     var max = Math.Max(currentTilePos.Y, tilePos.Y);
-                    for (int i = min; i <= max; i++)
+                    for (int i = min; i <= max; i += brush.Height)
                     {
                         Draw(surface, currentTilePos.X, i);
                     }
