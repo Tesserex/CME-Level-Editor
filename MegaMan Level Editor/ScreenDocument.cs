@@ -105,6 +105,8 @@ namespace MegaMan.LevelEditor
         private bool EntityBounded(EnemyCopyInfo entityInfo, Point location)
         {
             Entity entity = Stage.Project.EntityByName(entityInfo.enemy);
+            if (entity.MainSprite == null) return false;
+            
             RectangleF bounds = entity.MainSprite.BoundBox;
             bounds.Offset(-entity.MainSprite.HotSpot.X, -entity.MainSprite.HotSpot.Y);
             bounds.Offset(entityInfo.screenX, entityInfo.screenY);
@@ -120,7 +122,9 @@ namespace MegaMan.LevelEditor
         {
             foreach (var info in screen.EnemyInfo)
             {
-                Stage.Project.EntityByName(info.enemy).MainSprite.Draw(graphics, info.screenX, info.screenY);
+                var sprite = Stage.Project.EntityByName(info.enemy).MainSprite;
+                
+                if (sprite != null) sprite.Draw(graphics, info.screenX, info.screenY);
             }
         }
     }
