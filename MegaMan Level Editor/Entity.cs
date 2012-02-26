@@ -34,7 +34,7 @@ namespace MegaMan.LevelEditor
                 }
 
                 MainSprite.Play();
-                Program.FrameTick += Program_FrameTick;
+                Program.AnimateTick += Program_FrameTick;
             }
         }
 

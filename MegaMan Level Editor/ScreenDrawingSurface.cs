@@ -27,6 +27,7 @@ namespace MegaMan.LevelEditor
         private static readonly Brush ladderBrush = new SolidBrush(Color.FromArgb(160, Color.Yellow));
         private static readonly Pen passPen = new Pen(Color.Blue, 4);
         private static readonly Pen blockPen = new Pen(Color.Red, 4);
+        private static readonly Pen gridPen = new Pen(new SolidBrush(Color.FromArgb(160, Color.YellowGreen)));
 
         private Bitmap tileLayer;
         private Bitmap gridLayer;
@@ -73,7 +74,7 @@ namespace MegaMan.LevelEditor
 
             Screen.Resized += (w, h) => ResizeLayers();
 
-            Program.FrameTick += Program_FrameTick;
+            Program.AnimateTick += Program_FrameTick;
 
             RedrawJoins();
             ReDrawAll();
@@ -399,13 +400,13 @@ namespace MegaMan.LevelEditor
                 for (int x = 0; x < Screen.Width; x++)
                 {
                     int tx = x * Screen.Tileset.TileSize;
-                    g.DrawLine(Pens.GreenYellow, tx, 0, tx, Screen.PixelHeight);
+                    g.DrawLine(gridPen, tx, 0, tx, Screen.PixelHeight);
                 }
 
                 for (int y = 0; y < Screen.Height; y++)
                 {
                     int ty = y * Screen.Tileset.TileSize;
-                    g.DrawLine(Pens.GreenYellow, 0, ty, Screen.PixelWidth, ty);
+                    g.DrawLine(gridPen, 0, ty, Screen.PixelWidth, ty);
                 }
             }
         }

@@ -29,7 +29,7 @@ namespace MegaMan.LevelEditor
                 this.Height = tile.Sprite.Height;
             }
 
-            Program.FrameTick += new Action(Program_FrameTick);
+            Program.AnimateTick += new Action(Program_FrameTick);
             this.MouseEnter += new EventHandler(EnableHover);
             this.MouseLeave += new EventHandler(DisableHover);
         }

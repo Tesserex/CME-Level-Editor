@@ -34,7 +34,7 @@ namespace MegaMan.LevelEditor
             sep.Padding = new Padding(0);
             this.Items.Add(sep);
 
-            Program.FrameTick += new Action(TickSprites);
+            Program.AnimateTick += new Action(TickSprites);
         }
 
         public void ChangeTileset(Tileset tileset)

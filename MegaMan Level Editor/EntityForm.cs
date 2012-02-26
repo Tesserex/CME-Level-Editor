@@ -11,7 +11,7 @@ namespace MegaMan.LevelEditor
         public EntityForm()
         {
             InitializeComponent();
-            Program.FrameTick += Program_FrameTick;
+            Program.AnimateTick += Program_FrameTick;
         }
 
         private void Program_FrameTick()

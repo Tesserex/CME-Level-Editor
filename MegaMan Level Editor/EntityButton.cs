@@ -32,7 +32,7 @@ namespace MegaMan.LevelEditor
             spritePict.Image = sprite[0].CutTile;
             spritePict.Refresh();
 
-            Program.FrameTick += Program_FrameTick;
+            Program.AnimateTick += Program_FrameTick;
             spritePict.Click += spritePict_Click;
         }
 
