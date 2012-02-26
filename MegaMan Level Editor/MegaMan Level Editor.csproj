@@ -100,6 +100,7 @@
     <Compile Include="BrushTool.cs" />
     <Compile Include="Bucket.cs" />
     <Compile Include="Const.cs" />
+    <Compile Include="CursorTool.cs" />
     <Compile Include="Entity.cs" />
     <Compile Include="EntityButton.cs">
       <SubType>Component</SubType>
@@ -280,9 +281,6 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <None Include="Resources\NewButton.bmp" />
-  </ItemGroup>
-  <ItemGroup>
     <None Include="Resources\NewDocumentHS.png" />
   </ItemGroup>
   <ItemGroup>
@@ -305,9 +303,6 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\PauseHS.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\Undo_Redo.png" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\Undo.png" />
@@ -376,6 +371,8 @@
     <Content Include="Resources\continue_full.png" />
     <Content Include="Resources\continue_icon.png" />
     <Content Include="Resources\cross.png" />
+    <Content Include="Resources\metool.png" />
+    <None Include="Resources\point.png" />
     <Content Include="Resources\rectangle.png" />
     <Content Include="Resources\selection.png" />
     <Content Include="Resources\start_full.png" />

@@ -108,7 +108,7 @@ namespace MegaMan.LevelEditor
                 {
                     Cursor = CreateCursor((Bitmap)tool.Icon, tool.IconOffset.X, tool.IconOffset.Y);
                 }
-                else
+                else if (tool.Icon != null)
                 {
                     Cursor.Hide();
                 }
@@ -144,6 +144,8 @@ namespace MegaMan.LevelEditor
 
         protected override void OnMouseDown(MouseEventArgs e)
         {
+            Focus();
+            
             if (MainForm.Instance.CurrentTool == null) return;
 
             if (e.Button == MouseButtons.Left)
@@ -198,6 +200,23 @@ namespace MegaMan.LevelEditor
             }
 
             base.OnMouseMove(e);
+        }
+
+        protected override void OnGotFocus(EventArgs e)
+        {
+            base.OnGotFocus(e);
+        }
+
+        public void Unfocus()
+        {
+            OnLostFocus(EventArgs.Empty);
+        }
+
+        protected override void OnLostFocus(EventArgs e)
+        {
+            base.OnLostFocus(e);
+            Screen.SelectEntity(-1);
+            ReDrawEntities();
         }
 
         private Point IconLocation(MouseEventArgs e)

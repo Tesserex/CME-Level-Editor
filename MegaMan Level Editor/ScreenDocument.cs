@@ -9,6 +9,8 @@ namespace MegaMan.LevelEditor
     {
         private readonly Screen screen;
 
+        private int? selectedEntityIndex;
+
         public StageDocument Stage { get; private set; }
 
         public event Action<int, int> Resized;
@@ -77,15 +79,25 @@ namespace MegaMan.LevelEditor
             if (TileChanged != null) TileChanged();
         }
 
-        public void AddEntity(Entity entity, Point location)
+        public EnemyCopyInfo AddEntity(Entity entity, Point location)
         {
-            screen.AddEnemy(new EnemyCopyInfo
+            var info = new EnemyCopyInfo
                 {
                     enemy = entity.Name,
                     screenX = location.X,
                     screenY = location.Y,
-                }
-            );
+                };
+
+            screen.AddEnemy(info);
+
+            Dirty = true;
+
+            return info;
+        }
+
+        public void AddEntity(EnemyCopyInfo info)
+        {
+            screen.AddEnemy(info);
             Dirty = true;
         }
 
@@ -97,9 +109,23 @@ namespace MegaMan.LevelEditor
             Dirty = true;
         }
 
-        public EnemyCopyInfo FindEntityAt(Point location)
+        public void RemoveEntity(EnemyCopyInfo info)
         {
-            return screen.EnemyInfo.FirstOrDefault(e => EntityBounded(e, location));
+            screen.EnemyInfo.Remove(info);
+        }
+
+        public int FindEntityAt(Point location)
+        {
+            return screen.EnemyInfo.FindIndex(e => EntityBounded(e, location));
+        }
+
+        public EnemyCopyInfo GetEntity(int index)
+        {
+            if (index >= 0 && index < screen.EnemyInfo.Count)
+            {
+                return screen.EnemyInfo[index];
+            }
+            return null;
         }
 
         private bool EntityBounded(EnemyCopyInfo entityInfo, Point location)
@@ -120,11 +146,33 @@ namespace MegaMan.LevelEditor
 
         public void DrawEntities(Graphics graphics)
         {
-            foreach (var info in screen.EnemyInfo)
+            for (var i = 0; i < screen.EnemyInfo.Count; i++)
             {
+                var info = screen.EnemyInfo[i];
+
                 var sprite = Stage.Project.EntityByName(info.enemy).MainSprite;
-                
-                if (sprite != null) sprite.Draw(graphics, info.screenX, info.screenY);
+
+                if (sprite != null)
+                {
+                    sprite.Draw(graphics, info.screenX, info.screenY);
+
+                    if (selectedEntityIndex == i)
+                    {
+                        graphics.DrawRectangle(Pens.LimeGreen, info.screenX - sprite.HotSpot.X, info.screenY - sprite.HotSpot.Y, sprite.Width, sprite.Height);
+                    }
+                }
+            }
+        }
+
+        public void SelectEntity(int index)
+        {
+            if (index >= 0 && index < screen.EnemyInfo.Count)
+            {
+                selectedEntityIndex = index;
+            }
+            else
+            {
+                selectedEntityIndex = null;
             }
         }
     }

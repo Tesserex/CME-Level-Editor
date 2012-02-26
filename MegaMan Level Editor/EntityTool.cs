@@ -22,8 +22,8 @@ namespace MegaMan.LevelEditor
 
         public void Click(ScreenDrawingSurface surface, Point location)
         {
-            var action = new AddEntityAction(entity, surface, location);
-            action.Run();
+            var info = surface.Screen.AddEntity(entity, location);
+            var action = new AddEntityAction(info, surface);
             surface.EditedWithAction(action);
         }
 
@@ -44,15 +44,7 @@ namespace MegaMan.LevelEditor
 
         public void RightClick(ScreenDrawingSurface surface, Point location)
         {
-            // delete nearest entity
-            var info = surface.Screen.FindEntityAt(location);
-            if (info.enemy == null) return;
             
-            var nearest = surface.Screen.Stage.Project.EntityByName(info.enemy);
-
-            var action = new RemoveEntityAction(nearest, surface, new Point((int)info.screenX, (int)info.screenY));
-            action.Run();
-            surface.EditedWithAction(action);
         }
     }
 }

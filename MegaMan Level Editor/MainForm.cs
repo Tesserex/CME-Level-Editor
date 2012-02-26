@@ -165,6 +165,9 @@ namespace MegaMan.LevelEditor
             LoadRecentFiles();
 
             ActiveStage = null;
+
+            currentToolType = ToolType.Cursor;
+            AssembleTool();
         }
 
         void CreateBrushForm()
@@ -348,6 +351,10 @@ namespace MegaMan.LevelEditor
         {
             switch (currentToolType)
             {
+                case ToolType.Cursor:
+                    CurrentTool = new CursorTool();
+                    break;
+
                 case ToolType.Brush:
                     CurrentTool = null;
                     if (CurrentBrush != null) CurrentTool = new BrushTool(CurrentBrush);
@@ -604,6 +611,15 @@ namespace MegaMan.LevelEditor
             AssembleTool();
             foreach (ToolStripButton item in toolBar.Items) { item.Checked = false; }
             rectToolButton.Checked = true;
+            DrawJoins = false;
+        }
+
+        private void cursorToolButton_Click(object sender, EventArgs e)
+        {
+            currentToolType = ToolType.Cursor;
+            AssembleTool();
+            foreach (ToolStripButton item in toolBar.Items) { item.Checked = false; }
+            cursorToolButton.Checked = true;
             DrawJoins = false;
         }
     }

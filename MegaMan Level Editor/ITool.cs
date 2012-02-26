@@ -24,6 +24,7 @@ namespace MegaMan.LevelEditor
 
     public enum ToolType
     {
+        Cursor,
         Brush,
         Bucket,
         Join,

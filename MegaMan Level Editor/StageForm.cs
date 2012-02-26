@@ -346,9 +346,19 @@ namespace MegaMan.LevelEditor
             return surface;
         }
 
-        void surface_Edited(object sender, ScreenEditEventArgs e)
+        private void surface_Edited(object sender, ScreenEditEventArgs e)
         {
             history.Push(e.Action);
+        }
+
+        protected override void OnMouseDown(MouseEventArgs e)
+        {
+            base.OnMouseDown(e);
+
+            foreach (var surface in surfaces)
+            {
+                surface.Value.Unfocus();
+            }
         }
     }
 }

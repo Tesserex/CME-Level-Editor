@@ -78,6 +78,7 @@
             this.startPosToolButton = new System.Windows.Forms.ToolStripButton();
             this.zoomToolButton = new System.Windows.Forms.ToolStripButton();
             this.rectToolButton = new System.Windows.Forms.ToolStripButton();
+            this.cursorToolButton = new System.Windows.Forms.ToolStripButton();
             this.newToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.openToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.saveToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -268,16 +269,16 @@
             // mergeScreenToolStripMenuItem
             // 
             this.mergeScreenToolStripMenuItem.Name = "mergeScreenToolStripMenuItem";
-            this.mergeScreenToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)(((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Shift)
-                        | System.Windows.Forms.Keys.M)));
+            this.mergeScreenToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)(((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Shift) 
+            | System.Windows.Forms.Keys.M)));
             this.mergeScreenToolStripMenuItem.Size = new System.Drawing.Size(223, 22);
             this.mergeScreenToolStripMenuItem.Text = "Merge Screen";
             // 
             // splitScreenToolStripMenuItem
             // 
             this.splitScreenToolStripMenuItem.Name = "splitScreenToolStripMenuItem";
-            this.splitScreenToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)(((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Shift)
-                        | System.Windows.Forms.Keys.X)));
+            this.splitScreenToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)(((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Shift) 
+            | System.Windows.Forms.Keys.X)));
             this.splitScreenToolStripMenuItem.Size = new System.Drawing.Size(223, 22);
             this.splitScreenToolStripMenuItem.Text = "Split Screen";
             // 
@@ -289,8 +290,8 @@
             // clearScreenToolStripMenuItem
             // 
             this.clearScreenToolStripMenuItem.Name = "clearScreenToolStripMenuItem";
-            this.clearScreenToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)(((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Shift)
-                        | System.Windows.Forms.Keys.Delete)));
+            this.clearScreenToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)(((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Shift) 
+            | System.Windows.Forms.Keys.Delete)));
             this.clearScreenToolStripMenuItem.Size = new System.Drawing.Size(223, 22);
             this.clearScreenToolStripMenuItem.Text = "Clear Screen";
             // 
@@ -337,6 +338,7 @@
             // 
             this.toolBar.GripStyle = System.Windows.Forms.ToolStripGripStyle.Hidden;
             this.toolBar.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.cursorToolButton,
             this.brushToolButton,
             this.bucketToolButton,
             this.joinToolButton,
@@ -465,6 +467,17 @@
             this.rectToolButton.ToolTipText = "Rectangle";
             this.rectToolButton.Click += new System.EventHandler(this.rectToolButton_Click);
             // 
+            // cursorToolButton
+            // 
+            this.cursorToolButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.cursorToolButton.Image = global::MegaMan.LevelEditor.Properties.Resources.point;
+            this.cursorToolButton.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
+            this.cursorToolButton.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.cursorToolButton.Name = "cursorToolButton";
+            this.cursorToolButton.Size = new System.Drawing.Size(23, 22);
+            this.cursorToolButton.Text = "Cursor";
+            this.cursorToolButton.Click += new System.EventHandler(this.cursorToolButton_Click);
+            // 
             // newToolStripMenuItem
             // 
             this.newToolStripMenuItem.Image = global::MegaMan.LevelEditor.Properties.Resources.NewDocumentHS;
@@ -577,6 +590,7 @@
         private System.Windows.Forms.ToolStripMenuItem entitiesToolStripMenuItem;
         private System.Windows.Forms.ToolStripButton zoomToolButton;
         private System.Windows.Forms.ToolStripButton rectToolButton;
+        private System.Windows.Forms.ToolStripButton cursorToolButton;
     }
 }
 

@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Drawing;
+using MegaMan.Common;
 
 namespace MegaMan.LevelEditor
 {
@@ -75,51 +76,47 @@ namespace MegaMan.LevelEditor
 
     public class AddEntityAction : HistoryAction
     {
-        private readonly Entity entity;
+        private readonly EnemyCopyInfo entity;
         private readonly ScreenDrawingSurface surface;
-        private readonly Point location;
 
-        public AddEntityAction(Entity entity, ScreenDrawingSurface surface, Point location)
+        public AddEntityAction(EnemyCopyInfo entity, ScreenDrawingSurface surface)
         {
             this.entity = entity;
             this.surface = surface;
-            this.location = location;
         }
 
         public void Run()
         {
-            surface.Screen.AddEntity(entity, location);
+            surface.Screen.AddEntity(entity);
             surface.ReDrawEntities();
         }
 
         public HistoryAction Reverse()
         {
-            return new RemoveEntityAction(entity, surface, location);
+            return new RemoveEntityAction(entity, surface);
         }
     }
 
     public class RemoveEntityAction : HistoryAction
     {
-        private readonly Entity entity;
+        private readonly EnemyCopyInfo entity;
         private readonly ScreenDrawingSurface surface;
-        private readonly Point location;
 
-        public RemoveEntityAction(Entity entity, ScreenDrawingSurface surface, Point location)
+        public RemoveEntityAction(EnemyCopyInfo entity, ScreenDrawingSurface surface)
         {
             this.entity = entity;
             this.surface = surface;
-            this.location = location;
         }
 
         public void Run()
         {
-            surface.Screen.RemoveEntity(entity, location);
+            surface.Screen.RemoveEntity(entity);
             surface.ReDrawEntities();
         }
 
         public HistoryAction Reverse()
         {
-            return new AddEntityAction(entity, surface, location);
+            return new AddEntityAction(entity, surface);
         }
     }
 }

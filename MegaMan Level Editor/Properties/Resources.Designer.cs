@@ -144,6 +144,13 @@ namespace MegaMan.LevelEditor.Properties {
             }
         }
         
+        internal static System.Drawing.Bitmap metool {
+            get {
+                object obj = ResourceManager.GetObject("metool", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
         internal static System.Drawing.Bitmap NewDocumentHS {
             get {
                 object obj = ResourceManager.GetObject("NewDocumentHS", resourceCulture);
@@ -189,6 +196,13 @@ namespace MegaMan.LevelEditor.Properties {
         internal static System.Drawing.Bitmap PlayHS {
             get {
                 object obj = ResourceManager.GetObject("PlayHS", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        internal static System.Drawing.Bitmap point {
+            get {
+                object obj = ResourceManager.GetObject("point", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
