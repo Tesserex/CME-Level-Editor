@@ -349,6 +349,11 @@ namespace MegaMan.LevelEditor
 
         private void AssembleTool()
         {
+            if (CurrentTool != null && CurrentTool is IDisposable)
+            {
+                ((IDisposable)CurrentTool).Dispose();
+            }
+
             switch (currentToolType)
             {
                 case ToolType.Cursor:
@@ -634,6 +639,48 @@ namespace MegaMan.LevelEditor
             foreach (ToolStripButton item in toolBar.Items) { item.Checked = false; }
             selectToolButton.Checked = true;
             DrawJoins = false;
+        }
+
+        private void copyToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (ActiveStage != null)
+            {
+                ActiveStage.Copy();
+            }
+        }
+
+        private void pasteToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (ActiveStage != null)
+            {
+                var brush = ActiveStage.Paste();
+                if (brush != null)
+                {
+                    CurrentBrush = brush;
+                    currentToolType = ToolType.Brush;
+                    AssembleTool();
+                    foreach (ToolStripButton item in toolBar.Items) { item.Checked = false; }
+                    brushToolButton.Checked = true;
+                    DrawJoins = false;
+                    DrawTiles = true;
+
+                    // this is a bad hack to get it to draw immediately
+                    Cursor.Position = new Point(Cursor.Position.X, Cursor.Position.Y + 1);
+                    Cursor.Position = new Point(Cursor.Position.X, Cursor.Position.Y - 1);
+                }
+            }
+        }
+
+        private void pasteBrushToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (ActiveStage != null)
+            {
+                var brush = ActiveStage.Paste();
+                if (brushForm != null && brush != null)
+                {
+                    brushForm.AddBrush(brush);
+                }
+            }
         }
     }
 }

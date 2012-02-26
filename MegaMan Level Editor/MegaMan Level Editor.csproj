@@ -374,6 +374,7 @@
     <Content Include="Resources\cross.png" />
     <Content Include="Resources\metool.png" />
     <None Include="Resources\point.png" />
+    <None Include="Resources\PasteBrush.png" />
     <Content Include="Resources\rectangle.png" />
     <Content Include="Resources\selection.png" />
     <Content Include="Resources\start_full.png" />

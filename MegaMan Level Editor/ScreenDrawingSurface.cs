@@ -43,6 +43,10 @@ namespace MegaMan.LevelEditor
 
         private double zoomFactor = 1;
 
+        private Pen selectionPen;
+        public Rectangle? Selection { get; private set; }
+        public event Action<ScreenDrawingSurface, Rectangle?> SelectionChanged;
+
         private static readonly ColorMatrix grayMatrix = new ColorMatrix(
            new float[][] 
           {
@@ -59,6 +63,7 @@ namespace MegaMan.LevelEditor
         public ScreenDocument Screen { get; private set; }
 
         public event EventHandler<ScreenEditEventArgs> Edited;
+        public event Action Activated;
 
         #region Constructors
 
@@ -74,12 +79,28 @@ namespace MegaMan.LevelEditor
 
             Screen.Resized += (w, h) => ResizeLayers();
 
-            Program.AnimateTick += Program_FrameTick;
+            Program.AnimateTick += Animate;
+            Program.FrameTick += SelectionAnimate;
 
             RedrawJoins();
             ReDrawAll();
 
             MainForm.Instance.DrawOptionToggled += ReDrawMaster;
+
+            selectionPen = new Pen(Color.LimeGreen, 2);
+            selectionPen.DashPattern = new float[] { 3, 2 };
+        }
+
+        protected override void Dispose(bool disposing)
+        {
+            base.Dispose(disposing);
+
+            if (disposing)
+            {
+                selectionPen.Dispose();
+                Program.AnimateTick -= Animate;
+                Program.FrameTick -= SelectionAnimate;
+            }
         }
 
         #endregion
@@ -89,7 +110,7 @@ namespace MegaMan.LevelEditor
             if (Edited != null) Edited(this, new ScreenEditEventArgs(action));
         }
 
-        void Program_FrameTick()
+        private void Animate()
         {
             if (active)
             {
@@ -98,11 +119,29 @@ namespace MegaMan.LevelEditor
             }
         }
 
+        private int tickFrame = 0;
+        private void SelectionAnimate()
+        {
+            if (Selection != null)
+            {
+                tickFrame++;
+                if (tickFrame >= 5)
+                {
+                    selectionPen.DashOffset++;
+                    if (selectionPen.DashOffset > 4) selectionPen.DashOffset = 0;
+                    tickFrame = 0;
+                    DrawSelectionAnts();
+                }
+            }
+        }
+
         #region Mouse Handlers
 
         protected override void OnMouseEnter(EventArgs e)
         {
             active = true;
+            if (Activated != null) Activated();
+
             if (MainForm.Instance.CurrentTool != null)
             {
                 var tool = MainForm.Instance.CurrentTool;
@@ -127,7 +166,7 @@ namespace MegaMan.LevelEditor
             if (MainForm.Instance.CurrentTool != null)
             {
                 var tool = MainForm.Instance.CurrentTool;
-                if (!tool.IsIconCursor)
+                if (!tool.IsIconCursor && tool.Icon != null)
                 {
                     Cursor.Show();
                 }
@@ -219,6 +258,7 @@ namespace MegaMan.LevelEditor
             base.OnLostFocus(e);
             Screen.SelectEntity(-1);
             ReDrawEntities();
+            SetSelection(0, 0, 0, 0);
         }
 
         private Point IconLocation(MouseEventArgs e)
@@ -478,6 +518,45 @@ namespace MegaMan.LevelEditor
             RefreshSize();
         }
 
+        public void SetSelection(int tx, int ty, int width, int height)
+        {
+            if (width != 0 && height != 0)
+            {
+                if (tx < 0)
+                {
+                    width += tx;
+                    tx = 0;
+                }
+                if (ty < 0)
+                {
+                    height += ty;
+                    ty = 0;
+                }
+
+                if (width + tx > Screen.Width) width = Screen.Width - tx;
+                if (height + ty > Screen.Height) height = Screen.Height - ty;
+
+                // all in tile sizes
+                Selection = new Rectangle(tx, ty, width, height);
+
+                DrawSelectionAnts();
+            }
+            else
+            {
+                Selection = null;
+
+                using (Graphics g = Graphics.FromImage(toolLayer))
+                {
+                    g.Clear(Color.Transparent);
+                }
+            }
+
+            if (SelectionChanged != null)
+            {
+                SelectionChanged(this, Selection);
+            }
+        }
+
         private void RefreshSize()
         {
             Width = (int)(masterImage.Width * zoomFactor);
@@ -497,6 +576,31 @@ namespace MegaMan.LevelEditor
                 Image = img;
             }
             Refresh();
+        }
+
+        private void DrawSelectionAnts()
+        {
+            if (Selection == null) return;
+
+            var size = Screen.Tileset.TileSize;
+
+            var g = GetToolLayerGraphics();
+            if (g != null)
+            {
+                g.Clear(Color.Transparent);
+
+                // draw selection preview
+                g.DrawRectangle(selectionPen,
+                    new Rectangle(
+                        Selection.Value.X * Screen.Tileset.TileSize,
+                        Selection.Value.Y * Screen.Tileset.TileSize,
+                        Selection.Value.Width * Screen.Tileset.TileSize,
+                        Selection.Value.Height * Screen.Tileset.TileSize
+                    )
+                );
+
+                ReturnToolLayerGraphics(g);
+            }
         }
 
         #region Layer Helpers

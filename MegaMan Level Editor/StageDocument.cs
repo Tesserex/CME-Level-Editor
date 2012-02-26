@@ -202,6 +202,7 @@ namespace MegaMan.LevelEditor
         {
             if (!ConfirmSave()) return false;
 
+            stageForm.GotFocus -= StageForm_GotFocus;
             stageForm.FormClosing -= StageForm_FormClosing;
             stageForm.Close();
 
@@ -227,6 +228,17 @@ namespace MegaMan.LevelEditor
         public void Redo()
         {
             if (stageForm != null) stageForm.Redo();
+        }
+
+        public void Copy()
+        {
+            if (stageForm != null) stageForm.Copy();
+        }
+
+        public TileBrush Paste()
+        {
+            if (stageForm != null) return stageForm.Paste();
+            return null;
         }
 
         void StageForm_FormClosing(object sender, FormClosingEventArgs e)

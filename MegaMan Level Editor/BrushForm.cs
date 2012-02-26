@@ -127,11 +127,17 @@ namespace MegaMan.LevelEditor
 
         private void SaveNewBrush(object sender, EventArgs e)
         {
-            brushes.Add(creatingBrush);
-            AddBrushPanel(creatingBrush);
+            AddBrush(creatingBrush);
             creatingBrush = null;
             splitter.Panel1Collapsed = true;
+        }
 
+        public void AddBrush(ITileBrush brush)
+        {
+            if (brush == null) return;
+
+            brushes.Add(brush);
+            AddBrushPanel(brush);
             SaveBrushes();
         }
 

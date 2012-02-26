@@ -24,6 +24,8 @@ namespace MegaMan.LevelEditor
 
         private double zoomFactor = 1;
 
+        public ScreenDrawingSurface ActiveSurface { get; private set; }
+
         public void Undo()
         {
             var action = history.Undo();
@@ -42,6 +44,29 @@ namespace MegaMan.LevelEditor
             {
                 action.Run();
             }
+        }
+
+        private TileBrush copyBrush;
+        public void Copy()
+        {
+            if (ActiveSurface != null && ActiveSurface.Selection != null)
+            {
+                var selection = ActiveSurface.Selection.Value;
+                copyBrush = new TileBrush(selection.Width, selection.Height);
+
+                for (int ty = selection.Y; ty < selection.Bottom; ty++)
+                {
+                    for (int tx = selection.X; tx < selection.Right; tx++)
+                    {
+                        copyBrush.AddTile(ActiveSurface.Screen.TileAt(tx, ty), tx - selection.X, ty - selection.Y);
+                    }
+                }
+            }
+        }
+
+        public TileBrush Paste()
+        {
+            return copyBrush;
         }
 
         public void ZoomIn(Point center)
@@ -340,6 +365,7 @@ namespace MegaMan.LevelEditor
             screen.Renamed += this.RenameSurface;
             screen.Resized += (w, h) => this.AlignScreenSurfaces();
             surface.Edited += new EventHandler<ScreenEditEventArgs>(surface_Edited);
+            surface.Activated += () => { ActiveSurface = surface; };
             
             this.Controls.Add(surface);
             joinOverlay.Add(surface);

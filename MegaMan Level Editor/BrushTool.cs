@@ -31,10 +31,22 @@ namespace MegaMan.LevelEditor
 
         public void Click(ScreenDrawingSurface surface, Point location)
         {
+            Point tilePos = new Point(location.X / surface.Screen.Tileset.TileSize, location.Y / surface.Screen.Tileset.TileSize);
+
+            var selection = surface.Selection;
+            if (selection != null)
+            {
+                // only paint inside selection
+                if (!selection.Value.Contains(tilePos))
+                {
+                    startTiles = null;
+                    endTiles = null;
+                    return;
+                }
+            }
+
             startTiles = new int?[surface.Screen.Width, surface.Screen.Height];
             endTiles = new int?[surface.Screen.Width, surface.Screen.Height];
-
-            Point tilePos = new Point(location.X / surface.Screen.Tileset.TileSize, location.Y / surface.Screen.Tileset.TileSize);
 
             // check for line drawing
             if ((Control.ModifierKeys & Keys.Shift) != Keys.None)
@@ -81,6 +93,8 @@ namespace MegaMan.LevelEditor
 
         public void Release(ScreenDrawingSurface surface)
         {
+            if (startTiles == null) return;
+
             held = false;
             var changes = new List<TileChange>();
 
@@ -101,6 +115,13 @@ namespace MegaMan.LevelEditor
 
         private void Draw(ScreenDrawingSurface surface, int tile_x, int tile_y)
         {
+            var selection = surface.Selection;
+            if (selection != null)
+            {
+                // only paint inside selection
+                if (!selection.Value.Contains(tile_x, tile_y)) return;
+            }
+
             // first track the changes i'm going to make for undo purposes
             foreach (TileBrushCell cell in brush.Cells())
             {

@@ -179,6 +179,13 @@ namespace MegaMan.LevelEditor.Properties {
             }
         }
         
+        internal static System.Drawing.Bitmap PasteBrush {
+            get {
+                object obj = ResourceManager.GetObject("PasteBrush", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
         internal static System.Drawing.Bitmap PasteHS {
             get {
                 object obj = ResourceManager.GetObject("PasteHS", resourceCulture);

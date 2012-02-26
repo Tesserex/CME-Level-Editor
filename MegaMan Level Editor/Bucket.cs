@@ -35,6 +35,16 @@ namespace MegaMan.LevelEditor
 
         public void Click(ScreenDrawingSurface surface, Point location)
         {
+            var selection = surface.Selection;
+            if (selection != null)
+            {
+                // only paint inside selection
+                if (!selection.Value.Contains(location))
+                {
+                    return;
+                }
+            }
+
             int tile_x = location.X / surface.Screen.Tileset.TileSize;
             int tile_y = location.Y / surface.Screen.Tileset.TileSize;
 
@@ -53,6 +63,16 @@ namespace MegaMan.LevelEditor
 
         private void Flood(ScreenDrawingSurface surface, int tile_x, int tile_y, int tile_id, int brush_x, int brush_y)
         {
+            var selection = surface.Selection;
+            if (selection != null)
+            {
+                // only paint inside selection
+                if (!selection.Value.Contains(tile_x, tile_y))
+                {
+                    return;
+                }
+            }
+
             var old = surface.Screen.TileAt(tile_x, tile_y);
             // checking whether this is already the new tile prevents infinite recursion, but
             // it can prevent filling a solid area with a brush that uses that same tile
