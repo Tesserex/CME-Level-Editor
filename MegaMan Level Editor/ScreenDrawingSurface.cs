@@ -34,6 +34,7 @@ namespace MegaMan.LevelEditor
         private Bitmap entityLayer;
         private Bitmap mouseLayer;
         private Bitmap joinLayer;
+        private Bitmap toolLayer;
         private Bitmap masterImage;
         private Bitmap grayTiles;
 
@@ -447,6 +448,9 @@ namespace MegaMan.LevelEditor
                 if (MainForm.Instance.DrawJoins && joinLayer != null)
                     g.DrawImageUnscaled(joinLayer, 0, 0);
 
+                if (toolLayer != null)
+                    g.DrawImageUnscaled(toolLayer, 0, 0);
+
                 if (active) g.DrawImageUnscaled(mouseLayer, 0, 0);
             }
 
@@ -454,6 +458,18 @@ namespace MegaMan.LevelEditor
         }
 
         #endregion
+
+        public Graphics GetToolLayerGraphics()
+        {
+            if (toolLayer == null) return null;
+            return Graphics.FromImage(toolLayer);
+        }
+
+        public void ReturnToolLayerGraphics(Graphics g)
+        {
+            g.Dispose();
+            ReDrawMaster();
+        }
 
         public void Zoom(double factor)
         {
@@ -505,6 +521,7 @@ namespace MegaMan.LevelEditor
             InitLayer(ref entityLayer);
             InitLayer(ref mouseLayer);
             InitLayer(ref joinLayer);
+            InitLayer(ref toolLayer);
             InitLayer(ref masterImage);
         }
 
@@ -517,6 +534,7 @@ namespace MegaMan.LevelEditor
             ResizeLayer(ref blockLayer);
             ResizeLayer(ref mouseLayer);
             ResizeLayer(ref joinLayer);
+            ResizeLayer(ref toolLayer);
             ResizeLayer(ref masterImage);
             ReDrawAll();
         }

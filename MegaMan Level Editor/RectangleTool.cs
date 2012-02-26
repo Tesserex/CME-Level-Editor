@@ -47,11 +47,40 @@ namespace MegaMan.LevelEditor
             {
                 tx2 = location.X / surface.Screen.Tileset.TileSize;
                 ty2 = location.Y / surface.Screen.Tileset.TileSize;
+
+                var g = surface.GetToolLayerGraphics();
+                if (g != null)
+                {
+                    g.Clear(Color.Transparent);
+
+                    // draw rectangle preview
+                    int x_start = Math.Min(tx1, tx2);
+                    int x_end = Math.Max(tx1, tx2) - 1;
+                    int y_start = Math.Min(ty1, ty2);
+                    int y_end = Math.Max(ty1, ty2) - 1;
+
+                    for (int y = y_start; y <= y_end; y += brush.Height)
+                    {
+                        for (int x = x_start; x <= x_end; x += brush.Width)
+                        {
+                            brush.DrawOn(g, x * brush.CellSize, y * brush.CellSize);
+                        }
+                    }
+
+                    surface.ReturnToolLayerGraphics(g);
+                }
             }
         }
 
         public void Release(ScreenDrawingSurface surface)
         {
+            var g = surface.GetToolLayerGraphics();
+            if (g != null)
+            {
+                g.Clear(Color.Transparent);
+                surface.ReturnToolLayerGraphics(g);
+            }
+
             int x_start = Math.Min(tx1, tx2);
             int x_end = Math.Max(tx1, tx2) - 1;
             int y_start = Math.Min(ty1, ty2);
