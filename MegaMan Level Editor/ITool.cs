@@ -31,6 +31,7 @@ namespace MegaMan.LevelEditor
         Start,
         Entity,
         Zoom,
-        Rectangle
+        Rectangle,
+        Selection
     }
 }

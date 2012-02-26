@@ -385,6 +385,10 @@ namespace MegaMan.LevelEditor
                     CurrentTool = null;
                     if (CurrentBrush != null) CurrentTool = new RectangleTool(CurrentBrush);
                     break;
+
+                case ToolType.Selection:
+                    CurrentTool = new SelectionTool();
+                    break;
             }
 
             if (currentToolType != ToolType.Entity) entityForm.Deselect();
@@ -620,6 +624,15 @@ namespace MegaMan.LevelEditor
             AssembleTool();
             foreach (ToolStripButton item in toolBar.Items) { item.Checked = false; }
             cursorToolButton.Checked = true;
+            DrawJoins = false;
+        }
+
+        private void selectToolButton_Click(object sender, EventArgs e)
+        {
+            currentToolType = ToolType.Selection;
+            AssembleTool();
+            foreach (ToolStripButton item in toolBar.Items) { item.Checked = false; }
+            selectToolButton.Checked = true;
             DrawJoins = false;
         }
     }

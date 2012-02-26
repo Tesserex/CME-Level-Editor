@@ -74,6 +74,8 @@ namespace MegaMan.LevelEditor
 
         public void Release(ScreenDrawingSurface surface)
         {
+            held = false;
+
             var g = surface.GetToolLayerGraphics();
             if (g != null)
             {

@@ -138,6 +138,7 @@
     </Compile>
     <Compile Include="JoinTool.cs" />
     <Compile Include="RectangleTool.cs" />
+    <Compile Include="SelectionTool.cs" />
     <Compile Include="SoundControl.cs">
       <SubType>UserControl</SubType>
     </Compile>
