@@ -71,7 +71,11 @@ namespace MegaMan.LevelEditor
                 var deleteMenu = new ToolStripMenuItem(
                     String.Format("Delete {0}", heldEntity.enemy),
                     Properties.Resources.Remove,
-                    (s,e) => surface.Screen.RemoveEntity(heldEntity)
+                    (s, e) =>
+                    {
+                        surface.Screen.RemoveEntity(heldEntity);
+                        surface.ReDrawEntities();
+                    }
                 );
 
                 menu.Items.Add(deleteMenu);

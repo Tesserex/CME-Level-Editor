@@ -115,6 +115,7 @@ namespace MegaMan.LevelEditor
             if (active)
             {
                 ReDrawTiles();
+                ReDrawEntities();
                 ReDrawMaster();
             }
         }

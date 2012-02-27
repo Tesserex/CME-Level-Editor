@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Drawing;
 using System.Windows.Forms;
+using System.Linq;
 
 namespace MegaMan.LevelEditor
 {
@@ -11,42 +12,74 @@ namespace MegaMan.LevelEditor
         public EntityForm()
         {
             InitializeComponent();
-            Program.AnimateTick += Program_FrameTick;
+            Program.AnimateTick += Animate;
         }
 
-        private void Program_FrameTick()
+        private void Animate()
         {
-            container.Refresh();
+            var entity = entityList.SelectedItem as Entity;
+            if (entity != null && entityPreview.Image != null)
+            {
+                DrawPreview();
+            }
+        }
+
+        private void DrawPreview()
+        {
+            var entity = entityList.SelectedItem as Entity;
+            using (var g = Graphics.FromImage(entityPreview.Image))
+            {
+                g.Clear(Color.Transparent);
+                if (entity.MainSprite == null)
+                {
+                    g.DrawImage(Properties.Resources.nosprite, 0, 0);
+                }
+                else
+                {
+                    entity.MainSprite.Draw(g, entity.MainSprite.HotSpot.X, entity.MainSprite.HotSpot.Y);
+                }
+            }
+            entityPreview.Refresh();
         }
 
         public void Deselect()
         {
-            foreach (Control c in container.Controls) c.BackColor = container.BackColor;
+            if (entityPreview.Image != null) entityPreview.Image.Dispose();
+            entityPreview.Image = null;
         }
 
         public void LoadEntities(ProjectEditor project)
         {
-            foreach (Entity entity in project.Entities)
-            {
-                if (entity.MainSprite == null) continue;
-
-                var button = new EntityButton(entity);
-
-                button.Click += (snd, args) =>
-                {
-                    if (EntityChanged != null) EntityChanged(button.Entity);
-                    Deselect();
-                    button.BackColor = Color.Orange;
-                };
-
-                container.Controls.Add(button);
-            }
-            container.Refresh();
+            entityList.DataSource = project.Entities.ToList();
+            entityList.DisplayMember = "Name";
         }
 
         public void Unload()
         {
-            container.Controls.Clear();
+            entityList.DataSource = null;
+        }
+
+        private void entityList_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            var entity = entityList.SelectedItem as Entity;
+            if (entity != null)
+            {
+                if (entityPreview.Image != null) entityPreview.Image.Dispose();
+
+                if (entity.MainSprite == null)
+                {
+                    entityPreview.Image = new Bitmap(16, 16);
+                }
+                else
+                {
+                    entityPreview.Image = new Bitmap(entity.MainSprite.Width + 10, entity.MainSprite.Height + 10);
+                }
+
+                DrawPreview();
+
+                entityPreview.Refresh();
+                if (EntityChanged != null) EntityChanged(entity);
+            }
         }
     }
 }

@@ -13,7 +13,11 @@ namespace MegaMan.LevelEditor
 
         public Image Icon
         {
-            get { return entity.MainSprite[0].CutTile; }
+            get
+            {
+                if (entity.MainSprite == null) return Properties.Resources.nosprite;
+                return entity.MainSprite[0].CutTile;
+            }
         }
 
         public bool IsIconCursor { get { return false; } }
@@ -25,6 +29,7 @@ namespace MegaMan.LevelEditor
             var info = surface.Screen.AddEntity(entity, location);
             var action = new AddEntityAction(info, surface);
             surface.EditedWithAction(action);
+            surface.ReDrawEntities();
         }
 
         public void Move(ScreenDrawingSurface surface, Point location)
@@ -39,7 +44,11 @@ namespace MegaMan.LevelEditor
 
         public Point IconOffset
         {
-            get { return new Point(-entity.MainSprite.HotSpot.X, -entity.MainSprite.HotSpot.Y); }
+            get
+            {
+                if (entity.MainSprite == null) return new Point(-8, -8);
+                return new Point(-entity.MainSprite.HotSpot.X, -entity.MainSprite.HotSpot.Y);
+            }
         }
 
         public void RightClick(ScreenDrawingSurface surface, Point location)

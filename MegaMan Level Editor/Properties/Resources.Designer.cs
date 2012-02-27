@@ -172,6 +172,13 @@ namespace MegaMan.LevelEditor.Properties {
             }
         }
         
+        internal static System.Drawing.Bitmap nosprite {
+            get {
+                object obj = ResourceManager.GetObject("nosprite", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
         internal static System.Drawing.Bitmap openHS {
             get {
                 object obj = ResourceManager.GetObject("openHS", resourceCulture);
