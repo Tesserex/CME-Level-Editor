@@ -7,6 +7,7 @@ using System.Windows.Forms;
 using System.IO;
 using MegaMan.Common;
 using WeifenLuo.WinFormsUI.Docking;
+using System.Diagnostics;
 
 namespace MegaMan.LevelEditor
 {
@@ -33,6 +34,9 @@ namespace MegaMan.LevelEditor
         private readonly List<string> recentFiles = new List<string>(10);
 
         private readonly string configFile = Path.Combine(Path.GetDirectoryName(Application.ExecutablePath), "DockPanel.config");
+
+        private readonly string engineInfoPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "Mega Man", "Editor", "enginepath.ini");
+        private string enginePath = null;
 
         public ITileBrush CurrentBrush { get; private set; }
         private ToolType currentToolType;
@@ -681,6 +685,85 @@ namespace MegaMan.LevelEditor
                     brushForm.AddBrush(brush);
                 }
             }
+        }
+
+        private void setEnginePathToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            changeEnginePath();
+        }
+
+        private void loadEnginePath()
+        {
+            if (!File.Exists(engineInfoPath))
+            {
+                changeEnginePath();
+            }
+            else
+            {
+                enginePath = File.ReadLines(engineInfoPath).First();
+            }
+        }
+
+        private void changeEnginePath()
+        {
+            var dialog = new OpenFileDialog();
+            dialog.Filter = "executable files (*.exe)|*.exe";
+            dialog.Title = "Find Mega Man Engine";
+            
+            var result = dialog.ShowDialog(this);
+
+            if (result == System.Windows.Forms.DialogResult.OK)
+            {
+                enginePath = dialog.FileName;
+                File.WriteAllLines(engineInfoPath, new[] { enginePath });
+            }
+        }
+
+        private void runToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (activeProject == null) return;
+
+            if (enginePath == null || !File.Exists(enginePath))
+            {
+                loadEnginePath();
+            }
+
+            string args = String.Format("\"{0}\"", activeProject.Project.GameFile);
+
+            Process.Start(enginePath, args);
+        }
+
+        private void runStageToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (activeProject == null || activeStage == null) return;
+
+            if (enginePath == null || !File.Exists(enginePath))
+            {
+                loadEnginePath();
+            }
+
+            string args = String.Format("\"{0}\" \"Stage\\{1}\"",
+                activeProject.Project.GameFile,
+                activeStage.Name);
+
+            Process.Start(enginePath, args);
+        }
+
+        public void RunTestFromStage(ScreenDocument screen, Point location)
+        {
+            if (enginePath == null || !File.Exists(enginePath))
+            {
+                loadEnginePath();
+            }
+
+            string args = String.Format("\"{0}\" \"Stage\\{1}\" \"{2}\" \"{3},{4}\"",
+                activeProject.Project.GameFile,
+                screen.Stage.Name,
+                screen.Name,
+                location.X.ToString(),
+                location.Y.ToString());
+
+            Process.Start(enginePath, args);
         }
     }
 }

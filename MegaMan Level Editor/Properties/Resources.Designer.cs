@@ -221,6 +221,13 @@ namespace MegaMan.LevelEditor.Properties {
             }
         }
         
+        internal static System.Drawing.Bitmap protoman {
+            get {
+                object obj = ResourceManager.GetObject("protoman", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
         internal static System.Drawing.Bitmap rectangle {
             get {
                 object obj = ResourceManager.GetObject("rectangle", resourceCulture);

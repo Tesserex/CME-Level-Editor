@@ -65,9 +65,10 @@ namespace MegaMan.LevelEditor
         {
             Click(surface, location);
 
+            ContextMenuStrip menu = new ContextMenuStrip();
+
             if (heldEntity != null)
             {
-                ContextMenuStrip menu = new ContextMenuStrip();
                 var deleteMenu = new ToolStripMenuItem(
                     String.Format("Delete {0}", heldEntity.enemy),
                     Properties.Resources.Remove,
@@ -79,9 +80,21 @@ namespace MegaMan.LevelEditor
                 );
 
                 menu.Items.Add(deleteMenu);
-
-                menu.Show(surface, location);
+                menu.Items.Add(new ToolStripSeparator()); 
             }
+
+            var testMenu = new ToolStripMenuItem(
+                "Test From Here",
+                Properties.Resources.protoman,
+                (s, e) =>
+                {
+                    MainForm.Instance.RunTestFromStage(surface.Screen, location);
+                }
+            );
+
+            menu.Items.Add(testMenu);
+
+            menu.Show(surface, location);
         }
 
         public System.Drawing.Point IconOffset
