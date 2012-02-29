@@ -190,9 +190,10 @@ namespace MegaMan.LevelEditor
             if (stageForm == null)
             {
                 stageForm = new StageForm(this);
-                stageForm.GotFocus += StageForm_GotFocus;
-                stageForm.FormClosing += StageForm_FormClosing;
             }
+
+            stageForm.GotFocus += StageForm_GotFocus;
+            stageForm.FormClosing += StageForm_FormClosing;
 
             MainForm.Instance.ShowStageForm(stageForm);
             stageForm.Focus();

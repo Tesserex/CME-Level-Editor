@@ -241,8 +241,18 @@ namespace MegaMan.LevelEditor
 
         public void FocusScreen(StageDocument stage)
         {
-            ActiveStage = stage;
-            ChangeTileset(stage.Tileset);
+            if (stage != activeStage)
+            {
+                ActiveStage = stage;
+                ChangeTileset(stage.Tileset);
+                brushForm.ChangeTileset(stage.Tileset);
+
+                if (stage.Project != activeProject)
+                {
+                    activeProject = stage.Project;
+                    entityForm.LoadEntities(stage.Project);
+                }
+            }
         }
 
         private void ChangeTileset(Tileset tileset)
