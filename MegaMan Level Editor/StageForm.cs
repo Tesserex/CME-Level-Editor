@@ -122,6 +122,11 @@ namespace MegaMan.LevelEditor
             MainForm.Instance.DrawOptionToggled += () => { joinOverlay.Visible = MainForm.Instance.DrawJoins; };
         }
 
+        protected override Point ScrollToControl(Control activeControl)
+        {
+            return this.DisplayRectangle.Location;
+        }
+
         protected override void OnScroll(ScrollEventArgs se)
         {
             joinOverlay.Invalidate();
@@ -265,8 +270,6 @@ namespace MegaMan.LevelEditor
             {
                 surfaceLocations[surfacePair.Key] = surfacePair.Value.Location;
             }
-
-
         }
 
         private void LayoutFromScreen(ScreenDrawingSurface surface, Point location)

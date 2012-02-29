@@ -46,6 +46,7 @@ namespace MegaMan.LevelEditor {
         }
         #endregion
 
+
         // private System.Windows.Forms.Panel screenContainer;
     }
 }
